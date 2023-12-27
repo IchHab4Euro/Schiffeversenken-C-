@@ -10,7 +10,7 @@ public:
     int longitudeToIndex(const std::string cordinate) const;
     int latitudeToIndex(const std::string cordinate) const;
 
-    virtual void placeShips();
+    virtual void placeShips() = 0;
 
 private:
     char grid[10][10]; //Magic Number entfernen
