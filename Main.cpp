@@ -1,5 +1,6 @@
-#include "Headerdateien/Playfield.h"
+#include "Headerdateien/PlayerPlayField.h"
 #include "Headerdateien/GameRessources.h"
+
 
 #include <iostream>
 
@@ -150,11 +151,12 @@ int verloren()  {
 
 int main() {
     //start();
-    PlayField testField;
+    PlayerPlayField testField;
     testField.printField();
     testField.saveToFile("FieldSave.csv");
     testField.longitudeToIndex("A1");
     testField.latitudeToIndex("A1");
+    testField.placeShips();
 
     return 0;
 }

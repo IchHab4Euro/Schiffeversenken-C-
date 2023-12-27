@@ -8,7 +8,7 @@ PlayField::PlayField(){
         for (int j = 0; j < 10; ++j) {
             grid[i][j] = '~';
         }
-    } //C1 -> [2][1]
+    }
 }
 
 void PlayField::printField() const {
@@ -57,7 +57,7 @@ void PlayField::saveToFile(const std::string& filename) const {
 
 int PlayField::longitudeToIndex(const std::string cordinate) const{
     if (cordinate.length() == 2){
-        int longitude = cordinate[0] - 65;
+        int longitude = cordinate[0] - 'A';
 
         std::cout << "longitude" << longitude << std::endl;
 
@@ -68,7 +68,7 @@ int PlayField::longitudeToIndex(const std::string cordinate) const{
 
 int PlayField::latitudeToIndex(const std::string cordinate) const{
     if (cordinate.length() == 2){
-        int latitude = cordinate[1] - 49;
+        int latitude = cordinate[1] - '1';
 
         std::cout << "latitude" << latitude << std::endl;
 
@@ -76,3 +76,4 @@ int PlayField::latitudeToIndex(const std::string cordinate) const{
     }
     return 0;
 }
+
