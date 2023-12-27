@@ -4,11 +4,11 @@
 #include <fstream>
 
 PlayField::PlayField(){
-    for (int i = 0; i < 10; ++i) {
+    for (int i = 0; i < 10; ++i) { //Magic Numbers
         for (int j = 0; j < 10; ++j) {
             grid[i][j] = '~';
         }
-    }
+    } //C1 -> [2][1]
 }
 
 void PlayField::printField() const {
@@ -36,8 +36,8 @@ void PlayField::printField() const {
     }
 }
 
-
 void PlayField::saveToFile(const std::string& filename) const {
+
     std::ofstream saveFile (filename);
 
     if(!saveFile.is_open()){
@@ -53,4 +53,26 @@ void PlayField::saveToFile(const std::string& filename) const {
         }
     }
     saveFile << saveString << std::endl;
+}
+
+int PlayField::longitudeToIndex(const std::string cordinate) const{
+    if (cordinate.length() == 2){
+        int longitude = cordinate[0] - 65;
+
+        std::cout << "longitude" << longitude << std::endl;
+
+        return longitude;
+    }
+    return 0;
+}
+
+int PlayField::latitudeToIndex(const std::string cordinate) const{
+    if (cordinate.length() == 2){
+        int latitude = cordinate[1] - 49;
+
+        std::cout << "latitude" << latitude << std::endl;
+
+        return latitude;
+    }
+    return 0;
 }
