@@ -187,10 +187,13 @@ int verloren()  {
 
 
 int main() {
-    start();
-    //PlayField testField;
-    //testField.printField();
-    //testField.saveToFile("FieldSave.csv");
+    //start();
+    PlayField testField;
+    testField.printField();
+    testField.saveToFile("FieldSave.csv");
+    testField.longitudeToIndex("A1");
+    testField.latitudeToIndex("A1");
+
     return 0;
 }
 
