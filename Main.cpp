@@ -1,5 +1,8 @@
-#include "Headerdateien/PlayerPlayField.h"
+#include "Headerdateien/PlayerBoard.h"
+#include "Headerdateien/ComputerBoard.h"
 #include "Headerdateien/GameRessources.h"
+
+#include "Headerdateien/Ship.h"
 
 
 #include <iostream>
@@ -151,12 +154,19 @@ int verloren()  {
 
 int main() {
     //start();
-    PlayerPlayField testField;
-    testField.printField();
-    testField.saveToFile("FieldSave.csv");
-    testField.longitudeToIndex("A1");
-    testField.latitudeToIndex("A1");
-    testField.placeShips();
+    /*
+    PlayerBoard testPlayerBoard;
+    testPlayerBoard.printField();
+    testPlayerBoard.saveToFile("FieldSave.csv");
+    testPlayerBoard.longitudeToIndex("A1");
+    testPlayerBoard.latitudeToIndex("A1");
+    testPlayerBoard.placeShips();
+    */
+
+    ComputerBoard testComputerBoard;
+    testComputerBoard.printBoard();
+    testComputerBoard.placeShips();
+    testComputerBoard.printBoard();
 
     return 0;
 }

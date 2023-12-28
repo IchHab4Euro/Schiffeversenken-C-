@@ -1,10 +1,10 @@
 #pragma once
 
-#include "PlayField.h"
+#include "Board.h"
 
 #include <iostream>
 
-class PlayerPlayField : public PlayField {
+class PlayerBoard : public Board {
     public:
         void placeShips() override;
 };
