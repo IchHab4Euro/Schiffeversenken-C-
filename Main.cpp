@@ -4,7 +4,6 @@
 
 #include "Headerdateien/Ship.h"
 
-
 #include <iostream>
 
 int start()  {
@@ -154,19 +153,19 @@ int verloren()  {
 
 int main() {
     //start();
-    /*
+    
     PlayerBoard testPlayerBoard;
-    testPlayerBoard.printField();
-    testPlayerBoard.saveToFile("FieldSave.csv");
-    testPlayerBoard.longitudeToIndex("A1");
-    testPlayerBoard.latitudeToIndex("A1");
+    testPlayerBoard.printBoard();
     testPlayerBoard.placeShips();
-    */
+    testPlayerBoard.printBoard();
+    
 
+    /*k
     ComputerBoard testComputerBoard;
     testComputerBoard.printBoard();
     testComputerBoard.placeShips();
     testComputerBoard.printBoard();
+    */
 
     return 0;
 }

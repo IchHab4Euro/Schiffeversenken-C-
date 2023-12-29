@@ -11,13 +11,14 @@ public:
     Board();
     void printBoard() const;
     void saveToFile(const std::string& filename) const;
-    int longitudeToIndex(const std::string cordinate) const;
-    int latitudeToIndex(const std::string cordinate) const;
+    int cordinateToLatitude(const std::string cordinate) const;
+    int cordinateToLongitude(const std::string cordinate) const;
     bool checkForColission() const;
     void replacShipPlaceSymbol(char replacer);
+    bool placeShip(int latitude, int longitude, int direction, Ship ship);
 
     virtual void placeShips() = 0;
-    virtual bool placeShip(int latitude, int longitude, int direction, Ship ship) = 0;
+    
 
 protected:
     std::vector<Ship> shipsNextToBoard;

@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <random>
+#include <vector>
 
 void ComputerBoard::placeShips() {
     while(!shipsNextToBoard.empty()){
-        Ship shipToPlace = shipsNextToBoard.back();
-        shipsNextToBoard.pop_back();
+        Ship shipToPlace = shipsNextToBoard[0];
+        shipsNextToBoard.erase(shipsNextToBoard.begin());
         bool shipPlaced = false; 
 
         while(!shipPlaced){
@@ -18,41 +19,7 @@ void ComputerBoard::placeShips() {
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
         }
         shipsOnBoard.push_back(shipToPlace);
-
-        printBoard();
     }
-}
-
-bool ComputerBoard::placeShip(int latitude, int longitude, int direction, Ship ship) {
-    if(!direction){
-        if(latitude + ship.getLength() > boardSize - 1){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude + i][longitude] == waterSymbol){
-                grid[latitude + i][longitude] = shipPlaceSymbol;
-            }
-        }
-    }
-     if(direction){
-        if(longitude + ship.getLength() > boardSize - 1){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude + i] == waterSymbol){
-                grid[latitude][longitude + i] = shipPlaceSymbol;
-            }
-        }
-    }
-
-    if(checkForColission()){
-        replacShipPlaceSymbol(waterSymbol);
-        return false;
-    }
-    else{
-        replacShipPlaceSymbol(shipSymbol);
-    }
-    return true;
 }
 
 int ComputerBoard::getRandomNumber(int lowerBound, int upperBound){

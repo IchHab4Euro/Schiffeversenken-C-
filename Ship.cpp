@@ -1,6 +1,11 @@
 #include "Headerdateien/ship.h"
 
-Ship::Ship(std::string name, int length) : name(name), length(length) {}
+int Ship::nextId = 1; 
+
+Ship::Ship(std::string name, int length) : name(name), length(length) {
+    id = nextId;
+    nextId++;
+}
 
 std::string Ship::getName() const {
     return name;
@@ -8,4 +13,8 @@ std::string Ship::getName() const {
 
 int Ship::getLength() const {
     return length;
+}
+
+int Ship::getId() const {
+    return id;
 }
