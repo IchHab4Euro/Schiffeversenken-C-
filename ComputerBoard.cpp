@@ -14,7 +14,7 @@ void ComputerBoard::placeShips() {
         while(!shipPlaced){
             int startFieldLat = getRandomNumber(0,9);
             int startFieldLong = getRandomNumber(0,9);
-            int direction= getRandomNumber(0,1);
+            int direction= getRandomNumber(0,3);
 
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
         }

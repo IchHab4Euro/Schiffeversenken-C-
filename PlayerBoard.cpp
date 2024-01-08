@@ -35,9 +35,11 @@ void PlayerBoard::placeShips() {
     while(direction != 0 && direction != 1){
         std::cout << "Bitte gebe eine Richtung an in der das Schiff plaziert werden soll." << std::endl;
         std::cout << "Das Schifft wird von deiner angebenen Koordinate in die Richtung aufgebaut die du waehlst." << std::endl;
-        std::cout << "Gebe fuer nach unten: 0 ein fuer oben: 1" << std::endl;
+        std::cout << "0: unten \n 1: oben \n 2: rechts \n 3: links" << std::endl;
         std::cin >> direction;
     }
+
+    std::cout << "Lat: " << latitude << "Lon: " << longitude << std::endl;
 
     placeShip(latitude,longitude,direction,pickedShip);
 

@@ -80,7 +80,7 @@ void Board::saveToFile(const std::string& filename) const {
 
 int Board::cordinateToLatitude(const std::string cordinate) const{
     if (cordinate.length() == 2){
-        int latitude = cordinate[1] - '1';
+        int latitude = cordinate[0] - 'A';
         return latitude;
     }
     return 0;
@@ -88,13 +88,62 @@ int Board::cordinateToLatitude(const std::string cordinate) const{
 
 int Board::cordinateToLongitude(const std::string cordinate) const{
     if (cordinate.length() == 2){
-        int longitude = cordinate[0] - 'A';
+        int longitude = cordinate[1] - '1';
         return longitude;
     }
     return 0;
 }
 
 bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
+    switch (direction)
+    {
+    case 0: //unten
+        if(latitude + ship.getLength() >= boardSize){
+            return false;
+        }
+        for(int i = 0; i < ship.getLength(); i++){
+            if(grid[latitude + i][longitude] == waterSymbol){
+                grid[latitude + i][longitude] = shipPlaceSymbol;
+            }
+        }
+        break;
+    case 1://oben
+        if(longitude - ship.getLength() >= boardSize){
+            return false;
+        }
+        for(int i = 0; i < ship.getLength(); i++){
+            if(grid[latitude - i][longitude] == waterSymbol){
+                grid[latitude - i][longitude] = shipPlaceSymbol;
+            }
+        }
+        break;
+    case 2://rechts
+        if(longitude + ship.getLength() >= boardSize){
+            return false;
+        }
+        for(int i = 0; i < ship.getLength(); i++){
+            if(grid[latitude][longitude + i] == waterSymbol){
+                grid[latitude][longitude + i] = shipPlaceSymbol;
+            }
+        }
+        break;
+    case 3://links
+        if(longitude - ship.getLength() >= boardSize){
+            return false;
+        }
+        for(int i = 0; i < ship.getLength(); i++){
+            if(grid[latitude][longitude - i] == waterSymbol){
+                grid[latitude][longitude - i] = shipPlaceSymbol;
+            }
+        }
+        break;
+    default:
+        std::cerr<<"Falsche eingabe"<<std::endl;
+        return false;
+        break;
+    }
+
+    /*
     if(!direction){
         if(latitude + ship.getLength() > boardSize - 1){
             return false;
@@ -114,8 +163,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
                 grid[latitude][longitude + i] = shipPlaceSymbol;
             }
         }
-    }
-
+        */
     if(checkForColission()){
         replacShipPlaceSymbol(waterSymbol);
         return false;
