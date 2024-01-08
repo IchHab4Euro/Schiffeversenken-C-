@@ -25,7 +25,7 @@ protected:
     std::vector<Ship> shipsOnBoard;
     char grid[10][10];
     char waterSymbol = '~';
-    char shipSymbol = 's';
+    char shipSymbol = 'S';
     char shipPlaceSymbol = 'p';
     const int boardSize = 10; 
 
