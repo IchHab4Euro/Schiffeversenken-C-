@@ -10,7 +10,6 @@ void ComputerBoard::placeShips() {
         Ship shipToPlace = shipsNextToBoard[0];
         shipsNextToBoard.erase(shipsNextToBoard.begin());
         bool shipPlaced = false; 
-
         while(!shipPlaced){
             int startFieldLat = getRandomNumber(0,9);
             int startFieldLong = getRandomNumber(0,9);

@@ -6,48 +6,56 @@
 #include <algorithm>
 
 void PlayerBoard::placeShips() {
-    while(!shipsNextToBoard.empty()){
-        std::cout <<"folgende Schiffe koennen platziert werden" << std::endl;
-
-        for(const Ship& ship : shipsNextToBoard) {
-            std::cout << ship.getId() << " Name: " << ship.getName() << ", Laenge: " << ship.getLength() << std::endl;
+    while (!shipsNextToBoard.empty()) {
+        std::cout << "Folgende Schiffe können platziert werden:" << std::endl;
+        for (const Ship& ship : shipsNextToBoard) {
+            std::cout << ship.getId() << " Name: " << ship.getName() << ", Länge: " << ship.getLength() << std::endl;
         }
 
         int pickedShipId = 0;
-        
         while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
             std::cout <<"Welches Schiff willst du platziere? (gebe eine gueltige Schiffs Id ein)" << std::endl;
             std::cin >> pickedShipId; //was wenn String angeben
         }
 
-        Ship pickedShip = getShipById(shipsNextToBoard,pickedShipId);
+        Ship pickedShip = getShipById(shipsNextToBoard, pickedShipId);
+        std::string shipCoordinates;
+        int longitude, latitude, direction;
 
-        std::string shipCordinates;
-        int latitude = boardSize;
-        int longitude = boardSize;
-        while(!(latitude >= 0 && latitude < boardSize && longitude >= 0 && longitude < boardSize) || shipCordinates.length() > 2){
-            std::cout << "Du hast das Schiff: " << pickedShip.getName() << "Mit einer groesse: " << pickedShip.getLength() << std::endl;
-            std::cout << "Wohin soll das Schiff plaziert werden (geben Sie die Koordianate an)" << std::endl;
-            std::cin >> shipCordinates;
-            latitude = cordinateToLatitude(shipCordinates);
-            longitude = cordinateToLongitude(shipCordinates);
-        }
+        bool shipPlaced = false; 
+        while (!shipPlaced) {
+            std::cout << "Du hast das Schiff: " << pickedShip.getName() << " mit einer Größe: " << pickedShip.getLength() << std::endl;
+            std::cout << "Wohin soll das Schiff platziert werden? (Gib die Koordinaten an)" << std::endl;
+            std::cin >> shipCoordinates;
+            latitude = cordinateToLatitude(shipCoordinates);
+            longitude = cordinateToLongitude(shipCoordinates);
 
-        int direction = 5; //vorwert ist das nötig?
-        while(direction < 0 || direction > 3){
-            std::cout << "Bitte gebe eine Richtung an in der das Schiff plaziert werden soll." << std::endl;
-            std::cout << "Das Schifft wird von deiner angebenen Koordinate in die Richtung aufgebaut die du waehlst." << std::endl;
-            std::cout << "0: unten \n 1: oben \n 2: rechts \n 3: links" << std::endl;
+            std::cout << "Bitte gib eine Richtung an, in der das Schiff platziert werden soll." << std::endl;
+            std::cout << "0: unten, 1: oben, 2: rechts, 3: links" << std::endl;
             std::cin >> direction;
+
+            shipPlaced = placeShip(latitude, longitude, direction, pickedShip);
         }
 
-        std::cout << "Lat: " << latitude << "Lon: " << longitude << std::endl;
+        /*
+        bool shipPlaced = false;
+        int direction; 
+        while (!shipPlaced) {
+            std::cout << "Bitte gib eine Richtung an, in der das Schiff platziert werden soll." << std::endl;
+            std::cout << "0: unten, 1: oben, 2: rechts, 3: links" << std::endl;
+            std::cin >> direction;
+            shipPlaced = placeShip(latitude, longitude, direction, pickedShip);
+        }
+        */
 
-        placeShip(latitude,longitude,direction,pickedShip);
 
-        shipsNextToBoard.erase(std::remove(shipsNextToBoard.begin(), shipsNextToBoard.end(), pickedShip), shipsNextToBoard.end());
+        // Entferne das platzierte Schiff aus shipsNextToBoard
+        shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
+                                              [&pickedShip](const Ship& ship) { return ship.getId() == pickedShip.getId(); }), 
+                               shipsNextToBoard.end());
+
         shipsOnBoard.push_back(pickedShip);
-    }  
+    }
 }
 
 bool PlayerBoard::checkContainsShip(std::vector<Ship> shipList, int idToCheck) {
@@ -65,8 +73,4 @@ Ship PlayerBoard::getShipById(std::vector<Ship> shipList, int shipId) {
             return ship; //alternative als diese Methode was wenn if nicht zutrifft was wir returnt
         }
     }
-}
-
-void deleteShipFromVector(std::vector<Ship>& shipVector, Ship toDelete) {
-    for(std::vector<Ship>:: iterator it = shipVector.begin(); i != shipVector.end()
 }
