@@ -14,6 +14,8 @@ Board::Board(){
     Ship Schlachtschiff("Schlachtschiff",5);
     Ship Kreuzer1("Kreuzer1",4);
     Ship Kreuzer2("Kreuzer2",4);
+
+    /*
     Ship Zerstoerer1("Zerstoerer1",3);
     Ship Zerstoerer2("Zerstoerer2",3);
     Ship Zerstoerer3("Zerstoerer3",3);
@@ -21,10 +23,13 @@ Board::Board(){
     Ship UBoot2("U-Boot2",2);
     Ship UBoot3("U-Boot3",2);
     Ship UBoot4("U-Boot4",2);
+    */
 
     shipsNextToBoard.push_back(Schlachtschiff);
     shipsNextToBoard.push_back(Kreuzer1);
     shipsNextToBoard.push_back(Kreuzer2);
+    
+    /*
     shipsNextToBoard.push_back(Zerstoerer1);
     shipsNextToBoard.push_back(Zerstoerer2);
     shipsNextToBoard.push_back(Zerstoerer3);   
@@ -32,6 +37,7 @@ Board::Board(){
     shipsNextToBoard.push_back(UBoot2);
     shipsNextToBoard.push_back(UBoot3);
     shipsNextToBoard.push_back(UBoot4);
+    */
 }
 
 void Board::printBoard() const {
@@ -108,7 +114,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
         }
         break;
     case 1://oben
-        if(longitude - ship.getLength() >= boardSize){
+        if(longitude - ship.getLength() <= 0){
             return false;
         }
         for(int i = 0; i < ship.getLength(); i++){
@@ -128,7 +134,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
         }
         break;
     case 3://links
-        if(longitude - ship.getLength() >= boardSize){
+        if(longitude - ship.getLength() <= 0){
             return false;
         }
         for(int i = 0; i < ship.getLength(); i++){
@@ -143,28 +149,8 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
         break;
     }
 
-    /*
-    if(!direction){
-        if(latitude + ship.getLength() > boardSize - 1){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude + i][longitude] == waterSymbol){
-                grid[latitude + i][longitude] = shipPlaceSymbol;
-            }
-        }
-    }
-     if(direction){
-        if(longitude + ship.getLength() > boardSize - 1){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude + i] == waterSymbol){
-                grid[latitude][longitude + i] = shipPlaceSymbol;
-            }
-        }
-        */
     if(checkForColission()){
+        std::cerr<<"Es kommt zu einer Kollision!"<<std::endl;
         replacShipPlaceSymbol(waterSymbol);
         return false;
     }
@@ -194,5 +180,15 @@ void Board::replacShipPlaceSymbol(char replacer) {
                 grid[i][j] = replacer;
             }
         }
+    }
+}
+
+bool Board::isValidPlacement(int latitude, int longitude, Ship ship) const{
+    if(latitude + ship.getLength() < boardSize && (longitude + ship.getLength() < boardSize || longitude - ship.getLength() > 0) ||
+        (latitude + ship.getLength() < boardSize || latitude - ship.getLength() > 0) && (longitude + ship.getLength() < boardSize)){
+        return true;
+    }
+    else{
+        return false; 
     }
 }

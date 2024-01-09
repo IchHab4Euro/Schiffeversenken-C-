@@ -21,6 +21,7 @@ public:
     
 
 protected:
+    bool isValidPlacement(int latitude, int longitude, Ship pickedShip) const; 
     std::vector<Ship> shipsNextToBoard;
     std::vector<Ship> shipsOnBoard;
     char grid[10][10];
