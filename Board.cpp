@@ -84,7 +84,7 @@ void Board::saveToFile(const std::string& filename) const {
     saveFile << saveString << std::endl;
 }
 
-int Board::cordinateToLatitude(const std::string cordinate) const{
+int Board::cordinateToLatitude(const std::string cordinate) const {
     if (cordinate.length() == 2){
         int latitude = cordinate[0] - 'A';
         return latitude;
@@ -92,7 +92,7 @@ int Board::cordinateToLatitude(const std::string cordinate) const{
     return 0;
 }
 
-int Board::cordinateToLongitude(const std::string cordinate) const{
+int Board::cordinateToLongitude(const std::string cordinate) const {
     if (cordinate.length() == 2){
         int longitude = cordinate[1] - '1';
         return longitude;
@@ -100,10 +100,10 @@ int Board::cordinateToLongitude(const std::string cordinate) const{
     return 0;
 }
 
-bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
+bool Board::placeShip(int latitude, int longitude, Direction direction, Ship ship) {
     switch (direction)
     {
-    case 0: //unten
+    case Direction::Down: //unten
         if(latitude + ship.getLength() >= boardSize){
             return false;
         }
@@ -113,7 +113,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
             }
         }
         break;
-    case 1://oben
+    case Direction::Up://oben
         if(longitude - ship.getLength() <= 0){
             return false;
         }
@@ -123,7 +123,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
             }
         }
         break;
-    case 2://rechts
+    case Direction::Right://rechts
         if(longitude + ship.getLength() >= boardSize){
             return false;
         }
@@ -133,7 +133,7 @@ bool Board::placeShip(int latitude, int longitude, int direction, Ship ship) {
             }
         }
         break;
-    case 3://links
+    case Direction::Left://links
         if(longitude - ship.getLength() <= 0){
             return false;
         }
@@ -183,6 +183,22 @@ void Board::replacShipPlaceSymbol(char replacer) {
     }
 }
 
+Direction Board::numberToDirection(int number)  const { 
+    switch (number) {
+        case 0:
+            return Direction::Down;
+        case 1:
+            return Direction::Up;
+        case 2:
+            return Direction::Right;
+        case 3:
+            return Direction::Left;
+        default:
+            throw std::invalid_argument("Invalid number for Direction"); //werden einer Exc. sollten wir öfters machen und gekonnt abfangen!
+    }
+}
+
+/*
 bool Board::isValidPlacement(int latitude, int longitude, Ship ship) const{
     if(latitude + ship.getLength() < boardSize && (longitude + ship.getLength() < boardSize || longitude - ship.getLength() > 0) ||
         (latitude + ship.getLength() < boardSize || latitude - ship.getLength() > 0) && (longitude + ship.getLength() < boardSize)){
@@ -192,3 +208,4 @@ bool Board::isValidPlacement(int latitude, int longitude, Ship ship) const{
         return false; 
     }
 }
+*/

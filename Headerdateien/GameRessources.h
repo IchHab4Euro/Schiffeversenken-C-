@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GAMERESSOURCES_H
+#define GAMERESSOURCES_H
 
 #include <iostream>
 
@@ -8,3 +9,4 @@ public:
     void printWin();
     void printLose();
 };
+#endif

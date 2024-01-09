@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BOARD_H
+#define BOARD_H
 
 #include "Ship.h"
 
@@ -9,19 +10,21 @@ class Board {
 
 public:
     Board();
+    
     void printBoard() const;
     void saveToFile(const std::string& filename) const;
     int cordinateToLatitude(const std::string cordinate) const;
     int cordinateToLongitude(const std::string cordinate) const;
     bool checkForColission() const;
     void replacShipPlaceSymbol(char replacer);
-    bool placeShip(int latitude, int longitude, int direction, Ship ship);
+    bool placeShip(int latitude, int longitude, Direction direction, Ship ship);
 
     virtual void placeShips() = 0;
     
 
 protected:
-    bool isValidPlacement(int latitude, int longitude, Ship pickedShip) const; 
+    //bool isValidPlacement(int latitude, int longitude, Ship pickedShip) const;
+    Direction numberToDirection(int number) const;
     std::vector<Ship> shipsNextToBoard;
     std::vector<Ship> shipsOnBoard;
     char grid[10][10];
@@ -36,3 +39,4 @@ private:
     char splitSymbol = ';';
 
 };
+#endif

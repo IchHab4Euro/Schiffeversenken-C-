@@ -7,14 +7,15 @@
 
 void ComputerBoard::placeShips() {
     while(!shipsNextToBoard.empty()){
-        Ship shipToPlace = shipsNextToBoard[0];
+        Ship shipToPlace = shipsNextToBoard.front();
         shipsNextToBoard.erase(shipsNextToBoard.begin());
+        
         bool shipPlaced = false; 
         while(!shipPlaced){
             int startFieldLat = getRandomNumber(0,9);
             int startFieldLong = getRandomNumber(0,9);
-            int direction= getRandomNumber(0,3);
-
+            Direction direction = numberToDirection(getRandomNumber(0,3));
+            
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
         }
         shipsOnBoard.push_back(shipToPlace);
@@ -28,3 +29,4 @@ int ComputerBoard::getRandomNumber(int lowerBound, int upperBound){
 
     return distrubution(gen);
 }
+

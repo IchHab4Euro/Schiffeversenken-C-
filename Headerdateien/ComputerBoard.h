@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COMPUTERBOARD_H
+#define COMPUTERBOARD_H
+
 
 #include "Board.h"
 
@@ -11,3 +13,4 @@ class ComputerBoard : public Board {
     private:
         int getRandomNumber(int lowerBound, int upperBound);
 };
+#endif
