@@ -94,7 +94,7 @@ void GameRessources::printBoxMessage(std::string textMessage, std::string type)
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
-void GameRessources::printMenue()  {
+int GameRessources::printMenue()  {
     const int menueboxWidth = boxWidth;
 
     std::cout << std::string(menueboxWidth, '-') << std::endl;
@@ -125,4 +125,9 @@ void GameRessources::printMenue()  {
     }
 
     std::cout << std::string(menueboxWidth, '-') << std::endl;
+    
+    int selection;
+    std::cout << "Bitte waehlen sie einen Menue Punkt aus" << std::endl;
+    std::cin >> selection;
+    return selection;
 }

@@ -9,7 +9,7 @@ public:
     void printWin();
     void printLose();
     void printBoxMessage(std::string, std::string);
-    void printMenue();
+    int printMenue();
 
 private:
     int boxWidth = 30;

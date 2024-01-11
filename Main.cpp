@@ -154,7 +154,9 @@ int verloren()  {
 int main() {
     GameRessources gameRessource;
     gameRessource.printBoxMessage("Dies ist definitiv ein sehr sehr offizieller Fehler", "Hinweis");
-    gameRessource.printMenue();
+    int test = gameRessource.printMenue();
+    std::cout << test << std::endl;
+
     //start();
     
     /*
