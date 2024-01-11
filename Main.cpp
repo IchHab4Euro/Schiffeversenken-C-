@@ -1,8 +1,8 @@
 #include "Headerdateien/PlayerBoard.h"
 #include "Headerdateien/ComputerBoard.h"
 #include "Headerdateien/GameRessources.h"
-
 #include "Headerdateien/Ship.h"
+#include "Headerdateien/Umlaut.h"
 
 #include <iostream>
 
@@ -152,10 +152,8 @@ int verloren()  {
 
 
 int main() {
-    GameRessources gameRessource;
-    gameRessource.printBoxMessage("Dies ist definitiv ein sehr sehr offizieller Fehler", "Hinweis");
-    int test = gameRessource.printMenue();
-    std::cout << test << std::endl;
+    GameRessources gameressource;
+    gameressource.userinputInt("Geben sie eine Zahl ein", 0, 5);
 
     //start();
     

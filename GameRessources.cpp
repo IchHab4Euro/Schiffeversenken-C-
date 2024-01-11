@@ -131,3 +131,33 @@ int GameRessources::printMenue()  {
     std::cin >> selection;
     return selection;
 }
+
+int GameRessources::userinputInt(std::string message, int lower, int upper)  {
+    int inputCor = 1;
+    int input;
+    while (inputCor != 0)
+    {
+        std::cout << message << std::endl;
+        //Kontrolliert ob die Eingabe eine Zahl ist
+        while (!(std::cin >> input))  {
+            std::cout << "Bitte geben sie eine Zahl ein!" << std::endl;
+            std::cin.clear();               //Fehlerstatus von cin wird zurückgesetzt
+            std::cin.ignore(1000, '\n');    //Ersten 1000 Zeichen werden ignoriert; Alle Zeichen bis zu einem Enter werden überlesen
+        }
+        if (input >= lower && input <= upper)
+        {
+            inputCor = 0;
+        } else  {
+            message = "Bitte geben sie eine g\201ltige Zahl ein!";
+        }
+    }
+    return input;
+}
+
+std::string GameRessources::userinputString()  {
+    return "kdfjd";
+}
+
+std::string GameRessources::userinputCoordinates()  {
+    return "kdjskfj";
+}
