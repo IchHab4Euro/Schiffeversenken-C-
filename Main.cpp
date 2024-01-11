@@ -152,13 +152,17 @@ int verloren()  {
 
 
 int main() {
+    GameRessources gameRessource;
+    gameRessource.printBoxMessage("Dies ist definitiv ein sehr sehr offizieller Fehler", "Hinweis");
+    gameRessource.printMenue();
     //start();
     
+    /*
     PlayerBoard testPlayerBoard;
     testPlayerBoard.printBoard();
     testPlayerBoard.placeShips();
     testPlayerBoard.printBoard();
-    
+    */
 
     /*k
     ComputerBoard testComputerBoard;

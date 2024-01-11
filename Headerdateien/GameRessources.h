@@ -8,5 +8,11 @@ public:
     void printWelcome();
     void printWin();
     void printLose();
+    void printBoxMessage(std::string, std::string);
+    void printMenue();
+
+private:
+    int boxWidth = 30;
+
 };
 #endif

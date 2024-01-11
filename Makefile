@@ -1,5 +1,5 @@
-schiffe: main.o board.o gameRessources.o playerboard.o computerboard.o ship.o
-	g++ main.o board.o gameRessources.o playerboard.o computerboard.o ship.o -o schiffe
+schiffe: main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o
+	g++ main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
 
 main.o: Main.cpp
 	g++ -c Main.cpp
@@ -18,6 +18,9 @@ computerboard.o: ComputerBoard.cpp Headerdateien/ComputerBoard.h
 
 ship.o: Ship.cpp Headerdateien/Ship.h 
 	g++ -c Ship.cpp
+
+shipsegment.o: Shipsegment.cpp Headerdateien/Shipsegment.h
+	g++ -c Shipsegment.cpp
 
 clean:
 	del *.o schiffe
