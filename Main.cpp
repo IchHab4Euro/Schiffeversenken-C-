@@ -2,7 +2,6 @@
 #include "Headerdateien/ComputerBoard.h"
 #include "Headerdateien/GameRessources.h"
 #include "Headerdateien/Ship.h"
-#include "Headerdateien/Umlaut.h"
 
 #include <iostream>
 
