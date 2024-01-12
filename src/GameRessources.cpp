@@ -1,4 +1,4 @@
-#include "Headerdateien\GameRessources.h"
+#include "../include/GameRessources.h"
 
 #include <iostream>
 #include <iomanip>
@@ -156,8 +156,9 @@ int GameRessources::userinputInt(std::string pMessage, int pLower, int pUpper)  
 
 std::string GameRessources::userinputString(std::string pMessage)  {
     std::cout << pMessage << std::endl;
+    return "todo";
 }
 
 std::string GameRessources::userinputCoordinates()  {
-    return "kdjskfj";
+    return "todo";
 }
