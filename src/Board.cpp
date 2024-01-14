@@ -1,5 +1,5 @@
-#include "Headerdateien/Board.h"
-#include "Headerdateien/Ship.h"
+#include "../include/Board.h"
+#include "../include/Ship.h"
 
 #include <iostream>
 #include <fstream>

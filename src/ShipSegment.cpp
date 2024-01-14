@@ -1,4 +1,4 @@
-#include "Headerdateien/ShipSegment.h"
+#include "../include/ShipSegment.h"
 
 ShipSegment::ShipSegment() : state(ShipSegmentState::NotHit) {}
 

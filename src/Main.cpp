@@ -1,7 +1,7 @@
-#include "Headerdateien/PlayerBoard.h"
-#include "Headerdateien/ComputerBoard.h"
-#include "Headerdateien/GameRessources.h"
-#include "Headerdateien/Ship.h"
+#include "../include/PlayerBoard.h"
+#include "../include/ComputerBoard.h"
+#include "../include/GameRessources.h"
+#include "../include/Ship.h"
 
 #include <iostream>
 
@@ -151,19 +151,19 @@ int verloren()  {
 
 
 int main() {
-    GameRessources gameressource;
-    gameressource.userinputCoordinates("C8");
+    //GameRessources gameressource;
+    //gameressource.userinputInt("Geben sie eine Zahl ein", 0, 5);
 
     //start();
     
-    /*
+    
     PlayerBoard testPlayerBoard;
     testPlayerBoard.printBoard();
     testPlayerBoard.placeShips();
     testPlayerBoard.printBoard();
-    */
+    
 
-    /*k
+    /*
     ComputerBoard testComputerBoard;
     testComputerBoard.printBoard();
     testComputerBoard.placeShips();

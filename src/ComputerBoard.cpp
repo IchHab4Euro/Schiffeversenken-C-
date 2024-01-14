@@ -1,5 +1,5 @@
-#include "Headerdateien/ComputerBoard.h"
-#include "Headerdateien/Ship.h"
+#include "../include/ComputerBoard.h"
+#include "../include/Ship.h"
 
 #include <iostream>
 #include <random>
