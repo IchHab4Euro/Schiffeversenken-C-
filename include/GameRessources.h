@@ -12,7 +12,7 @@ public:
     int printMenue();
     int userinputInt(std::string message, int lower, int upper);
     std::string userinputString(std::string pMessage);
-    std::string userinputCoordinates();
+    std::string userinputCoordinates(std::string pMessage, int pBoardSize);
 
 private:
     int boxWidth = 30;
