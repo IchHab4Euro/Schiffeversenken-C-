@@ -155,10 +155,6 @@ int GameRessources::userinputInt(std::string pMessage, int pLower, int pUpper)  
     return input;
 }
 
-std::string GameRessources::userinputString(std::string pMessage)  {
-    std::cout << pMessage << std::endl;
-}
-
 std::string GameRessources::userinputCoordinates(std::string pMessage, int pBoardSize)  {
     std::string message = pMessage;
     std::string input;
