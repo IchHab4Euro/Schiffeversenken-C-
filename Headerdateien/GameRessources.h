@@ -11,8 +11,8 @@ public:
     void printBoxMessage(std::string, std::string);
     int printMenue();
     int userinputInt(std::string message, int lower, int upper);
-    std::string GameRessources::userinputString(std::string pMessage);
-    std::string userinputCoordinates();
+    std::string userinputString(std::string pMessage);
+    std::string userinputCoordinates(std::string pMessage, int pBoardSize);
 
 private:
     int boxWidth = 30;

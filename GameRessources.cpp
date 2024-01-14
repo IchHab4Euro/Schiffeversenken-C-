@@ -158,6 +158,20 @@ std::string GameRessources::userinputString(std::string pMessage)  {
     std::cout << pMessage << std::endl;
 }
 
-std::string GameRessources::userinputCoordinates()  {
-    return "kdjskfj";
+std::string GameRessources::userinputCoordinates(std::string pMessage, int pBoardSize)  {
+    std::cout << pMessage << std::endl;
+    std::string message;
+    int inputKorrekt = 1;
+    while (inputKorrekt == 1)
+    {
+        std::cin >> message;
+        char letter = message[0];
+        char number = message[1];
+        if (message.size() == 2 && letter >= 'A' && letter < 'A' + pBoardSize && number >= 1 && number <= pBoardSize)
+        {
+            /* code */
+        }
+        
+
+    } 
 }
