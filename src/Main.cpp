@@ -1,6 +1,5 @@
 #include "../include/PlayerBoard.h"
 #include "../include/ComputerBoard.h"
-#include "../include/GameRessources.h"
 #include "../include/Ship.h"
 
 #include <iostream>
@@ -151,9 +150,6 @@ int verloren()  {
 
 
 int main() {
-    GameRessources gameressource;
-    gameressource.userinputCoordinates("Geben sie eine Koordinate ein", 10);
-
     //start();
     
     

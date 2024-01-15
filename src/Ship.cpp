@@ -1,5 +1,15 @@
 #include "../include/Ship.h"
 
+ShipSegment::ShipSegment() : state(State::NoHit) {}
+
+void ShipSegment::hit() {
+    state = State::Hit;
+}
+
+bool ShipSegment::isHit() const {
+    return state == State::Hit;
+}
+
 int Ship::nextId = 1; 
 
 Ship::Ship(std::string name, int length) : name(name), length(length) {
@@ -25,7 +35,7 @@ int Ship::getId() const {
 
 bool Ship::isShipSunk() const{
     for(const ShipSegment& shipSegment : shipComponents){
-        if(shipSegment.getState() == ShipSegmentState::NotHit){
+        if(!shipSegment.isHit()){
             return false; 
         }
     }

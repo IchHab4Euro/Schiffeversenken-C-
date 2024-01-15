@@ -4,7 +4,8 @@
 #include <iostream>
 #include <fstream>
 
-Board::Board(int height, int width){
+Board::Board(int boardSize){
+    this->boardSize = boardSize;
     setupBoard();
     setupShips();
 }

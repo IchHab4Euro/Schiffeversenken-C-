@@ -8,6 +8,7 @@
 
 class PlayerBoard : public Board {
     public:
+        PlayerBoard(int boardSize) : Board(boardSize) {}
         void placeShips() override;
     
     private:

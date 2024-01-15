@@ -8,6 +8,7 @@
 
 class ComputerBoard : public Board {
     public:
+        ComputerBoard(int boardSize) : Board(boardSize) {}
         void placeShips() override;
         
     private:

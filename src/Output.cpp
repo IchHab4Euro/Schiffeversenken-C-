@@ -63,6 +63,10 @@ void Output::printBoxMessage(std::string textMessage, std::string type)  {
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
+void Output::printBoard(Board board){
+    //Todo: printBoard Methode
+}
+
 void Output::printWelcome()  {
     std::cout << R"(
          __          __ _  _  _  _                                                 _            _ 

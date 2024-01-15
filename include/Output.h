@@ -1,6 +1,7 @@
 #ifndef OUTPUT_H
 #define OUTPUT_H
 
+#include "Board.h"
 #include <iostream>
 #include <vector>
 
@@ -12,6 +13,7 @@ class Output  {
     public: 
         int printMenue(std::vector<std::string> pMenuePoints);
         void printBoxMessage(std::string textMessage, std::string type);
+        void printBoard(Board board);
         void printWelcome();
         void printWin();
         void printLose();
