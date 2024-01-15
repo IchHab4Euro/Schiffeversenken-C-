@@ -151,8 +151,8 @@ int verloren()  {
 
 
 int main() {
-    //GameRessources gameressource;
-    //gameressource.userinputInt("Geben sie eine Zahl ein", 0, 5);
+    GameRessources gameressource;
+    gameressource.userinputCoordinates("Geben sie eine Koordinate ein", 10);
 
     //start();
     

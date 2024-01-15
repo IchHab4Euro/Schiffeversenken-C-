@@ -1,26 +1,29 @@
-schiffe: main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o
-	g++ main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
+schiffe: main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o
+	g++ main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
 
-main.o: Main.cpp
-	g++ -c Main.cpp
+main.o: src/Main.cpp
+	g++ -c src/Main.cpp
 
-board.o: Board.cpp Headerdateien/Board.h
-	g++ -c Board.cpp
+board.o: src/Board.cpp include/Board.h
+	g++ -c src/Board.cpp
 
-gameRessources.o: GameRessources.cpp Headerdateien/GameRessources.h
-	g++ -c GameRessources.cpp
+input.o: src/Input.cpp include/Input.h
+	g++ -c src/Input.cpp
 
-playerboard.o: PlayerBoard.cpp Headerdateien/PlayerBoard.h
-	g++ -c PlayerBoard.cpp
+output.o: src/Output.cpp include/Output.h
+	g++ -c src/Output.cpp
 
-computerboard.o: ComputerBoard.cpp Headerdateien/ComputerBoard.h
-	g++ -c ComputerBoard.cpp
+playerboard.o: src/PlayerBoard.cpp include/PlayerBoard.h
+	g++ -c src/PlayerBoard.cpp
 
-ship.o: Ship.cpp Headerdateien/Ship.h 
-	g++ -c Ship.cpp
+computerboard.o: src/ComputerBoard.cpp include/ComputerBoard.h
+	g++ -c src/ComputerBoard.cpp
 
-shipsegment.o: Shipsegment.cpp Headerdateien/Shipsegment.h
-	g++ -c Shipsegment.cpp
+ship.o: src/Ship.cpp include/Ship.h 
+	g++ -c src/Ship.cpp
+
+shipsegment.o: src/Shipsegment.cpp include/Shipsegment.h
+	g++ -c src/Shipsegment.cpp
 
 clean:
 	del *.o schiffe
