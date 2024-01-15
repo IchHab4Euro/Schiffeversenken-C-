@@ -1,5 +1,5 @@
-schiffe: main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o
-	g++ main.o board.o gameRessources.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
+schiffe: main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o
+	g++ main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
 
 main.o: src/Main.cpp
 	g++ -c src/Main.cpp
@@ -7,8 +7,11 @@ main.o: src/Main.cpp
 board.o: src/Board.cpp include/Board.h
 	g++ -c src/Board.cpp
 
-gameRessources.o: src/GameRessources.cpp include/GameRessources.h
-	g++ -c src/GameRessources.cpp
+input.o: src/Input.cpp include/Input.h
+	g++ -c src/Input.cpp
+
+output.o: src/Output.cpp include/Output.h
+	g++ -c src/Output.cpp
 
 playerboard.o: src/PlayerBoard.cpp include/PlayerBoard.h
 	g++ -c src/PlayerBoard.cpp
