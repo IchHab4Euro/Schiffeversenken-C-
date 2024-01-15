@@ -158,7 +158,7 @@ int main() {
     
     
     PlayerBoard testPlayerBoard;
-    testPlayerBoard.printBoard();
+    //testPlayerBoard.printBoard();
     testPlayerBoard.placeShips();
     testPlayerBoard.printBoard();
     

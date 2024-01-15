@@ -4,13 +4,20 @@
 #include <iostream>
 #include <fstream>
 
-Board::Board(){
-    for (int i = 0; i < boardSize; ++i) { //Magic Numbers
-        for (int j = 0; j < boardSize; ++j) {
-            grid[i][j] = waterSymbol;
+Board::Board(int height, int width){
+    setupBoard();
+    setupShips();
+}
+
+void Board::setupBoard(){
+    for(int lat = 0; lat < boardSize; lat++){
+        for(int lon = 0; lon < boardSize; lon++){
+            grid[lat][lon] = BoardField();
         }
     }
+}
 
+void Board::setupShips(){
     Ship Schlachtschiff("Schlachtschiff",5);
     Ship Kreuzer1("Kreuzer1",4);
     Ship Kreuzer2("Kreuzer2",4);
@@ -40,6 +47,7 @@ Board::Board(){
     */
 }
 
+/*
 void Board::printBoard() const {
     for (int i = -1; i < 11; i++)
     {
@@ -64,7 +72,9 @@ void Board::printBoard() const {
         c++;
     }
 }
+*/
 
+/*
 void Board::saveToFile(const std::string& filename) const {
 
     std::ofstream saveFile (filename);
@@ -83,6 +93,7 @@ void Board::saveToFile(const std::string& filename) const {
     }
     saveFile << saveString << std::endl;
 }
+*/
 
 int Board::cordinateToLatitude(const std::string cordinate) const {
     if (cordinate.length() == 2){
@@ -103,47 +114,51 @@ int Board::cordinateToLongitude(const std::string cordinate) const {
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship ship) {
     switch (direction)
     {
-    case Direction::Down: //unten
+        case Direction::North://oben
+        if(longitude - ship.getLength() <= 0){
+            return false;
+        }
+        for(int i = 0; i < ship.getLength(); i++){
+            if(grid[latitude - i][longitude].getState() == BoardFieldState::Water){
+                grid[latitude - i][longitude].setState(BoardFieldState::ShipPlacement);
+            }
+        }
+        break;
+
+        case Direction::South: //unten
         if(latitude + ship.getLength() >= boardSize){
             return false;
         }
         for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude + i][longitude] == waterSymbol){
-                grid[latitude + i][longitude] = shipPlaceSymbol;
+            if(grid[latitude + i][longitude].getState() == BoardFieldState::Water){
+                grid[latitude + i][longitude].setState(BoardFieldState::ShipPlacement);
             }
         }
         break;
-    case Direction::Up://oben
-        if(longitude - ship.getLength() <= 0){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude - i][longitude] == waterSymbol){
-                grid[latitude - i][longitude] = shipPlaceSymbol;
-            }
-        }
-        break;
-    case Direction::Right://rechts
+
+        case Direction::West://rechts
         if(longitude + ship.getLength() >= boardSize){
             return false;
         }
         for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude + i] == waterSymbol){
-                grid[latitude][longitude + i] = shipPlaceSymbol;
+            if(grid[latitude][longitude + i].getState() == BoardFieldState::Water){
+                grid[latitude][longitude + i].setState(BoardFieldState::ShipPlacement);
             }
         }
         break;
-    case Direction::Left://links
+
+        case Direction::East://links
         if(longitude - ship.getLength() <= 0){
             return false;
         }
         for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude - i] == waterSymbol){
-                grid[latitude][longitude - i] = shipPlaceSymbol;
+            if(grid[latitude][longitude - i].getState() == BoardFieldState::Water){
+                grid[latitude][longitude - i].setState(BoardFieldState::ShipPlacement);
             }
         }
         break;
-    default:
+
+        default:
         std::cerr<<"Falsche eingabe"<<std::endl;
         return false;
         break;
@@ -151,11 +166,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship shi
 
     if(checkForColission()){
         std::cerr<<"Es kommt zu einer Kollision!"<<std::endl;
-        replacShipPlaceSymbol(waterSymbol);
+        changeBoardFieldState(BoardFieldState::Water);
         return false;
     }
     else{
-        replacShipPlaceSymbol(shipSymbol);
+        changeBoardFieldState(BoardFieldState::Ship);
     }
     return true;
 }
@@ -163,8 +178,9 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship shi
 bool Board::checkForColission() const{
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j] == shipPlaceSymbol){
-                if(grid[i + 1][j] == shipSymbol || grid[i - 1][j] == shipSymbol || grid[i][j + 1] == shipSymbol || grid[i][j - 1] == shipSymbol){
+            if(grid[i][j].getState() == BoardFieldState::ShipPlacement){
+                if(grid[i + 1][j].getState() == BoardFieldState::Ship || grid[i - 1][j].getState() == BoardFieldState::Ship ||
+                 grid[i][j + 1].getState() == BoardFieldState::Ship || grid[i][j - 1].getState() == BoardFieldState::Ship){
                     return true; 
                 }
             }
@@ -173,26 +189,25 @@ bool Board::checkForColission() const{
     return false; 
 }
 
-void Board::replacShipPlaceSymbol(char replacer) {
+void Board::changeBoardFieldState(BoardFieldState newState) {
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j] == shipPlaceSymbol){
-                grid[i][j] = replacer;
+            if(grid[i][j].getState() == BoardFieldState::ShipPlacement){
+                grid[i][j].setState(newState);
             }
         }
     }
 }
-
 Direction Board::numberToDirection(int number)  const { 
     switch (number) {
         case 0:
-            return Direction::Down;
+            return Direction::North;
         case 1:
-            return Direction::Up;
+            return Direction::East;
         case 2:
-            return Direction::Right;
+            return Direction::South;
         case 3:
-            return Direction::Left;
+            return Direction::East;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //werden einer Exc. sollten wir öfters machen und gekonnt abfangen!
     }

@@ -6,10 +6,10 @@
 #include <vector>
 
 enum class Direction {
-    Down,
-    Up,
-    Right,
-    Left
+    North,
+    East,
+    South,
+    West
 };
 
 class Ship {
