@@ -60,6 +60,9 @@
         "optional": "cpp",
         "iomanip": "cpp",
         "xlocmon": "cpp",
-        "xloctime": "cpp"
+        "xloctime": "cpp",
+        "csignal": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp"
     }
 }

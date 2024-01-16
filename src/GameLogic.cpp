@@ -1,20 +1,32 @@
 #include "../include/GameLogic.h"
-#include "../include/PlayerBoard.h"
-#include "../include/ComputerBoard.h"
 
+GameLogic::GameLogic() {
+    this->output = new Output();
+}
 
-GameLogic::startGame(){
+void GameLogic::init() {
+    //std::signal(SIGINT,signal_handler); Autosafe aktivieren
+    output->printWelcome();
+    //Todo: Check for Autosafe
 
-    int boardSize = 10; 
+    //Menu
+    char input;
+    std::vector<std::string> menuePoints {"Neues Spiel", "Spiel Laden"};
+    while(1) {
+        output->printMenue(menuePoints);
+    }
+}
 
-    PlayerBoard playerBoard(boardSize);
-    ComputerBoard computerBoard(boardSize);
+void GameLogic::startGame(){
+    
+}
 
-    Board* board1 = &playerBoard;
-    Board* board2 = &playerBoard;
+void GameLogic::newGame() {
+    board1 = new PlayerBoard();
+    board2 = new ComputerBoard();
+}
 
-    board1->placeShips();
-    board2->placeShips();
-
+void GameLogic::loadGame() {
 
 }
+

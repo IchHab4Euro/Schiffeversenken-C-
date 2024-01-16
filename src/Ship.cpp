@@ -1,13 +1,13 @@
 #include "../include/Ship.h"
 
-ShipSegment::ShipSegment() : state(State::NoHit) {}
+ShipSegment::ShipSegment() : shipState(ShipState::NoHit) {}
 
 void ShipSegment::hit() {
-    state = State::Hit;
+    shipState = ShipState::Hit;
 }
 
 bool ShipSegment::isHit() const {
-    return state == State::Hit;
+    return shipState == ShipState::Hit;
 }
 
 int Ship::nextId = 1; 

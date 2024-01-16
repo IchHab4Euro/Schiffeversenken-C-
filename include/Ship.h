@@ -12,6 +12,8 @@ struct ShipSegment {
     ShipState shipState;
 };
 
+enum class Direction {North, East, South, West};
+
 class Ship {
 public:
     Ship(std::string name, int length);
@@ -19,13 +21,12 @@ public:
     int getLength() const;
     int getId() const;
     bool isShipSunk() const;
+    Direction shipDirection;
 
 private:
-    enum class Direction {North, East, South, West};
     std::string name;
     int length;
-    int id;
-    Direction shipDirection; 
+    int id; 
     std::vector<ShipSegment> shipComponents;
     
     static int nextId; 

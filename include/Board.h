@@ -7,7 +7,7 @@
 #include <vector>
 
 struct BoardField {
-    enum class FieldState {Ship, ShipPlacement, Water}
+    enum class FieldState {Ship, ShipPlacement, Water};
     BoardField();
     void setShipState(ShipSegment shipSegment);
     FieldState fieldState;
@@ -17,7 +17,7 @@ struct BoardField {
 class Board {
 
 public:
-    Board(int boardSize);
+    Board();
     ~Board();
     void printBoard() const;
     virtual void placeShips() = 0;
@@ -27,25 +27,17 @@ protected:
     int cordinateToLatitude(const std::string cordinate) const;
     int cordinateToLongitude(const std::string cordinate) const;
     bool checkForColission() const;
-    void changeBoardFieldState(BoardFieldState newState);
+    void replaceShipPlacement(BoardField::FieldState newState);
     bool placeShip(int latitude, int longitude, Direction direction, Ship ship);
 
     std::vector<Ship> shipsNextToBoard;
     std::vector<Ship> shipsOnBoard;
     BoardField grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
-    int boardSize;
      
-
 private:
     void setupBoard();
     void setupShips();
-    
+    int const boardSize = 10;
     //Sammlung aller Spielfelder ungeordnet
-
-    std::string gameID = "1";
-    std::string playerID = "1";
-    char splitSymbol = ';';
-    
-
 };
 #endif

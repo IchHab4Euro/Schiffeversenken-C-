@@ -1,5 +1,4 @@
 #include "../include/ComputerBoard.h"
-#include "../include/Ship.h"
 
 #include <iostream>
 #include <random>

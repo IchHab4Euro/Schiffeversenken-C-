@@ -3,7 +3,7 @@
 #include "../include/Ship.h"
 
 #include <iostream>
-
+/*
 int start()  {
     GameRessources gameRessource;
     gameRessource.printWelcome();
@@ -159,13 +159,11 @@ int main() {
     testPlayerBoard.printBoard();
     
 
-    /*
+    
     ComputerBoard testComputerBoard;
     testComputerBoard.printBoard();
     testComputerBoard.placeShips();
     testComputerBoard.printBoard();
-    */
+    
 
-    return 0;
-}
-
+*/
