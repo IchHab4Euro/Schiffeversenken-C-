@@ -11,6 +11,10 @@ Board::Board(){
     setupShips();
 }
 
+int Board::getBoardSize() {
+    return this->boardSize;
+}
+
 void Board::setupBoard(){
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){

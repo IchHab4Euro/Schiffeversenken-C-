@@ -1,4 +1,5 @@
 #include "../include/Output.h"
+#include "../include/Board.h"
 
 int Output::printMenue(std::vector<std::string> pMenuePoints)  {
     const int menueboxWidth = boxWidth;
@@ -63,8 +64,57 @@ void Output::printBoxMessage(std::string textMessage, std::string type)  {
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
-void Output::printBoard(Board* board){
-    //Todo: printBoard Methode
+void Output::printBoard(Board* pBoard)  {
+    int boardSize = pBoard->getBoardSize();
+
+    std::cout << "boardSize" << std::endl;
+
+    for (int i = 1; i <= boardSize; i++)
+    {
+        std::cout << std::string(8, '-');
+    }
+    std::cout << std::endl;
+
+    for (int i = 1; i <= 10; i++)
+    {
+        printRow(pBoard, i);
+        
+        for (int i = 1; i <= boardSize; i++)  {
+            std::cout << std::string(8, '-');
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Output::printRow(Board* board, int pRow)  {
+    for (int i = 0; i < 3; i++)  {
+        for (int i = 0; i < 10; i++)  {
+            BoardField::FieldState state = board->grid[0][i].fieldState;
+            char symbol;
+            switch (state)
+            {
+            case BoardField::FieldState::Water:
+                symbol = '~';
+                break;
+            case BoardField::FieldState::Ship:
+                symbol = 's';
+                break;
+            case BoardField::FieldState::ShipPlacement:
+                symbol = 'p';
+                break;
+            default:
+                break;
+            }
+            std::cout << "|" << std::string(7, symbol);
+        }
+        std::cout << "|" << std::endl;
+    }
+    
+
+
+}
+
+
 
     /*
 void Board::printBoard() const {
@@ -93,7 +143,6 @@ void Board::printBoard() const {
 }
 */
 
-}
 
 void Output::printWelcome()  {
     std::cout << R"(

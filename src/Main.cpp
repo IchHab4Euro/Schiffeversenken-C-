@@ -1,6 +1,7 @@
 #include "../include/PlayerBoard.h"
 #include "../include/ComputerBoard.h"
 #include "../include/Ship.h"
+#include "../include/Output.h"
 
 #include <iostream>
 /*
@@ -147,23 +148,11 @@ int verloren()  {
     } while (eingabeKorrekt != 0);
     return 0;
 }
-
+*/
 
 int main() {
-    //start();
-    
-    
-    PlayerBoard testPlayerBoard;
-    //testPlayerBoard.printBoard();
-    testPlayerBoard.placeShips();
-    testPlayerBoard.printBoard();
-    
-
-    
-    ComputerBoard testComputerBoard;
-    testComputerBoard.printBoard();
-    testComputerBoard.placeShips();
-    testComputerBoard.printBoard();
-    
-
-*/
+    Output output;
+    ComputerBoard computerBoard;
+    Board* boardzeiger = &computerBoard;
+    output.printBoard(boardzeiger);
+}

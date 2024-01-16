@@ -18,9 +18,10 @@ class Board {
 
 public:
     Board();
-    ~Board();
     void printBoard() const;
     virtual void placeShips() = 0;
+    int getBoardSize();
+    BoardField grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
     
 protected:
     Direction numberToDirection(int number) const;
@@ -32,7 +33,6 @@ protected:
 
     std::vector<Ship> shipsNextToBoard;
     std::vector<Ship> shipsOnBoard;
-    BoardField grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
      
 private:
     void setupBoard();

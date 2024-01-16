@@ -14,6 +14,7 @@ class Output  {
         int printMenue(std::vector<std::string> pMenuePoints);
         void printBoxMessage(std::string textMessage, std::string type);
         void printBoard(Board* board);
+        void printRow(Board* board, int pRow);
         void printWelcome();
         void printWin();
         void printLose();
