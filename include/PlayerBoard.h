@@ -2,7 +2,7 @@
 #define PLAYERBOARD_H
 
 #include "Board.h"
-
+#include "Output.h"
 #include <iostream>
 #include <vector>
 

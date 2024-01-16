@@ -19,7 +19,7 @@ class Board {
 public:
     Board();
     ~Board();
-    void printBoard() const;
+    void init();
     virtual void placeShips() = 0;
     
 protected:
@@ -35,8 +35,6 @@ protected:
     BoardField grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
      
 private:
-    void setupBoard();
-    void setupShips();
     int const boardSize = 10;
     //Sammlung aller Spielfelder ungeordnet
 };

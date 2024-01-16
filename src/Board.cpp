@@ -7,19 +7,17 @@
 BoardField::BoardField() :fieldState(FieldState::Water) {}
 
 Board::Board(){
-    setupBoard();
-    setupShips();
 }
 
-void Board::setupBoard(){
+void Board::init(){
+    //setup grid
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
             grid[lat][lon] =  BoardField();
         }
     }
-}
 
-void Board::setupShips(){
+    //setup ships
     Ship Schlachtschiff("Schlachtschiff",5);
     Ship Kreuzer1("Kreuzer1",4);
     Ship Kreuzer2("Kreuzer2",4);
@@ -47,6 +45,8 @@ void Board::setupShips(){
     shipsNextToBoard.push_back(UBoot3);
     shipsNextToBoard.push_back(UBoot4);
     */
+
+
 }
 
 /*
@@ -73,7 +73,7 @@ void Board::saveToFile(const std::string& filename) const {
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship ship) {
     switch (direction)
     {
-        case Direction::North://oben
+        case Direction::North://up
         if(longitude - ship.getLength() <= 0){
             return false;
         }
@@ -84,7 +84,7 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship shi
         }
         break;
 
-        case Direction::South: //unten
+        case Direction::South: //down
         if(latitude + ship.getLength() >= boardSize){
             return false;
         }
@@ -95,7 +95,7 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship shi
         }
         break;
 
-        case Direction::West://rechts
+        case Direction::West://right
         if(longitude + ship.getLength() >= boardSize){
             return false;
         }
@@ -106,7 +106,7 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship shi
         }
         break;
 
-        case Direction::East://links
+        case Direction::East://left
         if(longitude - ship.getLength() <= 0){
             return false;
         }

@@ -1,6 +1,6 @@
 #include "../include/Output.h"
 
-int Output::printMenue(std::vector<std::string> pMenuePoints)  {
+void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     const int menueboxWidth = boxWidth;
 
     std::cout << std::string(menueboxWidth, '-') << std::endl;
@@ -29,8 +29,6 @@ int Output::printMenue(std::vector<std::string> pMenuePoints)  {
     
     int selection;
     std::cout << "Bitte waehlen sie einen Menue Punkt aus" << std::endl;
-    std::cin >> selection;
-    return selection;
 }
 
 void Output::printBoxMessage(std::string textMessage, std::string type)  {
