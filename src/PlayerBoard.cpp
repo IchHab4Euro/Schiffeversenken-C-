@@ -1,5 +1,4 @@
 #include "../include/PlayerBoard.h"
-#include "../include/Ship.h"
 
 #include <iostream>
 #include <vector>
@@ -8,14 +7,14 @@
 void PlayerBoard::placeShips() {
     while (!shipsNextToBoard.empty()) {
 
-        Ship selectedShip = shipSelection();
+        Ship* selectedShip = shipSelection();
 
         std::string shipCoordinates;
         int longitude, latitude, directionNumber;
         bool shipPlaced = false;  
         while (!shipPlaced) {
             //Todo: Output::shipLocation
-            std::cout << "Du hast das Schiff: " << selectedShip.getName() << " mit einer Größe: " << selectedShip.getLength() << std::endl;
+            std::cout << "Du hast das Schiff: " << selectedShip->getName() << " mit einer Größe: " << selectedShip->getLength() << std::endl;
             std::cout << "Wohin soll das Schiff platziert werden? (Gib die Koordinaten an)" << std::endl;
             //Todo: Input::shipLocation
             std::cin >> shipCoordinates;
@@ -34,17 +33,17 @@ void PlayerBoard::placeShips() {
         }
 
         shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
-                                              [&selectedShip](const Ship& ship) { return ship.getId() == selectedShip.getId(); }), 
-                               shipsNextToBoard.end());
+                                      [&selectedShip](const Ship* ship) { return ship->getId() == selectedShip->getId(); }), 
+                       shipsNextToBoard.end());
 
         shipsOnBoard.push_back(selectedShip);
     }
 }
 
-Ship PlayerBoard::shipSelection(){ //Todo: Output::shipSelection(ships)
+Ship* PlayerBoard::shipSelection(){ //Todo: Output::shipSelection(ships)
     std::cout << "Folgende Schiffe können platziert werden:" << std::endl;
-        for (const Ship& ship : shipsNextToBoard) {
-            std::cout << ship.getId() << " Name: " << ship.getName() << ", Länge: " << ship.getLength() << std::endl;
+        for (const Ship* ship : shipsNextToBoard) {
+            std::cout << ship->getId() << " Name: " << ship->getName() << ", Länge: " << ship->getLength() << std::endl;
         }
         int pickedShipId = 0;
         //Todo: Input::shipSelection(ships)
@@ -55,19 +54,20 @@ Ship PlayerBoard::shipSelection(){ //Todo: Output::shipSelection(ships)
         return getShipById(shipsNextToBoard, pickedShipId);
 }
 
-bool PlayerBoard::checkContainsShip(std::vector<Ship> shipList, int idToCheck) {
-    for(const Ship& ship : shipList) {
-        if(ship.getId() == idToCheck){
+bool PlayerBoard::checkContainsShip(std::vector<Ship*> shipList, int idToCheck) {
+    for(const Ship* ship : shipList) {
+        if(ship->getId() == idToCheck){
             return true;
         }
     }
     return false;
 }
 
-Ship PlayerBoard::getShipById(std::vector<Ship> shipList, int shipId) {
-    for(const Ship& ship : shipList) {
-        if(ship.getId() == shipId) {
+Ship* PlayerBoard::getShipById(std::vector<Ship*> shipList, int shipId) {
+    for(Ship* ship : shipList) {
+        if(ship->getId() == shipId) {
             return ship; //alternative als diese Methode was wenn if nicht zutrifft was wir returnt
         }
     }
+    return nullptr;
 }

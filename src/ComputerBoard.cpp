@@ -6,7 +6,7 @@
 
 void ComputerBoard::placeShips() {
     while(!shipsNextToBoard.empty()){
-        Ship shipToPlace = shipsNextToBoard.front();
+        Ship* shipToPlace = shipsNextToBoard.front();
         shipsNextToBoard.erase(shipsNextToBoard.begin());
         
         bool shipPlaced = false; 

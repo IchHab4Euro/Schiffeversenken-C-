@@ -1,5 +1,12 @@
 #include "../include/GameLogic.h"
 
+int Player::nextID = 0;
+
+Player::Player(std::string name) : name(name) {
+    playerID = this->nextID;
+    this->nextID++;
+}
+
 GameLogic::GameLogic() {
     this->output = new Output();
 }
@@ -29,27 +36,29 @@ void GameLogic::init() { //vlt umbennen zu
                 break;
             default:
                 //Todo: print Error
+                output->printBoxMessage("Falsche Auswahl", "Error");
+                break;
         }
     }
 }
 
-void GameLogic::menue() {
-    
-}
-
 void GameLogic::startGame(){
-    board1->placeShips();
+    //board1->placeShips();
     board2->placeShips();
+
+    //output->printPlayerBoard(board1);
+    output->printPlayerBoard(board2);
 }
 
 void GameLogic::newGame() {
-    //Todo: Spielernamen abfragen
+    //Todo: Spielernamen abfragen 
     player1 = new Player("Rumpelstielschen");
     player2 = new Player("Computer");
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
-    board1->init();
-    board2->init();
+    board1->init(startingShips);
+    board2->init(startingShips);
+    startGame();
 }
 
 void GameLogic::loadGame() {

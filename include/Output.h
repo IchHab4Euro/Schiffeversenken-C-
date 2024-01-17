@@ -10,7 +10,8 @@
 #define RESET "\033[0m"
 
 class Output  {
-    public: 
+    public:
+        Output(); 
         void printMenue(std::vector<std::string> pMenuePoints);
         void printBoxMessage(std::string textMessage, std::string type);
         void printPlayerBoard(Board* board);

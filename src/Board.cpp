@@ -1,5 +1,4 @@
 #include "../include/Board.h"
-#include "../include/Ship.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,142 +9,105 @@ Board::Board(){
 }
 
 
-void Board::init() {
+void Board::init(std::vector<Ship*> ships) {
     //setup grid
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
             grid[lat][lon] =  BoardField();
         }
     }
-    //setup ships
-    Ship Schlachtschiff("Schlachtschiff",5);
-    Ship Kreuzer1("Kreuzer1",4);
-    Ship Kreuzer2("Kreuzer2",4);
-
-    /*
-    Ship Zerstoerer1("Zerstoerer1",3);
-    Ship Zerstoerer2("Zerstoerer2",3);
-    Ship Zerstoerer3("Zerstoerer3",3);
-    Ship UBoot1("U-Boot1",2);
-    Ship UBoot2("U-Boot2",2);
-    Ship UBoot3("U-Boot3",2);
-    Ship UBoot4("U-Boot4",2);
-    */
-
-    shipsNextToBoard.push_back(Schlachtschiff);
-    //shipsNextToBoard.push_back(Kreuzer1);
-    //shipsNextToBoard.push_back(Kreuzer2);
-    
-    /*
-    shipsNextToBoard.push_back(Zerstoerer1);
-    shipsNextToBoard.push_back(Zerstoerer2);
-    shipsNextToBoard.push_back(Zerstoerer3);   
-    shipsNextToBoard.push_back(UBoot1);
-    shipsNextToBoard.push_back(UBoot2);
-    shipsNextToBoard.push_back(UBoot3);
-    shipsNextToBoard.push_back(UBoot4);
-    */
-
-
+    shipsNextToBoard = ships;
 }
 
 int Board::getBoardSize() {
     return this->boardSize;
 }
 
-/*
-void Board::saveToFile(const std::string& filename) const {
 
-    std::ofstream saveFile (filename);
-
-    if(!saveFile.is_open()){
-        std::cerr << "Unable to open File!" << std::endl;
-        return;
-    }
-
-    std::string saveString = gameID + splitSymbol + playerID;
-
-    for(int i = 0; i < 10; ++i) {
-        for (int j = 0; j < 10; ++j){
-            saveString = saveString + splitSymbol + grid[i][j];
-        }
-    }
-    saveFile << saveString << std::endl;
-}
-*/
-
-bool Board::placeShip(int latitude, int longitude, Direction direction, Ship ship) {
+bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
+    std::string testDirection = "test"; 
     switch (direction)
     {
-        case Direction::North://up
-        if(longitude - ship.getLength() <= 0){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude - i][longitude].fieldState == BoardField::FieldState::Water){
-                grid[latitude - i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+        case Direction::North://up, North
+            if(latitude - ship->getLength() < 0){
+                return false;
             }
-        }
+            for(int i = 0; i < ship->getLength(); i++){
+                if(grid[latitude - i][longitude].fieldState == BoardField::FieldState::Water){
+                    grid[latitude - i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+                }
+            }
+            testDirection = "Norden";
         break;
 
-        case Direction::South: //down
-        if(latitude + ship.getLength() >= boardSize){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude + i][longitude].fieldState == BoardField::FieldState::Water){
-                grid[latitude + i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+        case Direction::South: //down, South
+            if(latitude + ship->getLength() > boardSize){
+                return false;
             }
-        }
+            for(int i = 0; i < ship->getLength(); i++){
+                if(grid[latitude + i][longitude].fieldState == BoardField::FieldState::Water){
+                    grid[latitude + i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+                }
+            }
+            testDirection = "Süden";
         break;
 
-        case Direction::West://right
-        if(longitude + ship.getLength() >= boardSize){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude + i].fieldState == BoardField::FieldState::Water){
-                grid[latitude][longitude + i].fieldState == BoardField::FieldState::ShipPlacement;
+        case Direction::East://left, East
+            if(longitude - ship->getLength() < 0){
+                return false;
             }
-        }
+            for(int i = 0; i < ship->getLength(); i++){
+                if(grid[latitude][longitude - i].fieldState == BoardField::FieldState::Water){
+                    grid[latitude][longitude - i].fieldState = BoardField::FieldState::ShipPlacement;
+                }
+            }
+            testDirection = "Osten";
         break;
 
-        case Direction::East://left
-        if(longitude - ship.getLength() <= 0){
-            return false;
-        }
-        for(int i = 0; i < ship.getLength(); i++){
-            if(grid[latitude][longitude - i].fieldState == BoardField::FieldState::Water){
-                grid[latitude][longitude - i].fieldState == BoardField::FieldState::ShipPlacement;
+        case Direction::West://right, West
+            if(longitude + ship->getLength() > boardSize){
+                return false;
             }
-        }
+            for(int i = 0; i < ship->getLength(); i++){
+                if(grid[latitude][longitude + i].fieldState == BoardField::FieldState::Water){
+                    grid[latitude][longitude + i].fieldState = BoardField::FieldState::ShipPlacement;
+                }
+            }
+            testDirection = "Westen";
         break;
 
         default:
-        //Ausgeben, das falsche Eingabe
-        return false;
-        break;
-    }
+            std::cout<<"Falsche Eingabe Richtung";
+            return false;
+            break;
+        }
 
-    if(checkForColission()){
-        //Ausgeben, das es zu einer Kollision kommt
+    if (!(checkForColission())) {
+        std::cout<<"Schiff konnte platziert werden lat " << latitude << " lon " << longitude << " Direction " << testDirection << std::endl;
+        replaceShipPlacement(BoardField::FieldState::Ship);
+        return true; 
+    }
+    else {
+        std::cout<<"Es kommt zu Kollision!";
         replaceShipPlacement(BoardField::FieldState::Water);
         return false;
     }
-    else{
-        replaceShipPlacement(BoardField::FieldState::Ship);
-    }
-    return true;
 }
 
 bool Board::checkForColission() const{
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
             if(grid[i][j].fieldState == BoardField::FieldState::ShipPlacement){
-                if(grid[i + 1][j].fieldState == BoardField::FieldState::Ship || grid[i - 1][j].fieldState == BoardField::FieldState::Ship ||
-                 grid[i][j + 1].fieldState == BoardField::FieldState::Ship || grid[i][j - 1].fieldState == BoardField::FieldState::Ship){
-                    return true; 
-                }
+                if(grid[i - 1][j].fieldState == BoardField::FieldState::Ship || //collision North
+                grid[i + 1][j].fieldState == BoardField::FieldState::Ship || //collision South
+                grid[i][j - 1].fieldState == BoardField::FieldState::Ship || //collision East
+                grid[i][j + 1].fieldState == BoardField::FieldState::Ship || //collision West
+                grid[i - 1][j - 1].fieldState == BoardField::FieldState::Ship || //collision North-East
+                grid[i - 1][j + 1].fieldState == BoardField::FieldState::Ship || //collision North-West
+                grid[i + 1][j - 1].fieldState == BoardField::FieldState::Ship || //collision South-East
+                grid[i + 1][j + 1].fieldState == BoardField::FieldState::Ship    //collision South-West
+                )
+                return true;
             }
         }
     }

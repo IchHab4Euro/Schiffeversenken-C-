@@ -1,5 +1,6 @@
 #include "../include/Output.h"
-#include "../include/Board.h"
+
+Output::Output(){};
 
 void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     const int menueboxWidth = boxWidth;
