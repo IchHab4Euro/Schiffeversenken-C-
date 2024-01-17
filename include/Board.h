@@ -6,12 +6,14 @@
 #include <iostream>
 #include <vector>
 
-struct BoardField {
-    enum class FieldState {Ship, ShipPlacement, Water};
-    BoardField();
-    void setShipState(ShipSegment shipSegment);
+struct FieldSegment {
+    enum class FieldState {Ship, ShipHit, ShipPlacement, Water};
+    FieldSegment(FieldState initState);
     FieldState fieldState;
-    ShipSegment shipSegment;
+    bool isShip();
+    bool isShipHit();
+    bool isShipPlacement();
+    bool isWater();
 };
 
 class Board {
@@ -21,14 +23,14 @@ public:
     void init(std::vector<Ship*> ships);
     virtual void placeShips() = 0;
     int getBoardSize();
-    BoardField grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
+    FieldSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
     
 protected:
     Direction numberToDirection(int number) const;
     int cordinateToLatitude(const std::string cordinate) const;
     int cordinateToLongitude(const std::string cordinate) const;
     bool checkForColission() const;
-    void replaceShipPlacement(BoardField::FieldState newState);
+    void replaceShipPlacement(FieldSegment::FieldState newState);
     bool placeShip(int latitude, int longitude, Direction direction, Ship* ship);
 
     std::vector<Ship*> shipsNextToBoard;

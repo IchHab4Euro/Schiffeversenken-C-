@@ -87,16 +87,16 @@ void Output::printRow(Board* board, int pRow)  {
     char symbol;
     for (int i = 0; i < 3; i++)  {
         for (int i = 0; i < 10; i++)  {
-            BoardField::FieldState state = board->grid[pRow][i].fieldState;
+            FieldSegment::FieldState state = board->grid[pRow][i].fieldState;
             switch (state)
             {
-            case BoardField::FieldState::Water:
+            case FieldSegment::FieldState::Water:
                 symbol = '~';
                 break;
-            case BoardField::FieldState::Ship:
+            case FieldSegment::FieldState::Ship:
                 symbol = 's';
                 break;
-            case BoardField::FieldState::ShipPlacement:
+            case FieldSegment::FieldState::ShipPlacement:
                 symbol = 'p';
                 break;
             default:
@@ -139,17 +139,17 @@ void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
 void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
     for (int i = 0; i < 3; i++)  {
         for (int i = 0; i < 10; i++)  {
-            BoardField::FieldState stateP = pPlayer->grid[pRow][i].fieldState;
+            FieldSegment::FieldState stateP = pPlayer->grid[pRow][i].fieldState;
             char symbol;
             switch (stateP)
             {
-            case BoardField::FieldState::Water:
+            case FieldSegment::FieldState::Water:
                 symbol = '~';
                 break;
-            case BoardField::FieldState::Ship:
+            case FieldSegment::FieldState::Ship:
                 symbol = 's';
                 break;
-            case BoardField::FieldState::ShipPlacement:
+            case FieldSegment::FieldState::ShipPlacement:
                 symbol = 'p';
                 break;
             default:
@@ -161,9 +161,8 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
         std::cout << "|" << std::string(8, ' ');
         char symbol; 
         for (int i = 0; i < 10; i++)  {
-            BoardField::FieldState stateC = pComputer->grid[pRow][i].fieldState;
-            ShipSegment::ShipState stateS = pComputer->grid[pRow][i].shipSegment.shipState;
-            if (stateC == BoardField::FieldState::Ship && stateS == ShipSegment::ShipState::Hit)  {                 //Überprüfen ob im grid ein getroffenes Schiff ist und gegebenfalls anzeigen
+            //ieldSegment::FieldState stateC = pComputer->grid[pRow][i].fieldState;
+            if (!(stateC->isHit()))  {                 //Überprüfen ob im grid ein getroffenes Schiff ist und gegebenfalls anzeigen
                 symbol = 's';
             } else  {
                 symbol = '~';
@@ -203,16 +202,16 @@ int Output::printRowMenue(Board* board, std::vector<Ship>* pMenue, int pRow, int
     char symbol;
     for (int i = 0; i < 3; i++)  {
         for (int i = 0; i < 10; i++)  {
-            BoardField::FieldState state = board->grid[pRow][i].fieldState;
+            FieldSegment::FieldState state = board->grid[pRow][i].fieldState;
             switch (state)
             {
-            case BoardField::FieldState::Water:
+            case FieldSegment::FieldState::Water:
                 symbol = '~';
                 break;
-            case BoardField::FieldState::Ship:
+            case FieldSegment::FieldState::Ship:
                 symbol = 's';
                 break;
-            case BoardField::FieldState::ShipPlacement:
+            case FieldSegment::FieldState::ShipPlacement:
                 symbol = 'p';
                 break;
             default:

@@ -1,16 +1,9 @@
 #ifndef SHIP_H //sollen wir das so überal machen?
 #define SHIP_H
 
+#include "Board.h"
 #include <string>
 #include <vector>
-
-struct ShipSegment {
-    enum class ShipState {Hit, NoHit};
-    ShipSegment();
-    void hit();
-    bool isHit() const;
-    ShipState shipState;
-};
 
 enum class Direction {North, East, South, West};
 
@@ -21,13 +14,14 @@ public:
     int getLength() const;
     int getId() const;
     bool isShipSunk() const;
+    void setFieldSegment(std::vector<FieldSegment*> fieldSegments);
     Direction shipDirection;
 
 private:
     std::string name;
     int length;
     int id; 
-    std::vector<ShipSegment> shipComponents;
+    std::vector<FieldSegment*> fieldSegments;
     
     static int nextId; 
 };

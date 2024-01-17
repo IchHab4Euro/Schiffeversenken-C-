@@ -3,7 +3,23 @@
 #include <iostream>
 #include <fstream>
 
-BoardField::BoardField() :fieldState(FieldState::Water) {}
+FieldSegment::FieldSegment(FieldState initState) : fieldState(initState) {}
+
+bool FieldSegment::isShip() {
+    return fieldState == FieldState::Ship;
+}
+
+bool FieldSegment::isShipHit() {
+    return fieldState == FieldState::ShipHit;
+}
+
+bool FieldSegment::isShipPlacement() {
+    return fieldState == FieldState::ShipPlacement;
+}
+
+bool FieldSegment::isWater() {
+    return fieldState == FieldState::Water;
+}
 
 Board::Board(){
 }
@@ -13,7 +29,7 @@ void Board::init(std::vector<Ship*> ships) {
     //setup grid
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
-            grid[lat][lon] =  BoardField();
+            grid[lat][lon] = new FieldSegment(FieldSegment::FieldState::Water);
         }
     }
     shipsNextToBoard = ships;
@@ -25,6 +41,8 @@ int Board::getBoardSize() {
 
 
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
+    std::vector<FieldSegment*> segmentsOfShip;
+    FieldSegment* fieldSegmentToPlace;
     std::string testDirection = "test"; 
     switch (direction)
     {
@@ -33,8 +51,14 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                if(grid[latitude - i][longitude].fieldState == BoardField::FieldState::Water){
-                    grid[latitude - i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+                fieldSegmentToPlace = grid[latitude - i][longitude];
+                if(fieldSegmentToPlace->isWater()){
+                    fieldSegmentToPlace->fieldState = FieldSegment::FieldState::ShipPlacement;
+                    segmentsOfShip.push_back(fieldSegmentToPlace);
+                }
+                else {
+                    replaceShipPlacement(FieldSegment::FieldState::Water);
+                    return false;
                 }
             }
             testDirection = "Norden";
@@ -45,8 +69,14 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                if(grid[latitude + i][longitude].fieldState == BoardField::FieldState::Water){
-                    grid[latitude + i][longitude].fieldState = BoardField::FieldState::ShipPlacement;
+                fieldSegmentToPlace = grid[latitude + i][longitude];
+                if(fieldSegmentToPlace->isWater()){
+                    fieldSegmentToPlace->fieldState = FieldSegment::FieldState::ShipPlacement;
+                    segmentsOfShip.push_back(fieldSegmentToPlace);
+                }
+                else {
+                    replaceShipPlacement(FieldSegment::FieldState::Water);
+                    return false;
                 }
             }
             testDirection = "Süden";
@@ -57,9 +87,16 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                if(grid[latitude][longitude - i].fieldState == BoardField::FieldState::Water){
-                    grid[latitude][longitude - i].fieldState = BoardField::FieldState::ShipPlacement;
+                fieldSegmentToPlace = grid[latitude][longitude - i];
+                if(fieldSegmentToPlace->isWater()){
+                    fieldSegmentToPlace->fieldState = FieldSegment::FieldState::ShipPlacement;
+                    segmentsOfShip.push_back(fieldSegmentToPlace);
                 }
+                else {
+                    replaceShipPlacement(FieldSegment::FieldState::Water);
+                    return false;
+                }
+                
             }
             testDirection = "Osten";
         break;
@@ -69,8 +106,14 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                if(grid[latitude][longitude + i].fieldState == BoardField::FieldState::Water){
-                    grid[latitude][longitude + i].fieldState = BoardField::FieldState::ShipPlacement;
+                fieldSegmentToPlace = grid[latitude][longitude + i];
+                if(fieldSegmentToPlace->isWater()){
+                    fieldSegmentToPlace->fieldState = FieldSegment::FieldState::ShipPlacement;
+                    segmentsOfShip.push_back(fieldSegmentToPlace);
+                }
+                else {
+                    replaceShipPlacement(FieldSegment::FieldState::Water);
+                    return false;
                 }
             }
             testDirection = "Westen";
@@ -84,12 +127,12 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 
     if (!(checkForColission())) {
         std::cout<<"Schiff konnte platziert werden lat " << latitude << " lon " << longitude << " Direction " << testDirection << std::endl;
-        replaceShipPlacement(BoardField::FieldState::Ship);
+        replaceShipPlacement(FieldSegment::FieldState::Ship);
         return true; 
     }
     else {
         std::cout<<"Es kommt zu Kollision!";
-        replaceShipPlacement(BoardField::FieldState::Water);
+        replaceShipPlacement(FieldSegment::FieldState::Water);
         return false;
     }
 }
@@ -97,15 +140,15 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 bool Board::checkForColission() const{
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j].fieldState == BoardField::FieldState::ShipPlacement){
-                if(grid[i - 1][j].fieldState == BoardField::FieldState::Ship || //collision North
-                grid[i + 1][j].fieldState == BoardField::FieldState::Ship || //collision South
-                grid[i][j - 1].fieldState == BoardField::FieldState::Ship || //collision East
-                grid[i][j + 1].fieldState == BoardField::FieldState::Ship || //collision West
-                grid[i - 1][j - 1].fieldState == BoardField::FieldState::Ship || //collision North-East
-                grid[i - 1][j + 1].fieldState == BoardField::FieldState::Ship || //collision North-West
-                grid[i + 1][j - 1].fieldState == BoardField::FieldState::Ship || //collision South-East
-                grid[i + 1][j + 1].fieldState == BoardField::FieldState::Ship    //collision South-West
+            if(grid[i][j]->fieldState == FieldSegment::FieldState::ShipPlacement){
+                if(grid[i - 1][j]->fieldState == FieldSegment::FieldState::Ship || //collision North
+                grid[i + 1][j]->fieldState == FieldSegment::FieldState::Ship || //collision South
+                grid[i][j - 1]->fieldState == FieldSegment::FieldState::Ship || //collision East
+                grid[i][j + 1]->fieldState == FieldSegment::FieldState::Ship || //collision West
+                grid[i - 1][j - 1]->fieldState == FieldSegment::FieldState::Ship || //collision North-East
+                grid[i - 1][j + 1]->fieldState == FieldSegment::FieldState::Ship || //collision North-West
+                grid[i + 1][j - 1]->fieldState == FieldSegment::FieldState::Ship || //collision South-East
+                grid[i + 1][j + 1]->fieldState == FieldSegment::FieldState::Ship    //collision South-West
                 )
                 return true;
             }
@@ -114,11 +157,11 @@ bool Board::checkForColission() const{
     return false; 
 }
 
-void Board::replaceShipPlacement(BoardField::FieldState newState) {
+void Board::replaceShipPlacement(FieldSegment::FieldState newState) {
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j].fieldState == BoardField::FieldState::ShipPlacement){
-                grid[i][j].fieldState = newState;
+            if(grid[i][j]->fieldState == FieldSegment::FieldState::ShipPlacement){
+                grid[i][j]->fieldState = newState;
             }
         }
     }
@@ -155,14 +198,3 @@ Direction Board::numberToDirection(int number)  const {
     }
 }
 
-/*
-bool Board::isValidPlacement(int latitude, int longitude, Ship ship) const{
-    if(latitude + ship.getLength() < boardSize && (longitude + ship.getLength() < boardSize || longitude - ship.getLength() > 0) ||
-        (latitude + ship.getLength() < boardSize || latitude - ship.getLength() > 0) && (longitude + ship.getLength() < boardSize)){
-        return true;
-    }
-    else{
-        return false; 
-    }
-}
-*/
