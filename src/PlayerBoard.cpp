@@ -14,7 +14,7 @@ void PlayerBoard::placeShips() {
         bool shipPlaced = false;  
         while (!shipPlaced) {
             //Todo: Output::shipLocation
-            std::cout << "Du hast das Schiff: " << selectedShip->getName() << " mit einer Größe: " << selectedShip->getLength() << std::endl;
+            std::cout << "Du hast das Schiff: " << selectedShip->getName() << " mit einer Gr\224sse: " << selectedShip->getLength() << std::endl;
             std::cout << "Wohin soll das Schiff platziert werden? (Gib die Koordinaten an)" << std::endl;
             //Todo: Input::shipLocation
             std::cin >> shipCoordinates;
@@ -41,14 +41,14 @@ void PlayerBoard::placeShips() {
 }
 
 Ship* PlayerBoard::shipSelection(){ //Todo: Output::shipSelection(ships)
-    std::cout << "Folgende Schiffe können platziert werden:" << std::endl;
+    std::cout << "Folgende Schiffe k\224nnen platziert werden:" << std::endl;
         for (const Ship* ship : shipsNextToBoard) {
-            std::cout << ship->getId() << " Name: " << ship->getName() << ", Länge: " << ship->getLength() << std::endl;
+            std::cout << ship->getId() << " Name: " << ship->getName() << ", L\204nge: " << ship->getLength() << std::endl;
         }
         int pickedShipId = 0;
         //Todo: Input::shipSelection(ships)
         while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
-            std::cout <<"Welches Schiff willst du platziere? (gebe eine gueltige Schiffs Id ein)" << std::endl;
+            std::cout <<"Welches Schiff willst du platziere? (gebe eine g\201ltige Schiffs Id ein)" << std::endl;
             std::cin >> pickedShipId; //was wenn String angeben
         }
         return getShipById(shipsNextToBoard, pickedShipId);

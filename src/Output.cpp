@@ -20,17 +20,17 @@ void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
         }
     }
 
-    freeBefore = (menueboxWidth - length) / 2;
+    freeBefore = (menueboxWidth - length -4) / 2;
     
     for (int i = 0; i < pMenuePoints.size(); i++)
     {
-        std::cout << "| " << std::string(freeBefore - 2, ' ') << pMenuePoints.at(i) << std::string(boxWidth - freeBefore - 2 - pMenuePoints.at(i).size(), ' ') << " |" << std::endl;
+        std::cout << "| " << std::string(freeBefore - 2, ' ') << i+1 << "." << pMenuePoints.at(i) << std::string(boxWidth - freeBefore - 4 - pMenuePoints.at(i).size(), ' ') << " |" << std::endl;
     }
 
     std::cout << std::string(menueboxWidth, '-') << std::endl;
     
     int selection;
-    std::cout << "Bitte waehlen sie einen Menue Punkt aus" << std::endl;
+    std::cout << "Bitte waehlen sie einen Menue Punkt aus: " << std::endl;
 }
 
 void Output::printBoxError(std::string errorMessage)  {
