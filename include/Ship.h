@@ -1,7 +1,7 @@
 #ifndef SHIP_H //sollen wir das so überal machen?
 #define SHIP_H
 
-#include "Board.h"
+#include "BoardSegment.h"
 #include <string>
 #include <vector>
 
@@ -14,14 +14,14 @@ public:
     int getLength() const;
     int getId() const;
     bool isShipSunk() const;
-    void setFieldSegment(std::vector<FieldSegment*> fieldSegments);
+    void setBoardSegment(std::vector<BoardSegment*> BoardSegments);
     Direction shipDirection;
 
 private:
     std::string name;
     int length;
     int id; 
-    std::vector<FieldSegment*> fieldSegments;
+    std::vector<BoardSegment*> BoardSegments;
     
     static int nextId; 
 };

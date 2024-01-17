@@ -36,7 +36,7 @@ void GameLogic::init() { //vlt umbennen zu
                 break;
             default:
                 //Todo: print Error
-                output->printBoxMessage("Falsche Auswahl", "Error");
+                output->printBoxError("Falsche Auswahl");
                 break;
         }
     }

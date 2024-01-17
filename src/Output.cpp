@@ -33,18 +33,43 @@ void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     std::cout << "Bitte waehlen sie einen Menue Punkt aus" << std::endl;
 }
 
-void Output::printBoxMessage(std::string textMessage, std::string type)  {
+void Output::printBoxError(std::string errorMessage)  {
     std::string color;
-    if (type == "Error")
-    {
-        color = RED;
-    }
-    else
-    {
-        color = GREEN;
-    }
+    color = RED;
 
     const int textboxWidth = boxWidth;
+    std::string type = "Error";
+
+    std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
+    int length = type.length();
+    int freeBefore = (textboxWidth - length) / 2;
+    int freeAfter = textboxWidth - length - freeBefore;
+    std::cout << color << "| " << std::string(freeBefore - 2, ' ') << type << std::string(freeAfter - 2, ' ') << " |" << RESET << std::endl;
+
+
+    size_t start = 0;
+    while (start < errorMessage.length())
+    {
+        std::string line = errorMessage.substr(start, textboxWidth - 5);
+        std::string connection;
+        if (line.length() == textboxWidth-5)  {
+            connection = "-";
+        } else  {
+            connection = std::string(textboxWidth - 4 - line.length(), ' ');
+        }
+        
+        std::cout << color << "| " << line << connection << " |" << RESET << std::endl;
+        start += textboxWidth - 5;
+    }
+    std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
+}
+
+void Output::printBoxMessage(std::string textMessage)  {
+    std::string color;
+    color = GREEN;
+
+    const int textboxWidth = boxWidth;
+    std::string type = "Nachricht";
 
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
     int length = type.length();
@@ -56,26 +81,40 @@ void Output::printBoxMessage(std::string textMessage, std::string type)  {
     size_t start = 0;
     while (start < textMessage.length())
     {
-        std::string line = textMessage.substr(start, textboxWidth - 4);
-        std::cout << color << "| " << line << std::string(textboxWidth - 4 - line.length(), ' ') << " |" << RESET << std::endl;
-        start += textboxWidth - 4;
+        std::string line = textMessage.substr(start, textboxWidth - 5);
+        std::string connection;
+        if (line.length() == textboxWidth-5)  {
+            connection = "-";
+        } else  {
+            connection = std::string(textboxWidth - 4 - line.length(), ' ');
+        }
+        
+        std::cout << color << "| " << line << connection << " |" << RESET << std::endl;
+        start += textboxWidth - 5;
     }
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
 void Output::printPlayerBoard(Board* pBoard)  {
     int boardSize = pBoard->getBoardSize();
+    std::cout << std::string(7, ' ');
+    for (int i = 0; i < boardSize; i++)  {
+        std::cout << std::string(4, ' ') << i+1 << std::string(3, ' ');
+    }
 
+    std::cout << std::endl;
+    std::cout << std::string(7, ' ');
     for (int i = 1; i <= boardSize; i++)
     {
         std::cout << std::string(8, '-');
     }
     std::cout << "-" << std::endl;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < boardSize; i++)
     {
         printRow(pBoard, i);
         
+        std::cout << std::string(7, ' ');
         for (int i = 1; i <= boardSize; i++)  {
             std::cout << std::string(8, '-');
         }
@@ -85,21 +124,26 @@ void Output::printPlayerBoard(Board* pBoard)  {
 
 void Output::printRow(Board* board, int pRow)  {
     char symbol;
-    for (int i = 0; i < 3; i++)  {
+    char letter = 'A';
+    letter = letter+pRow;
+    for (int j = 0; j < 3; j++)  {
+        if (j == 1)  {
+            std::cout << std::string(3, ' ') << letter << std::string(3, ' ');
+        } else  {
+            std::cout << std::string(7, ' ');   
+        }
+        
         for (int i = 0; i < 10; i++)  {
-            FieldSegment::FieldState state = board->grid[pRow][i].fieldState;
-            switch (state)
-            {
-            case FieldSegment::FieldState::Water:
-                symbol = '~';
+            BoardSegment::FieldState state = board->grid[pRow][i]->fieldState;
+            switch (state)  {
+            case BoardSegment::FieldState::Water:
+                symbol = ' ';
                 break;
-            case FieldSegment::FieldState::Ship:
-                symbol = 's';
-                break;
-            case FieldSegment::FieldState::ShipPlacement:
-                symbol = 'p';
+            case BoardSegment::FieldState::Ship:
+                symbol = '#';
                 break;
             default:
+                symbol = ' ';
                 break;
             }
             std::cout << "|" << std::string(7, symbol);
@@ -110,12 +154,34 @@ void Output::printRow(Board* board, int pRow)  {
 
 void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
     int boardSize = pBoardPlayer->getBoardSize();
+    std::cout << std::string(7, ' ');
+    for (int i = 0; i < boardSize; i++)  {
+        int length = 0;
+        if (i >=10)  {
+            length = 1;
+        } else if (i >= 100)  {
+            length = 2;
+        }
+        std::cout << std::string(4, ' ') << i+1 << std::string(3 - length, ' ');
+    }
+    std::cout << std::string(9, ' ');
+    for (int i = 0; i < boardSize; i++)  {
+        int length = 0;
+        if (i >=10)  {
+            length = 1;
+        } else if (i >= 100)  {
+            length = 2;
+        }
+        std::cout << std::string(4, ' ') << i+1 << std::string(3-length, ' ');
+    }
+    std::cout << std::endl;
 
+    std::cout << std::string(7, ' ');
     for (int i = 1; i <= boardSize; i++)
     {
         std::cout << std::string(8, '-');
     }
-    std::cout << "-" << std::string(8, ' ');
+    std::cout << "-" << std::string(9, ' ');
     for (int i = 1; i <= boardSize; i++)
     {
         std::cout << std::string(8, '-');
@@ -125,60 +191,74 @@ void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
     for (int i = 0; i < 10; i++)  {
         printRowTwoBoards(pBoardPlayer, pBoardComputer, i);
         
+        std::cout << std::string(7, ' ');
         for (int i = 1; i <= boardSize; i++)  {
             std::cout << std::string(8, '-');
         }
-        std::cout << "-" << std::string(8, ' ');
+        std::cout << "-" << std::string(9, ' ');
         for (int i = 1; i <= boardSize; i++)  {
             std::cout << std::string(8, '-');
         }
         std::cout << "-" << std::endl;
     }
+    std::cout << std::string((boardSize/2)*8, ' ') << "Spielerboard" << std::string(boardSize*8-2, ' ') << "Computerboard" << std::endl;
 }
 
 void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
-    for (int i = 0; i < 3; i++)  {
+    for (int j = 0; j < 3; j++)  {
+        char letter = 'A';
+        letter = letter+pRow;
+        if (j == 1)  {
+            std::cout << std::string(3, ' ') << letter << std::string(3, ' ');
+        } else  {
+            std::cout << std::string(7, ' ');   
+        }
         for (int i = 0; i < 10; i++)  {
-            FieldSegment::FieldState stateP = pPlayer->grid[pRow][i].fieldState;
-            char symbol;
-            switch (stateP)
-            {
-            case FieldSegment::FieldState::Water:
-                symbol = '~';
+            BoardSegment::FieldState stateField = pPlayer->grid[pRow][i]->fieldState;
+            char symbolP;
+            switch (stateField)  {
+            case BoardSegment::FieldState::Water:
+                symbolP = ' ';
                 break;
-            case FieldSegment::FieldState::Ship:
-                symbol = 's';
-                break;
-            case FieldSegment::FieldState::ShipPlacement:
-                symbol = 'p';
+            case BoardSegment::FieldState::Ship:
+                symbolP = '#';
                 break;
             default:
-                symbol = '~';
+                symbolP = ' ';
                 break;
             }
-            std::cout << "|" << std::string(7, symbol);
+            std::cout << "|" << std::string(7, symbolP);
         }
-        std::cout << "|" << std::string(8, ' ');
-        char symbol; 
+        
+        std::cout << "|" << std::string(9, ' ');
+        char symbolC; 
         for (int i = 0; i < 10; i++)  {
-            //ieldSegment::FieldState stateC = pComputer->grid[pRow][i].fieldState;
-            if (!(stateC->isHit()))  {                 //Überprüfen ob im grid ein getroffenes Schiff ist und gegebenfalls anzeigen
-                symbol = 's';
+            if (pComputer->grid[pRow][i]->isShipHit())  {                 
+                symbolC = 's';
             } else  {
-                symbol = '~';
+                symbolC = ' ';
             }
-            
-            symbol = '~';
-            std::cout << "|" << std::string(7, symbol);
+            std::cout << "|" << std::string(7, symbolC);
         }
-        std::cout << "|" << std::endl;
+        if (j == 1)  {
+            std::cout << "|" << std::string(4, ' ') << letter << std::endl;
+        } else  {
+            std::cout << "|" << std::endl;  
+        }
 
     }
 }
 
-void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship>* pMenue)  {
+void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue)  {
     int boardSize = pBoard->getBoardSize();
     int menuePos = 0;
+    std::cout << std::string(7, ' ');
+    for (int i = 0; i < boardSize; i++)  {
+        std::cout << std::string(4, ' ') << i+1 << std::string(3, ' ');
+    }
+
+    std::cout << std::endl;
+    std::cout << std::string(7, ' ');
 
     for (int i = 1; i <= boardSize; i++)
     {
@@ -190,6 +270,7 @@ void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship>* pMenue)  {
     {
         menuePos = printRowMenue(pBoard, pMenue, i, menuePos);
         
+        std::cout << std::string(7, ' ');
         for (int i = 1; i <= boardSize; i++)  {
             std::cout << std::string(8, '-');
         }
@@ -198,24 +279,28 @@ void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship>* pMenue)  {
     }
 }
 
-int Output::printRowMenue(Board* board, std::vector<Ship>* pMenue, int pRow, int pMenuePos)  {
+int Output::printRowMenue(Board* board, std::vector<Ship*> pMenue, int pRow, int pMenuePos)  {
     char symbol;
-    for (int i = 0; i < 3; i++)  {
+    char letter = 'A';
+    letter = letter+pRow;
+    for (int j = 0; j < 3; j++)  {
+        if (j == 1)  {
+            std::cout << std::string(3, ' ') << letter << std::string(3, ' ');
+        } else  {
+            std::cout << std::string(7, ' ');   
+        }
         for (int i = 0; i < 10; i++)  {
-            FieldSegment::FieldState state = board->grid[pRow][i].fieldState;
+            BoardSegment::FieldState state = board->grid[pRow][i]->fieldState;
             switch (state)
             {
-            case FieldSegment::FieldState::Water:
-                symbol = '~';
+            case BoardSegment::FieldState::Water:
+                symbol = ' ';
                 break;
-            case FieldSegment::FieldState::Ship:
-                symbol = 's';
-                break;
-            case FieldSegment::FieldState::ShipPlacement:
-                symbol = 'p';
+            case BoardSegment::FieldState::Ship:
+                symbol = '#';
                 break;
             default:
-                symbol = '~';
+                symbol = ' ';
                 break;
             }
             std::cout << "|" << std::string(7, symbol);
@@ -226,46 +311,16 @@ int Output::printRowMenue(Board* board, std::vector<Ship>* pMenue, int pRow, int
     return pMenuePos;
 }
 
-std::string Output::printShipNameAndLength(std::vector<Ship>* pMenue, int pMenuePos)  {
-    if (pMenue->size() <= pMenuePos )  {
+std::string Output::printShipNameAndLength(std::vector<Ship*> pMenue, int pMenuePos)  {
+    if (pMenue.size() <= pMenuePos )  {
         return "";
     } else  {
-        Ship ship = pMenue->at(pMenuePos);
+        Ship* ship = pMenue[pMenuePos];
         std::string output;
-        output = ship.getName() + " Size: " + std::to_string(ship.getLength());
+        output = ship->getName() + " Size: " + std::to_string(ship->getLength());
         return output;
     }
 }
-
-
-
-    /*
-void Board::printBoard() const {
-    for (int i = -1; i < 11; i++)
-    {
-        if (i == -1 || i == 0)
-        {
-            std::cout << " ";
-        } else {
-            std::cout << i << " ";
-        }
-    }
-    std::cout << std::endl;
-
-    char c = 'A';
-    for (int i = 0; i < 10; i++)
-    {
-        std::cout << c << "|";
-        for (int j = 0; j < 10; j++)
-        {
-            std::cout << grid[i][j] << " ";
-        }
-        std::cout << "|" << std::endl;
-        c++;
-    }
-}
-*/
-
 
 void Output::printWelcome()  {
     std::cout << R"(

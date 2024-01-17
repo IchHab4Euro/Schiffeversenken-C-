@@ -20,7 +20,7 @@ int Ship::getId() const {
 }
 
 bool Ship::isShipSunk() const{
-    for(FieldSegment* shipSegment : fieldSegments){
+    for(BoardSegment* shipSegment : BoardSegments){
         if(!(shipSegment->isShipHit())){
             return false; 
         }

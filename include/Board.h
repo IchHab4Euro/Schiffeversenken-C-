@@ -2,19 +2,9 @@
 #define BOARD_H
 
 #include "Ship.h"
-//#include "Output.h"
+#include "BoardSegment.h"
 #include <iostream>
 #include <vector>
-
-struct FieldSegment {
-    enum class FieldState {Ship, ShipHit, ShipPlacement, Water};
-    FieldSegment(FieldState initState);
-    FieldState fieldState;
-    bool isShip();
-    bool isShipHit();
-    bool isShipPlacement();
-    bool isWater();
-};
 
 class Board {
 
@@ -23,14 +13,14 @@ public:
     void init(std::vector<Ship*> ships);
     virtual void placeShips() = 0;
     int getBoardSize();
-    FieldSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
+    BoardSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
     
 protected:
     Direction numberToDirection(int number) const;
     int cordinateToLatitude(const std::string cordinate) const;
     int cordinateToLongitude(const std::string cordinate) const;
     bool checkForColission() const;
-    void replaceShipPlacement(FieldSegment::FieldState newState);
+    void replaceShipPlacement(BoardSegment::FieldState newState);
     bool placeShip(int latitude, int longitude, Direction direction, Ship* ship);
 
     std::vector<Ship*> shipsNextToBoard;
