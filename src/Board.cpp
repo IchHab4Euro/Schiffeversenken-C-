@@ -9,14 +9,14 @@ BoardField::BoardField() :fieldState(FieldState::Water) {}
 Board::Board(){
 }
 
-void Board::init(){
+
+void Board::init() {
     //setup grid
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
             grid[lat][lon] =  BoardField();
         }
     }
-
     //setup ships
     Ship Schlachtschiff("Schlachtschiff",5);
     Ship Kreuzer1("Kreuzer1",4);
@@ -33,8 +33,8 @@ void Board::init(){
     */
 
     shipsNextToBoard.push_back(Schlachtschiff);
-    shipsNextToBoard.push_back(Kreuzer1);
-    shipsNextToBoard.push_back(Kreuzer2);
+    //shipsNextToBoard.push_back(Kreuzer1);
+    //shipsNextToBoard.push_back(Kreuzer2);
     
     /*
     shipsNextToBoard.push_back(Zerstoerer1);
@@ -47,6 +47,10 @@ void Board::init(){
     */
 
 
+}
+
+int Board::getBoardSize() {
+    return this->boardSize;
 }
 
 /*

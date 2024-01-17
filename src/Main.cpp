@@ -1,6 +1,7 @@
 #include "../include/PlayerBoard.h"
 #include "../include/ComputerBoard.h"
 #include "../include/Ship.h"
+#include "../include/Output.h"
 
 #include <iostream>
 /*
@@ -150,20 +151,20 @@ int verloren()  {
 
 
 int main() {
-    //start();
-    
-    
-    PlayerBoard testPlayerBoard;
-    //testPlayerBoard.printBoard();
-    testPlayerBoard.placeShips();
-    testPlayerBoard.printBoard();
-    
-
-    
-    ComputerBoard testComputerBoard;
-    testComputerBoard.printBoard();
-    testComputerBoard.placeShips();
-    testComputerBoard.printBoard();
-    
-
-*/
+    Output output;
+    ComputerBoard computerBoard;
+    PlayerBoard playerboard;
+    std::vector<Ship> menue;
+    Ship Schlachtschiff("Schlachtschiff",5);
+    Ship Kreuzer1("Kreuzer1",4);
+    Ship Kreuzer2("Kreuzer2",4);
+    Ship Boot("Boot", 2);
+    menue.push_back(Schlachtschiff);
+    menue.push_back(Kreuzer1);
+    menue.push_back(Kreuzer2);
+    menue.push_back(Boot);
+    std::vector<Ship>* menuezeiger = &menue;
+    Board* playerzeiger = &playerboard;
+    Board* computerZeiger = &computerBoard;
+    output.printBoardWithMenue(playerzeiger, menuezeiger);
+}*/

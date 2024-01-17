@@ -1,5 +1,5 @@
-schiffe: main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o
-	g++ main.o board.o input.o output.o playerboard.o computerboard.o ship.o shipsegment.o -o schiffe
+battleship: main.o board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o
+	g++ main.o board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o -o BattleShip
 
 main.o: src/Main.cpp
 	g++ -c src/Main.cpp
@@ -22,8 +22,11 @@ computerboard.o: src/ComputerBoard.cpp include/ComputerBoard.h
 ship.o: src/Ship.cpp include/Ship.h 
 	g++ -c src/Ship.cpp
 
-shipsegment.o: src/Shipsegment.cpp include/Shipsegment.h
-	g++ -c src/Shipsegment.cpp
+gamelogic.o: src/GameLogic.cpp include/GameLogic.h
+	g++ -c src/GameLogic.cpp
+
+battleship.o: src/BattleShip.cpp
+	g++ -c src/BattleShip.cpp
 
 clean:
 	del *.o schiffe
