@@ -13,8 +13,13 @@ class Output  {
     public: 
         int printMenue(std::vector<std::string> pMenuePoints);
         void printBoxMessage(std::string textMessage, std::string type);
-        void printBoard(Board* board);
+        void printPlayerBoard(Board* board);
         void printRow(Board* board, int pRow);
+        void printBothBoards(Board* pBoardPlayer, Board* pBoardComputer);
+        void printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow);
+        void printBoardWithMenue(Board* pBoard, std::vector<Ship>* pMenue);
+        int printRowMenue(Board* board, std::vector<Ship>* pMenue, int pRow, int pMenuePos);
+        std::string printShipNameAndLength(std::vector<Ship>* pMenue, int pMenuePos);
         void printWelcome();
         void printWin();
         void printLose();

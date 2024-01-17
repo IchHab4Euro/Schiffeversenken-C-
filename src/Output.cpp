@@ -64,33 +64,31 @@ void Output::printBoxMessage(std::string textMessage, std::string type)  {
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
-void Output::printBoard(Board* pBoard)  {
+void Output::printPlayerBoard(Board* pBoard)  {
     int boardSize = pBoard->getBoardSize();
-
-    std::cout << "boardSize" << std::endl;
 
     for (int i = 1; i <= boardSize; i++)
     {
         std::cout << std::string(8, '-');
     }
-    std::cout << std::endl;
+    std::cout << "-" << std::endl;
 
-    for (int i = 1; i <= 10; i++)
+    for (int i = 0; i < 10; i++)
     {
         printRow(pBoard, i);
         
         for (int i = 1; i <= boardSize; i++)  {
             std::cout << std::string(8, '-');
         }
-        std::cout << std::endl;
+        std::cout << "-" << std::endl;
     }
 }
 
 void Output::printRow(Board* board, int pRow)  {
+    char symbol;
     for (int i = 0; i < 3; i++)  {
         for (int i = 0; i < 10; i++)  {
-            BoardField::FieldState state = board->grid[0][i].fieldState;
-            char symbol;
+            BoardField::FieldState state = board->grid[pRow][i].fieldState;
             switch (state)
             {
             case BoardField::FieldState::Water:
@@ -109,9 +107,136 @@ void Output::printRow(Board* board, int pRow)  {
         }
         std::cout << "|" << std::endl;
     }
-    
+}
 
+void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
+    int boardSize = pBoardPlayer->getBoardSize();
 
+    for (int i = 1; i <= boardSize; i++)
+    {
+        std::cout << std::string(8, '-');
+    }
+    std::cout << "-" << std::string(8, ' ');
+    for (int i = 1; i <= boardSize; i++)
+    {
+        std::cout << std::string(8, '-');
+    }
+    std::cout << "-" << std::endl;
+
+    for (int i = 0; i < 10; i++)  {
+        printRowTwoBoards(pBoardPlayer, pBoardComputer, i);
+        
+        for (int i = 1; i <= boardSize; i++)  {
+            std::cout << std::string(8, '-');
+        }
+        std::cout << "-" << std::string(8, ' ');
+        for (int i = 1; i <= boardSize; i++)  {
+            std::cout << std::string(8, '-');
+        }
+        std::cout << "-" << std::endl;
+    }
+}
+
+void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
+    for (int i = 0; i < 3; i++)  {
+        for (int i = 0; i < 10; i++)  {
+            BoardField::FieldState stateP = pPlayer->grid[pRow][i].fieldState;
+            char symbol;
+            switch (stateP)
+            {
+            case BoardField::FieldState::Water:
+                symbol = '~';
+                break;
+            case BoardField::FieldState::Ship:
+                symbol = 's';
+                break;
+            case BoardField::FieldState::ShipPlacement:
+                symbol = 'p';
+                break;
+            default:
+                symbol = '~';
+                break;
+            }
+            std::cout << "|" << std::string(7, symbol);
+        }
+        std::cout << "|" << std::string(8, ' ');
+        char symbol; 
+        for (int i = 0; i < 10; i++)  {
+            BoardField::FieldState stateC = pComputer->grid[pRow][i].fieldState;
+            ShipSegment::ShipState stateS = pComputer->grid[pRow][i].shipSegment.shipState;
+            if (stateC == BoardField::FieldState::Ship && stateS == ShipSegment::ShipState::Hit)  {                 //Überprüfen ob im grid ein getroffenes Schiff ist und gegebenfalls anzeigen
+                symbol = 's';
+            } else  {
+                symbol = '~';
+            }
+            
+            symbol = '~';
+            std::cout << "|" << std::string(7, symbol);
+        }
+        std::cout << "|" << std::endl;
+
+    }
+}
+
+void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship>* pMenue)  {
+    int boardSize = pBoard->getBoardSize();
+    int menuePos = 0;
+
+    for (int i = 1; i <= boardSize; i++)
+    {
+        std::cout << std::string(8, '-');
+    }
+    std::cout << "-" << std::string(8, ' ') << "Ihre Schiffe: " << std::endl;
+
+    for (int i = 0; i < 10; i++)
+    {
+        menuePos = printRowMenue(pBoard, pMenue, i, menuePos);
+        
+        for (int i = 1; i <= boardSize; i++)  {
+            std::cout << std::string(8, '-');
+        }
+        std::cout << "-" << std::string(8, ' ') <<  printShipNameAndLength(pMenue, menuePos) << std::endl;
+        menuePos++;
+    }
+}
+
+int Output::printRowMenue(Board* board, std::vector<Ship>* pMenue, int pRow, int pMenuePos)  {
+    char symbol;
+    for (int i = 0; i < 3; i++)  {
+        for (int i = 0; i < 10; i++)  {
+            BoardField::FieldState state = board->grid[pRow][i].fieldState;
+            switch (state)
+            {
+            case BoardField::FieldState::Water:
+                symbol = '~';
+                break;
+            case BoardField::FieldState::Ship:
+                symbol = 's';
+                break;
+            case BoardField::FieldState::ShipPlacement:
+                symbol = 'p';
+                break;
+            default:
+                symbol = '~';
+                break;
+            }
+            std::cout << "|" << std::string(7, symbol);
+        }
+        std::cout << "|" << std::string(8, ' ') << printShipNameAndLength(pMenue, pMenuePos) << std::endl;
+        pMenuePos++;
+    }
+    return pMenuePos;
+}
+
+std::string Output::printShipNameAndLength(std::vector<Ship>* pMenue, int pMenuePos)  {
+    if (pMenue->size() <= pMenuePos )  {
+        return "";
+    } else  {
+        Ship ship = pMenue->at(pMenuePos);
+        std::string output;
+        output = ship.getName() + " Size: " + std::to_string(ship.getLength());
+        return output;
+    }
 }
 
 
