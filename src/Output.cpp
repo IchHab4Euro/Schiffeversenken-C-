@@ -134,12 +134,12 @@ void Output::printRow(Board* board, int pRow)  {
         }
         
         for (int i = 0; i < 10; i++)  {
-            BoardSegment::FieldState state = board->grid[pRow][i]->fieldState;
+            SegmentState state = board->grid[pRow][i]->fieldState;
             switch (state)  {
-            case BoardSegment::FieldState::Water:
+            case SegmentState::Water:
                 symbol = ' ';
                 break;
-            case BoardSegment::FieldState::Ship:
+            case SegmentState::Ship:
                 symbol = '#';
                 break;
             default:
@@ -214,13 +214,13 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             std::cout << std::string(7, ' ');   
         }
         for (int i = 0; i < 10; i++)  {
-            BoardSegment::FieldState stateField = pPlayer->grid[pRow][i]->fieldState;
+            SegmentState stateField = pPlayer->grid[pRow][i]->fieldState;
             char symbolP;
             switch (stateField)  {
-            case BoardSegment::FieldState::Water:
+            case SegmentState::Water:
                 symbolP = ' ';
                 break;
-            case BoardSegment::FieldState::Ship:
+            case SegmentState::Ship:
                 symbolP = '#';
                 break;
             default:
@@ -290,13 +290,13 @@ int Output::printRowMenue(Board* board, std::vector<Ship*> pMenue, int pRow, int
             std::cout << std::string(7, ' ');   
         }
         for (int i = 0; i < 10; i++)  {
-            BoardSegment::FieldState state = board->grid[pRow][i]->fieldState;
+            SegmentState state = board->grid[pRow][i]->fieldState;
             switch (state)
             {
-            case BoardSegment::FieldState::Water:
+            case SegmentState::Water:
                 symbol = ' ';
                 break;
-            case BoardSegment::FieldState::Ship:
+            case SegmentState::Ship:
                 symbol = '#';
                 break;
             default:

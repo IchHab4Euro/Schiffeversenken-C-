@@ -43,7 +43,7 @@ void GameLogic::init() { //vlt umbennen zu
 }
 
 void GameLogic::startGame(){
-    board1->placeShips();
+    //board1->placeShips();
     board2->placeShips();
 
     //output->printPlayerBoard(board1);

@@ -6,15 +6,14 @@
 Board::Board(){
 }
 
-
-void Board::init(std::vector<Ship*> ships) {
+void Board::init(std::vector<Ship*> initShips) {
     //setup grid
     for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
-            grid[lat][lon] = new BoardSegment(BoardSegment::FieldState::Water);
+            grid[lat][lon] = new BoardSegment(SegmentState::Water);
         }
     }
-    shipsNextToBoard = ships;
+    shipsNextToBoard = initShips;
 }
 
 int Board::getBoardSize() {
@@ -29,17 +28,17 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
     switch (direction)
     {
         case Direction::North://up, North
-            if(latitude - ship->getLength() < 0){
+            if(latitude - ship->getLength() < -1){
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
                 BoardSegmentToPlace = grid[latitude - i][longitude];
                 if(BoardSegmentToPlace->isWater()){
-                    BoardSegmentToPlace->fieldState = BoardSegment::FieldState::ShipPlacement;
+                    BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                     segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
-                    replaceShipPlacement(BoardSegment::FieldState::Water);
+                    replaceShipPlacement(SegmentState::Water, nullptr);
                     return false;
                 }
             }
@@ -53,11 +52,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
             for(int i = 0; i < ship->getLength(); i++){
                 BoardSegmentToPlace = grid[latitude + i][longitude];
                 if(BoardSegmentToPlace->isWater()){
-                    BoardSegmentToPlace->fieldState = BoardSegment::FieldState::ShipPlacement;
+                    BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                     segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
-                    replaceShipPlacement(BoardSegment::FieldState::Water);
+                    replaceShipPlacement(SegmentState::Water, nullptr);
                     return false;
                 }
             }
@@ -65,17 +64,17 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
         break;
 
         case Direction::East://left, East
-            if(longitude - ship->getLength() < 0){
+            if(longitude - ship->getLength() < -1){
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
                 BoardSegmentToPlace = grid[latitude][longitude - i];
                 if(BoardSegmentToPlace->isWater()){
-                    BoardSegmentToPlace->fieldState = BoardSegment::FieldState::ShipPlacement;
+                    BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                     segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
-                    replaceShipPlacement(BoardSegment::FieldState::Water);
+                    replaceShipPlacement(SegmentState::Water, nullptr);
                     return false;
                 }
                 
@@ -90,11 +89,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
             for(int i = 0; i < ship->getLength(); i++){
                 BoardSegmentToPlace = grid[latitude][longitude + i];
                 if(BoardSegmentToPlace->isWater()){
-                    BoardSegmentToPlace->fieldState = BoardSegment::FieldState::ShipPlacement;
+                    BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                     segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
-                    replaceShipPlacement(BoardSegment::FieldState::Water);
+                    replaceShipPlacement(SegmentState::Water, nullptr);
                     return false;
                 }
             }
@@ -109,12 +108,12 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 
     if (!(checkForColission())) {
         std::cout<<"Schiff konnte platziert werden lat " << latitude << " lon " << longitude << " Direction " << testDirection << std::endl;
-        replaceShipPlacement(BoardSegment::FieldState::Ship);
+        replaceShipPlacement(SegmentState::Ship, ship);
         return true; 
     }
     else {
         std::cout<<"Es kommt zu Kollision!";
-        replaceShipPlacement(BoardSegment::FieldState::Water);
+        replaceShipPlacement(SegmentState::Water, nullptr);
         return false;
     }
 }
@@ -122,15 +121,15 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 bool Board::checkForColission() const{
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j]->fieldState == BoardSegment::FieldState::ShipPlacement){
-                if(grid[i - 1][j]->fieldState == BoardSegment::FieldState::Ship || //collision North
-                grid[i + 1][j]->fieldState == BoardSegment::FieldState::Ship || //collision South
-                grid[i][j - 1]->fieldState == BoardSegment::FieldState::Ship || //collision East
-                grid[i][j + 1]->fieldState == BoardSegment::FieldState::Ship || //collision West
-                grid[i - 1][j - 1]->fieldState == BoardSegment::FieldState::Ship || //collision North-East
-                grid[i - 1][j + 1]->fieldState == BoardSegment::FieldState::Ship || //collision North-West
-                grid[i + 1][j - 1]->fieldState == BoardSegment::FieldState::Ship || //collision South-East
-                grid[i + 1][j + 1]->fieldState == BoardSegment::FieldState::Ship    //collision South-West
+            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
+                if(grid[i - 1][j]->fieldState == SegmentState::Ship || //collision North
+                grid[i + 1][j]->fieldState == SegmentState::Ship || //collision South
+                grid[i][j - 1]->fieldState == SegmentState::Ship || //collision East
+                grid[i][j + 1]->fieldState == SegmentState::Ship || //collision West
+                grid[i - 1][j - 1]->fieldState == SegmentState::Ship || //collision North-East
+                grid[i - 1][j + 1]->fieldState == SegmentState::Ship || //collision North-West
+                grid[i + 1][j - 1]->fieldState == SegmentState::Ship || //collision South-East
+                grid[i + 1][j + 1]->fieldState == SegmentState::Ship    //collision South-West
                 )
                 return true;
             }
@@ -139,11 +138,12 @@ bool Board::checkForColission() const{
     return false; 
 }
 
-void Board::replaceShipPlacement(BoardSegment::FieldState newState) {
+void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
     for(int i = 0; i < boardSize; i++){
         for(int j = 0; j < boardSize; j++){
-            if(grid[i][j]->fieldState == BoardSegment::FieldState::ShipPlacement){
+            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
                 grid[i][j]->fieldState = newState;
+                grid[i][j]->setShipOnSegment(shipToPlace);
             }
         }
     }
@@ -174,9 +174,39 @@ Direction Board::numberToDirection(int number)  const {
         case 2:
             return Direction::South;
         case 3:
-            return Direction::East;
+            return Direction::West;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //exc. Klasse erstellen und exc. abfangen und verarbeiten 
     }
 }
 
+void Board::setSunkenShips() {
+    for (int i = 0; i < boardSize; i++) {
+        for (int j = 0; j < boardSize; j++) {
+            BoardSegment* segment = grid[i][j];
+            if (segment->isShipHit()) {
+                Ship* ship = segment->getShipOnSegment();
+                if (ship) {
+                    bool allSegmentsHit = true;
+
+                    // Check if all Segments of the Ship are hitted
+                    for (int x = 0; x < boardSize; x++) {
+                        for (int y = 0; y < boardSize; y++) {
+                            if (grid[x][y]->getShipOnSegment() == ship && !grid[x][y]->isShipHit()) {
+                                allSegmentsHit = false;
+                                break;
+                            }
+                        }
+                        if (!allSegmentsHit) {
+                            break;
+                        }
+                    }
+
+                    if (allSegmentsHit) {
+                        ship->isSunken = true;
+                    }
+                }
+            }
+        }
+    }
+}
