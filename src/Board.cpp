@@ -20,9 +20,7 @@ int Board::getBoardSize() {
     return this->boardSize;
 }
 
-
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
-    std::vector<BoardSegment*> segmentsOfShip;
     BoardSegment* BoardSegmentToPlace;
     std::string testDirection = "test"; 
     switch (direction)
@@ -35,7 +33,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 BoardSegmentToPlace = grid[latitude - i][longitude];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
-                    segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
                     replaceShipPlacement(SegmentState::Water, nullptr);
@@ -53,7 +50,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 BoardSegmentToPlace = grid[latitude + i][longitude];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
-                    segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
                     replaceShipPlacement(SegmentState::Water, nullptr);
@@ -71,13 +67,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 BoardSegmentToPlace = grid[latitude][longitude - i];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
-                    segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
                     replaceShipPlacement(SegmentState::Water, nullptr);
                     return false;
                 }
-                
             }
             testDirection = "Osten";
         break;
@@ -90,7 +84,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
                 BoardSegmentToPlace = grid[latitude][longitude + i];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
-                    segmentsOfShip.push_back(BoardSegmentToPlace);
                 }
                 else {
                     replaceShipPlacement(SegmentState::Water, nullptr);
@@ -112,7 +105,7 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
         return true; 
     }
     else {
-        std::cout<<"Es kommt zu Kollision!";
+        std::cout<<"Es kommt zur Kollision!"<<std::endl;
         replaceShipPlacement(SegmentState::Water, nullptr);
         return false;
     }
