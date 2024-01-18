@@ -17,9 +17,9 @@ public:
     virtual void attack(Board* board) = 0; 
     int getBoardSize();
     BoardSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
-
     void setSunkenShips();
-    
+    bool allShipsSunk() const;
+
 protected:
     Direction numberToDirection(int number) const;
     int cordinateToLatitude(const std::string cordinate) const;
@@ -28,6 +28,7 @@ protected:
     void replaceShipPlacement(SegmentState newState, Ship* shipToPlace);
     bool placeShip(int latitude, int longitude, Direction direction, Ship* ship);
     int const boardSize = 10;
+    
 
     std::vector<Ship*> shipsNextToBoard;
     std::vector<Ship*> shipsOnBoard;

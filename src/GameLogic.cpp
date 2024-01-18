@@ -48,9 +48,16 @@ void GameLogic::startGame(){
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
 
-    board1->attack(board2);
-    board2->attack(board1);
-}
+    while(!(board1->allShipsSunk()) || !(board2->allShipsSunk())){
+        board1->attack(board2);
+        board2->attack(board1);
+
+        Output::printPlayerBoard(board1);
+        Output::printPlayerBoard(board2);
+        }
+
+    }
+    
 
 void GameLogic::newGame() {
     //Todo: Spielernamen abfragen 
@@ -64,6 +71,7 @@ void GameLogic::newGame() {
 }
 
 void GameLogic::loadGame() {
+    
 
 }
 

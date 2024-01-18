@@ -24,34 +24,42 @@ void ComputerBoard::placeShips() {
 }
 
 void ComputerBoard::attack(Board* board) {
-    if(!firstHit || shipHit->isSunken()){
-        firstHit = false;
-        secondHit = false;
-        BoardSegment* boardSegmentToHit;
-        do{
-            lastHitLat = getRandomNumber(0,boardSize - 1);
-            lastHitLon = getRandomNumber(0,boardSize - 1);
-            boardSegmentToHit = board->grid[lastHitLat][lastHitLon];
-        } while(boardSegmentToHit->isWaterHit() || boardSegmentToHit->isShipHit() || boardSegmentToHit->isRevealed());
+    if (!firstHit || (shipHit != nullptr && shipHit->isSunken())) {
+        // Debug-Ausgabe
+        std::cout << "Entering initial attack phase..." << std::endl;
 
-        if(boardSegmentToHit->isWater()) {
+        BoardSegment* boardSegmentToHit;
+        do {
+            lastHitLat = getRandomNumber(0, boardSize - 1);
+            lastHitLon = getRandomNumber(0, boardSize - 1);
+            boardSegmentToHit = board->grid[lastHitLat][lastHitLon];
+        } while (boardSegmentToHit->isWaterHit() || boardSegmentToHit->isShipHit() || boardSegmentToHit->isRevealed());
+
+        if (boardSegmentToHit->isWater()) {
             boardSegmentToHit->setWaterHit();
+            // Debug-Ausgabe
+            std::cout << "Hit water at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
         }
-        if(boardSegmentToHit->isShip()) {
+        if (boardSegmentToHit->isShip()) {
             boardSegmentToHit->setShipHit();
             shipHit = boardSegmentToHit->getShipOnSegment();
             neighboursRevealMode = 2;
             revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
             firstHit = true;
+            // Debug-Ausgabe
+            std::cout << "Hit ship at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
         }
     }
-    else if(firstHit && !secondHit) {
+    else if (firstHit && !secondHit) {
+        // Debug-Ausgabe
+        std::cout << "Entering second hit phase..." << std::endl;
+
         bool validDirectionFound = false;
 
         while (!validDirectionFound) {
-            int revealDirection = getRandomNumber(0, 3); 
+            int revealDirection = getRandomNumber(0, 3);
 
-            switch (revealDirection) { 
+            switch (revealDirection) {
                 case 0: // North
                     latOffsetReveal = -1;
                     neighboursRevealMode = 1;
@@ -81,7 +89,9 @@ void ComputerBoard::attack(Board* board) {
                 if (boardSegmentToReveal->isWater()) {
                     boardSegmentToReveal->setWaterHit();
                     validDirectionFound = true;
-
+                    // Debug-Ausgabe
+                    std::cout << "Hit water at (" << newLat << ", " << newLon << ")" << std::endl;
+                }
                 if (boardSegmentToReveal->isShip()) {
                     boardSegmentToReveal->setShipHit();
                     lastHitLat = newLat;
@@ -89,16 +99,32 @@ void ComputerBoard::attack(Board* board) {
                     revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
                     secondHit = true;
                     validDirectionFound = true;
-                    }
+                    board->setSunkenShips();
+                    // Debug-Ausgabe
+                    std::cout << "Hit ship at (" << newLat << ", " << newLon << ")" << std::endl;
                 }
             }
         }
     }
-    else if (!(shipHit->isSunken())) {
-        int lastHitLat = lastHitLat + latOffsetReveal;
-        int lastHitLon = lastHitLon + lonOffsetReveal;
-        board->grid[lastHitLat][lastHitLon]->setShipHit();
-        revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
+    else if (shipHit != nullptr && !shipHit->isSunken()) {
+        // Debug-Ausgabe
+        std::cout << "Continuing to attack previously hit ship..." << std::endl;
+
+        int newLat = lastHitLat + latOffsetReveal;
+        int newLon = lastHitLon + lonOffsetReveal;
+        board->grid[newLat][newLon]->setShipHit();
+        revealNeighbors(board, newLat, newLon, neighboursRevealMode);
+        board->setSunkenShips();
+        // Debug-Ausgabe
+        std::cout << "Continuing attack on ship at (" << newLat << ", " << newLon << ")" << std::endl;
+    }
+
+    if (shipHit != nullptr && shipHit->isSunken()) {
+        shipHit = nullptr;
+        firstHit = false;
+        secondHit = false;
+        // Debug-Ausgabe
+        std::cout << "Resetting attack state after sinking a ship." << std::endl;
     }
 }
 

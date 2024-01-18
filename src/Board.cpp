@@ -199,5 +199,15 @@ void Board::setSunkenShips() {
                 }
             }
         }
+
     }
+}
+
+bool Board::allShipsSunk() const {
+    for (Ship* ship : shipsOnBoard) {
+        if (!ship->isSunken()) {
+            return false;
+        }
+    }
+    return true;
 }

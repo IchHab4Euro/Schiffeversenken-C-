@@ -4,7 +4,7 @@
 #include "Ship.h"
 #include <iostream>
 
-enum class SegmentState {Ship, ShipHit, Water, WaterHit, Revealed,ShipPlacement};
+enum class SegmentState {Ship, ShipHit, Water, WaterHit, Revealed, ShipPlacement};
 
 class BoardSegment {
     public:
