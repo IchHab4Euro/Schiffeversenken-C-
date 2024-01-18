@@ -5,30 +5,30 @@
 #include <algorithm>
 
 void PlayerBoard::placeShips() {
+    int ships = shipsNextToBoard.size();
     while (!shipsNextToBoard.empty()) {
 
-        Ship* selectedShip = shipSelection();
+        Ship* selectedShip = shipSelection(ships);
 
         std::string shipCoordinates;
         std::string message;
         int longitude, latitude, directionNumber;
         bool shipPlaced = false;  
         while (!shipPlaced) {
-            message = "Du hast das Schiff: " + selectedShip->getName() + " mit einer Gr\224sse: " + std::to_string(selectedShip->getLength()) + ". Wohin soll das Schiff platziert werden?";
-            Output::printBoxMessage(message);
-            shipCoordinates = Input::userinputCoordinates("Gib die Koordinate ein: ", Board::getBoardSize());
+            message = "Du hast das Schiff: " + selectedShip->getName() + " mit einer Gr\224sse: " + std::to_string(selectedShip->getLength());
+            Output::printBoxMessage(message, true);
+            shipCoordinates = Input::userinputCoordinates("Wohin soll das Schiff platziert werden? Gib die Koordinate ein: ", Board::getBoardSize());
             latitude = cordinateToLatitude(shipCoordinates);
             longitude = cordinateToLongitude(shipCoordinates);
             
-            Output::printBoxMessage("Bitte gib eine Richtung an, in der das Schiff platziert werden soll.");
-            std::vector<std::string> directions = {"0: North", "1: East", "2: South", "3: West"};
+            Output::printBoxMessage("Bitte gib eine Richtung an, in der das Schiff platziert werden soll.", true);
+            std::vector<std::string> directions = {"North", "East", "South", "West"};
             Output::printMenue(directions);
             
-            directionNumber = Input::userinputInt("W\204hlen sie eine Richtung: ", 0, 3);
+            directionNumber = Input::userinputInt("W\204hlen sie eine Richtung: ", 1, 4);
  
             Direction direction = numberToDirection(directionNumber);
 
-            std::cout << std::to_string(latitude) << std::to_string(longitude) << std::to_string(directionNumber) << selectedShip->getName() << std::endl;
             shipPlaced = placeShip(latitude, longitude, direction, selectedShip);
             std::cout << shipPlaced << std::endl;
         }
@@ -41,12 +41,12 @@ void PlayerBoard::placeShips() {
     }
 }
 
-Ship* PlayerBoard::shipSelection()  {
+Ship* PlayerBoard::shipSelection(int ships)  {
     Output::printBoardWithMenue(this, shipsNextToBoard);
     std::string message = "Welches Schiff willst du platzieren?";
     int pickedShipId = 0;
     while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
-        pickedShipId = Input::userinputInt(message, 1, shipsNextToBoard.size());
+        pickedShipId = Input::userinputInt(message, 1, ships);
         if (!checkContainsShip(shipsNextToBoard, pickedShipId))  {
             message = "Sie haben dieses Schiff bereits platziert! Wählen sie ein neues";
         }  
@@ -106,3 +106,40 @@ void PlayerBoard::attack(Board* enemyBoard) {
         Output::printBoxMessage(message);
     }
 }
+
+void PlayerBoard::attack(Board* enemyBoard) {
+    std::string message;
+    std::string attackCoordinates;
+
+    message = "Gib die Koordinaten für deinen Angriff ein: ";
+    Output::printBoxMessage(message);
+    attackCoordinates = Input::userinputCoordinates("Gib die Koordinate ein: ", Board::getBoardSize());
+
+    int latitude = cordinateToLatitude(attackCoordinates);
+    int longitude = cordinateToLongitude(attackCoordinates);
+
+    BoardSegment* targetSegment = enemyBoard->grid[latitude][longitude];
+
+    if (targetSegment->isShip()) {
+        targetSegment->setShipHit();
+
+        message = "Treffer bei " + attackCoordinates + "!";
+        Output::printBoxMessage(message);
+
+        Ship* hitShip = targetSegment->getShipOnSegment();
+        enemyBoard->setSunkenShips();
+        if (hitShip->isSunken()) {
+            message = "Du hast das Schiff " + hitShip->getName() + " versenkt!";
+            Output::printBoxMessage(message);
+        }
+    } else if (targetSegment->isWater()) {
+        targetSegment->setWaterHit();
+        message = "Nur Wasser getroffen bei: " + attackCoordinates + ".";
+        Output::printBoxMessage(message);
+    } else {
+        message = "Dieses Feld hast du bereits angegriffen!";
+        Output::printBoxMessage(message);
+    }
+}
+
+void PlayerBoard::attack(Board* board) {}

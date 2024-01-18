@@ -15,7 +15,7 @@ class PlayerBoard : public Board {
         void attack(Board* board) override; 
     
     private:
-        Ship* shipSelection(); 
+        Ship* shipSelection(int ships); 
         bool checkContainsShip(std::vector<Ship*> shipList, int idToCheck);
         Ship* getShipById(std::vector<Ship*> shipList, int shipId);
 };
