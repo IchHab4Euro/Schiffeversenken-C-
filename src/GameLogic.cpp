@@ -47,13 +47,16 @@ void GameLogic::startGame(){
 
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
+
+    board1->attack(board2);
+    board2->attack(board1);
 }
 
 void GameLogic::newGame() {
     //Todo: Spielernamen abfragen 
     player1 = new Player("Rumpelstielschen");
     player2 = new Player("Computer");
-    board1 = new PlayerBoard();
+    board1 = new ComputerBoard();
     board2 = new ComputerBoard();
     board1->init(startingShips);
     board2->init(startingShips);

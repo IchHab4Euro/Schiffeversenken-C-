@@ -105,7 +105,7 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
         return true; 
     }
     else {
-        std::cout<<"Es kommt zur Kollision!"<<std::endl;
+        //std::cout<<"Es kommt zur Kollision!"<<std::endl;
         replaceShipPlacement(SegmentState::Water, nullptr);
         return false;
     }
