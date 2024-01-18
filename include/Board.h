@@ -14,6 +14,7 @@ public:
     Board();
     void init(std::vector<Ship*> initShips);
     virtual void placeShips() = 0;
+    virtual void attack(Board* board) = 0; 
     int getBoardSize();
     BoardSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
 
@@ -26,12 +27,13 @@ protected:
     bool checkForColission() const;
     void replaceShipPlacement(SegmentState newState, Ship* shipToPlace);
     bool placeShip(int latitude, int longitude, Direction direction, Ship* ship);
+    int const boardSize = 10;
 
     std::vector<Ship*> shipsNextToBoard;
     std::vector<Ship*> shipsOnBoard;
      
 private:
-    int const boardSize = 10;
+    
     
     //Sammlung aller Spielfelder ungeordnet
 };

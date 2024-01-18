@@ -19,6 +19,10 @@ int Ship::getId() const {
     return id;
 }
 
+bool Ship::isSunken(){
+    return this->sunk;
+}
+
 /*
 bool Ship::isShipSunk() const{
     for(BoardSegment* shipSegment : BoardSegments){

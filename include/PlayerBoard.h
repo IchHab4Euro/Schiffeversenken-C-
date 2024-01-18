@@ -12,6 +12,7 @@ class PlayerBoard : public Board {
     public:
         PlayerBoard() : Board() {}
         void placeShips() override;
+        void attack(Board* board) override; 
     
     private:
         Ship* shipSelection(); 

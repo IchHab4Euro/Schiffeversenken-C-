@@ -196,7 +196,7 @@ void Board::setSunkenShips() {
                     }
 
                     if (allSegmentsHit) {
-                        ship->isSunken = true;
+                        ship->sunk = true;
                     }
                 }
             }

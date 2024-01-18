@@ -10,11 +10,12 @@ public:
     std::string getName() const;
     int getLength() const;
     int getId() const;
+    bool isSunken();
 
     std::string name;
     int length;
     int id; 
-    bool isSunken;
+    bool sunk;
     
     static int nextId; 
 
