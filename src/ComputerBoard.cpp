@@ -55,10 +55,8 @@ void ComputerBoard::attack(Board* board) {
         bool validDirectionFound = false;
         while (!validDirectionFound) {
             int revealDirection = getRandomNumber(1, 4);
-            int revealDirection = getRandomNumber(1, 4);
 
             switch (revealDirection) {
-                case 1: // North
                 case 1: // North
                     latOffsetReveal = -1;
                     lonOffsetReveal = 0;
@@ -69,7 +67,6 @@ void ComputerBoard::attack(Board* board) {
                     lonOffsetReveal = 1;
                     neighboursRevealMode = 0;
                     break;
-                case 3: // South
                 case 3: // South
                     latOffsetReveal = 1;
                     lonOffsetReveal = 0;

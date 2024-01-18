@@ -42,11 +42,13 @@ void GameLogic::init() { //vlt umbennen zu
 }
 
 void GameLogic::startGame(){
+    phase = false;
     board1->placeShips();
     board2->placeShips();
-
-    //Output::printPlayerBoard(board1);
-    //Output::printPlayerBoard(board2);
+    phase = true;
+    saveGame();
+    Output::printPlayerBoard(board1);
+    Output::printPlayerBoard(board2);
 
     while(!(board1->allShipsSunk())){
         board1->attack(board2);
@@ -86,6 +88,97 @@ void GameLogic::newGame() {
     board1->init(startingShipsPlayer);
     board2->init(startingShipsComputer);
     startGame();
+}
+
+void GameLogic::saveGame()  {
+    std::string playName;
+    std::vector<Ship*> ships;
+    std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
+    std::cin >> playName;
+    if (phase == false)  {
+        ships = board1->getShipsNextToBoard();
+    } else  {
+        ships = board1->getShipsOnBoard();
+    }
+    std::string saveString = playName + ";" + player1->name + ";" + std::to_string(phase) + ";" + std::to_string(ships.size()) + ";";
+    for (int i = 0; i < ships.size(); i++)  {
+        saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";";
+    }
+
+    saveString = saveString + std::to_string(board1->getBoardSize()) + ";";
+
+    for(int i = 0; i < board1->getBoardSize(); i++)  {
+        for (int j = 0; j < board1->getBoardSize(); j++)  {
+            BoardSegment* boardsegmentP = board1->grid[i][j];
+            std::string symbol;
+            std::string shipID;
+            if (boardsegmentP->isRevealed())  {
+                symbol = "r";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentP->isShip())  {
+                symbol = "s";
+                shipID = std::to_string(boardsegmentP->getShipOnSegment()->getId());
+                saveString = saveString + symbol + ":" + shipID + ";";
+            }
+            if (boardsegmentP->isShipHit())  {
+                symbol = "#";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentP->isShipPlacement())  {
+                symbol = "p";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentP->isWater())  {
+                symbol = "w";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentP->isWaterHit())  {
+                symbol = "h";
+                saveString = saveString + symbol + ";";
+            }
+        }
+    }    
+    for(int i = 0; i < board2->getBoardSize(); i++)  {
+        for (int j = 0; j < board1->getBoardSize(); j++)  {
+            BoardSegment* boardsegmentC = board2->grid[i][j];
+            std::string symbol;
+            std::string shipID;
+            if (boardsegmentC->isRevealed())  {
+                symbol = "r";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentC->isShip())  {
+                symbol = "s";
+                shipID = std::to_string(boardsegmentC->getShipOnSegment()->getId());
+                saveString = saveString + symbol + ":" + shipID + ";";
+            }
+            if (boardsegmentC->isShipHit())  {
+                symbol = "#";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentC->isShipPlacement())  {
+                symbol = "p";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentC->isWater())  {
+                symbol = "w";
+                saveString = saveString + symbol + ";";
+            }
+            if (boardsegmentC->isWaterHit())  {
+                symbol = "h";
+                saveString = saveString + symbol + ";";
+            }
+        }
+    }    
+    std::ofstream csvFile("../FieldSave.csv", std::ios_base::app);
+
+    if (csvFile.is_open())  {
+        csvFile << saveString << std::endl;
+        csvFile.close();
+    } else  {
+        std::cout << "Datei konnte nicht ge\224ffnet werden!" << std::endl;
+    } 
 }
 
 void GameLogic::loadGame() {

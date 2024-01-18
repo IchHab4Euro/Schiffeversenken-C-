@@ -216,3 +216,11 @@ bool Board::allShipsSunk() const {
 
     return allSunk;
 }
+
+std::vector<Ship*> Board::getShipsNextToBoard()  {
+    return shipsNextToBoard;
+}
+
+std::vector<Ship*> Board::getShipsOnBoard() {
+    return shipsOnBoard;
+}
