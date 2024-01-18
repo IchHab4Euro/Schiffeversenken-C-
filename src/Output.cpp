@@ -262,9 +262,9 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             std::cout << "|" << color << std::string(7, symbolP) << RESET;
         }
         
-        std::cout << "|" << std::string(9, ' ');
-        char symbolC = ' '; 
+        std::cout << "|" << std::string(9, ' '); 
         for (int i = 0; i < 10; i++)  {
+            char symbolC = ' ';
             BoardSegment* segmentC = pComputer->grid[pRow][i];
             if (segmentC->isShipHit())  {
                 symbolC = '#';
@@ -274,6 +274,11 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
                     color = RED;
                 }
             }
+            if (segmentC->isWaterHit())  {
+                symbolC = '#';
+                color = BLUE;
+            }
+            
             std::cout << "|" << color << std::string(7, symbolC) << RESET;
         }
         if (j == 1)  {

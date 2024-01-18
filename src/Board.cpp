@@ -6,12 +6,16 @@
 Board::Board(){
 }
 
-void Board::init(std::vector<Ship*> initShips) {
+//Nicht fertig
+void Board::init(BoardSegment* initGrid, std::vector<Ship*> initShips) {
     //setup grid
-    for(int lat = 0; lat < boardSize; lat++){
+
+    if (initGrid == nullptr)  {
+        for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
-            grid[lat][lon] = new BoardSegment(SegmentState::Water);
+            initGrid[lat][lon] = new BoardSegment(SegmentState::Water);
         }
+    }    
     }
     shipsNextToBoard = initShips;
 }

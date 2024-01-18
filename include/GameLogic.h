@@ -28,6 +28,7 @@ class GameLogic {
         Board* board2;
         Player* player1;
         Player* player2;
+        std::string gameName;
 
         void newGame();
         void saveGame();

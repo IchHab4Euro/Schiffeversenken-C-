@@ -24,8 +24,8 @@ void GameLogic::init() { //vlt umbennen zu
             case 1: //New Game 
                 newGame();
                 break;
-            case 2: //Load Game 
-                //Todo: Print verfügbaren Speicherstände
+            case 2: 
+                loadGame();
                 break;
             case 3: //Exit
                 //Todo: Settings
@@ -83,6 +83,7 @@ void GameLogic::newGame() {
     player2 = new Player("Computer");
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
+    BoardSegment =
     board1->init(startingShipsPlayer);
     board2->init(startingShipsComputer);
     startGame();
@@ -180,7 +181,96 @@ void GameLogic::saveGame()  {
 }
 
 void GameLogic::loadGame() {
+    std::ifstream csvFileName("../FieldSave.csv");
+    std::vector<std::string> gameNames;
+
+    if (csvFileName.is_open()) {
+        std::string lineN;
+
+        while (std::getline(csvFileName, lineN)) {
+            std::stringstream ss(lineN);
+            std::string gameName;
+            if (std::getline(ss, gameName, ';')) {
+                gameNames.push_back(gameName);
+            }
+        }
+        csvFileName.close();
+    }
+
+    if (gameNames.empty())  {
+        std::cout << "Es gibt keine Spielst\204nde zum laden!" << std::endl;
+        return;
+    }
     
+    int game;
+    std::ifstream csvFile("../FieldSave.csv");
+    Output::printMenue(gameNames);
+    game = Input::userinputInt("W\204hlen sie einen der Spielst\204nde: ", 1, gameNames.size());
+    std::string line;
+    if (csvFile.is_open()) {
+        int zeile = 1;
+        while (std::getline(csvFile, line)) {
+            if (zeile == game)  {
+                break;
+            } else  {
+                zeile++;
+            }
+        }
+        csvFile.close();
+    }
+    std::cout << line << std::endl;
+
+    std::stringstream ss(line);
+    std::string tempFileInput;
+    bool tempPhase;
+
+    std::getline(ss, gameName, ';');
+
+    std::getline(ss, tempFileInput, ';');
+    player1 = new Player(tempFileInput);
+    player2 = new Player("Computer");
+
+    std::getline(ss, tempFileInput, ';');
+    if (tempFileInput == "1")  {
+        phase = true;
+    } else  {
+        phase = false;
+    }
+    
+    //Schiffe erstellen
+
+    board1 = new PlayerBoard();
+    board2 = new ComputerBoard();
+
+    std::getline(ss, tempFileInput, ';');
+    int boardSize = std::stoi(tempFileInput);
+
+    BoardSegment* grid[boardSize][boardSize];
+    for(int lat = 0; lat < boardSize; lat++){
+        for(int lon = 0; lon < boardSize; lon++){
+            SegmentState segmentStateL;
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "r")  {
+                segmentStateL = SegmentState::Revealed;
+            }
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "s")  {
+                segmentStateL = SegmentState::Ship;
+            }
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "#")  {
+                segmentStateL = SegmentState::ShipHit;
+            }
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "p")  {
+                segmentStateL = SegmentState::ShipPlacement;
+            }
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "w")  {
+                segmentStateL = SegmentState::Water;
+            }
+            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "h")  {
+                segmentStateL = SegmentState::WaterHit;
+            }
+            grid[lat][lon] = new BoardSegment(SegmentState::Water);
+        }
+    }
+
+    board1->init()
 
 }
-
