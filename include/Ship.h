@@ -1,28 +1,24 @@
-#ifndef SHIP_H //sollen wir das so überal machen?
+#ifndef SHIP_H 
 #define SHIP_H
 
-#include "BoardSegment.h"
 #include <string>
 #include <vector>
 
-enum class Direction {North, East, South, West};
-
 class Ship {
 public:
-    Ship(std::string name, int length);
+    Ship(std::string name, int length, bool isSunken);
     std::string getName() const;
     int getLength() const;
     int getId() const;
-    bool isShipSunk() const;
-    void setBoardSegment(std::vector<BoardSegment*> BoardSegments);
-    Direction shipDirection;
 
-private:
     std::string name;
     int length;
     int id; 
-    std::vector<BoardSegment*> BoardSegments;
+    bool isSunken;
     
     static int nextId; 
+
+private:
+    
 };
 #endif
