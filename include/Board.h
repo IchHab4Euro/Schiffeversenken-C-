@@ -23,7 +23,7 @@ protected:
     Direction numberToDirection(int number) const;
     int cordinateToLatitude(const std::string cordinate) const;
     int cordinateToLongitude(const std::string cordinate) const;
-    bool checkForColission() const;
+    bool checkForColission();
     void replaceShipPlacement(SegmentState newState, Ship* shipToPlace);
     bool placeShip(int latitude, int longitude, Direction direction, Ship* ship);
 

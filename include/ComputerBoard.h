@@ -3,6 +3,7 @@
 
 #include "Board.h"
 #include <iostream>
+#include <ctime>
 
 class ComputerBoard : public Board {
     public:
@@ -11,5 +12,6 @@ class ComputerBoard : public Board {
 
     private:
         int getRandomNumber(int lowerBound, int upperBound);
+        int getRandomNumberWindows(int lowerBound, int upperBound);
 };
 #endif

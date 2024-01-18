@@ -2,6 +2,7 @@
 #define BOARDSEGMENT_H
 
 #include "Ship.h"
+#include <iostream>
 
 enum class SegmentState {Ship, ShipHit, ShipPlacement, Water};
 
