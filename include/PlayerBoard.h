@@ -2,6 +2,9 @@
 #define PLAYERBOARD_H
 
 #include "Board.h"
+#include "Output.h"
+#include "Input.h"
+#include "GameLogic.h"
 #include <iostream>
 #include <vector>
 

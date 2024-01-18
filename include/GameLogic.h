@@ -21,8 +21,7 @@ class GameLogic {
         GameLogic();
         //~GameLogic();
         void init();
-        
-        Output* output;
+
         Board* board1;
         Board* board2;
         Player* player1;

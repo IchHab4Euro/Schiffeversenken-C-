@@ -8,18 +8,17 @@ Player::Player(std::string name) : name(name) {
 }
 
 GameLogic::GameLogic() {
-    this->output = new Output();
 }
 
 void GameLogic::init() { //vlt umbennen zu
     //std::signal(SIGINT,signal_handler); Autosafe aktivieren
-    output->printWelcome(); //Todo: Press any Button to Continue, danach clear
+    Output::printWelcome(); //Todo: Press any Button to Continue, danach clear
     //Todo: Check for Autosafe
     //Todo: AutoSave durchführen
     char inputMenu;
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
     while(1) {
-        output->printMenue(menuePoints); //Todo: Zahlen vor die Menüopunkte + Zentral Ausrichten + Text drunter, dass Zahl eingeben soll
+        Output::printMenue(menuePoints); //Todo: Zahlen vor die Menüopunkte + Zentral Ausrichten + Text drunter, dass Zahl eingeben soll
         std::cin >> inputMenu;
         switch (inputMenu) {
             case '1': //New Game 
@@ -36,7 +35,7 @@ void GameLogic::init() { //vlt umbennen zu
                 break;
             default:
                 //Todo: print Error
-                output->printBoxError("Falsche Auswahl");
+                Output::printBoxError("Falsche Auswahl");
                 break;
         }
     }
@@ -47,7 +46,7 @@ void GameLogic::startGame(){
     board2->placeShips();
 
     //output->printPlayerBoard(board1);
-    output->printPlayerBoard(board2);
+    Output::printPlayerBoard(board2);
 }
 
 void GameLogic::newGame() {

@@ -70,7 +70,6 @@ void Output::printBoxMessage(std::string textMessage)  {
 
     const int textboxWidth = boxWidth;
     std::string type = "Nachricht";
-
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
     int length = type.length();
     int freeBefore = (textboxWidth - length) / 2;
