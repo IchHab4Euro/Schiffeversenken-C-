@@ -48,7 +48,7 @@ void GameLogic::startGame(){
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
 
-    while(!(board1->allShipsSunk()) || !(board2->allShipsSunk())){
+    while(!(board1->allShipsSunk()) && !(board2->allShipsSunk())){
         board1->attack(board2);
         board2->attack(board1);
 
