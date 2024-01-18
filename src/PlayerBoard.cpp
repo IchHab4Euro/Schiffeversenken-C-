@@ -77,7 +77,7 @@ void PlayerBoard::attack(Board* enemyBoard) {
     std::string attackCoordinates;
 
     message = "Gib die Koordinaten für deinen Angriff ein: ";
-    Output::printBoxMessage(message);
+    Output::printBoxMessage(message, true);
     attackCoordinates = Input::userinputCoordinates("Gib die Koordinate ein: ", Board::getBoardSize());
 
     int latitude = cordinateToLatitude(attackCoordinates);
@@ -89,57 +89,21 @@ void PlayerBoard::attack(Board* enemyBoard) {
         targetSegment->setShipHit();
 
         message = "Treffer bei " + attackCoordinates + "!";
-        Output::printBoxMessage(message);
+        Output::printBoxMessage(message, true);
 
         Ship* hitShip = targetSegment->getShipOnSegment();
         enemyBoard->setSunkenShips();
         if (hitShip->isSunken()) {
             message = "Du hast das Schiff " + hitShip->getName() + " versenkt!";
-            Output::printBoxMessage(message);
+            Output::printBoxMessage(message, true);
         }
     } else if (targetSegment->isWater()) {
         targetSegment->setWaterHit();
         message = "Nur Wasser getroffen bei: " + attackCoordinates + ".";
-        Output::printBoxMessage(message);
+        Output::printBoxMessage(message, true);
     } else {
         message = "Dieses Feld hast du bereits angegriffen!";
-        Output::printBoxMessage(message);
+        Output::printBoxMessage(message, true);
     }
 }
 
-void PlayerBoard::attack(Board* enemyBoard) {
-    std::string message;
-    std::string attackCoordinates;
-
-    message = "Gib die Koordinaten für deinen Angriff ein: ";
-    Output::printBoxMessage(message);
-    attackCoordinates = Input::userinputCoordinates("Gib die Koordinate ein: ", Board::getBoardSize());
-
-    int latitude = cordinateToLatitude(attackCoordinates);
-    int longitude = cordinateToLongitude(attackCoordinates);
-
-    BoardSegment* targetSegment = enemyBoard->grid[latitude][longitude];
-
-    if (targetSegment->isShip()) {
-        targetSegment->setShipHit();
-
-        message = "Treffer bei " + attackCoordinates + "!";
-        Output::printBoxMessage(message);
-
-        Ship* hitShip = targetSegment->getShipOnSegment();
-        enemyBoard->setSunkenShips();
-        if (hitShip->isSunken()) {
-            message = "Du hast das Schiff " + hitShip->getName() + " versenkt!";
-            Output::printBoxMessage(message);
-        }
-    } else if (targetSegment->isWater()) {
-        targetSegment->setWaterHit();
-        message = "Nur Wasser getroffen bei: " + attackCoordinates + ".";
-        Output::printBoxMessage(message);
-    } else {
-        message = "Dieses Feld hast du bereits angegriffen!";
-        Output::printBoxMessage(message);
-    }
-}
-
-void PlayerBoard::attack(Board* board) {}
