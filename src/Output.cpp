@@ -123,7 +123,7 @@ void Output::printPlayerBoard(Board* pBoard)  {
 
 void Output::printRow(Board* board, int pRow)  {
     char symbol;
-    std::string color = RESET;
+    std::string color;
     char letter = 'A';
     letter = letter+pRow;
     for (int j = 0; j < 3; j++)  {
@@ -134,6 +134,7 @@ void Output::printRow(Board* board, int pRow)  {
         }
         
         for (int i = 0; i < 10; i++)  {
+            color = RESET;
             BoardSegment* boardSegment = board->grid[pRow][i];
             if (boardSegment->isWater())  {
                 symbol = '~';
@@ -230,6 +231,7 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             std::cout << std::string(7, ' ');   
         }
         for (int i = 0; i < 10; i++)  {
+            color = RESET;
             BoardSegment* segmentP = pPlayer->grid[pRow][i];
             char symbolP = ' ';
             if (segmentP->isWater())  {
