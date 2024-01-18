@@ -134,25 +134,20 @@ void Output::printRow(Board* board, int pRow)  {
         }
         
         for (int i = 0; i < 10; i++)  {
-            SegmentState state = board->grid[pRow][i]->fieldState;
-            switch (state)  {
-            case SegmentState::Water:
+            BoardSegment* boardSegment = board->grid[pRow][i];
+            if (boardSegment->isWater())  {
                 symbol = ' ';
-                break;
-            case SegmentState::Ship:
+            } 
+            if (boardSegment->isShip())  {
                 symbol = '#';
-                break;
-            case SegmentState::ShipHit:
-                symbol = 's';
-                if (state->shipOnSegment()->isSunken())
-                {
-                    /* code */
+            }
+            if (boardSegment->isShipHit())  {
+                symbol = '#';
+                if (boardSegment->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
                 }
-                
-                break;
-            default:
-                symbol = ' ';
-                break;
             }
             std::cout << "|" << color << std::string(7, symbol) << RESET;
         }
