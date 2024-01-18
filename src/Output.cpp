@@ -123,6 +123,7 @@ void Output::printPlayerBoard(Board* pBoard)  {
 
 void Output::printRow(Board* board, int pRow)  {
     char symbol;
+    std::string color = RESET;
     char letter = 'A';
     letter = letter+pRow;
     for (int j = 0; j < 3; j++)  {
@@ -141,14 +142,19 @@ void Output::printRow(Board* board, int pRow)  {
             case SegmentState::Ship:
                 symbol = '#';
                 break;
-            case SegmentState::ShipPlacement:
-                symbol = 'p';
+            case SegmentState::ShipHit:
+                symbol = 's';
+                if (state->shipOnSegment()->isSunken())
+                {
+                    /* code */
+                }
+                
                 break;
             default:
                 symbol = ' ';
                 break;
             }
-            std::cout << "|" << std::string(7, symbol);
+            std::cout << "|" << color << std::string(7, symbol) << RESET;
         }
         std::cout << "|" << std::endl;
     }
