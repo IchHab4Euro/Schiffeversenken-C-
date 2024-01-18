@@ -43,7 +43,7 @@ std::string Input::userinputCoordinates(std::string pMessage, int pBoardSize)  {
             }
         }
         if (intCor == 0)  {
-            //numberI = std::stoi(numberS);
+            numberI = std::stoi(numberS);
         } else {
             message = "Bitte geben sie eine g\201ltige Koordinate ein.";
             continue;
@@ -61,8 +61,7 @@ std::string Input::userinputCoordinates(std::string pMessage, int pBoardSize)  {
         }
         inputKorrekt = 0;
     }
-    //input = letter + std::to_string(numberI);
-    std::cout << input << std::endl;
+    input = letter + std::to_string(numberI);
     return input;
 }
 

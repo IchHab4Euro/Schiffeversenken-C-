@@ -10,26 +10,27 @@ void PlayerBoard::placeShips() {
         Ship* selectedShip = shipSelection();
 
         std::string shipCoordinates;
+        std::string message;
         int longitude, latitude, directionNumber;
         bool shipPlaced = false;  
         while (!shipPlaced) {
-            //Todo: Output::shipLocation
-            std::cout << "Du hast das Schiff: " << selectedShip->getName() << " mit einer Gr\224sse: " << selectedShip->getLength() << std::endl;
-            std::cout << "Wohin soll das Schiff platziert werden? (Gib die Koordinaten an)" << std::endl;
-            //Todo: Input::shipLocation
-            std::cin >> shipCoordinates;
+            message = "Du hast das Schiff: " + selectedShip->getName() + " mit einer Gr\224sse: " + std::to_string(selectedShip->getLength()) + ". Wohin soll das Schiff platziert werden?";
+            Output::printBoxMessage(message);
+            shipCoordinates = Input::userinputCoordinates("Gib die Koordinate ein: ", Board::getBoardSize());
             latitude = cordinateToLatitude(shipCoordinates);
             longitude = cordinateToLongitude(shipCoordinates);
             
-            //Todo: Output::shipDirecion
-            std::cout << "Bitte gib eine Richtung an, in der das Schiff platziert werden soll." << std::endl;
-            std::cout << "0: unten, 1: oben, 2: rechts, 3: links" << std::endl;
-            //Todo: Input::shipDirecion
-            std::cin >> directionNumber;
-
+            Output::printBoxMessage("Bitte gib eine Richtung an, in der das Schiff platziert werden soll.");
+            std::vector<std::string> directions = {"0: North", "1: East", "2: South", "3: West"};
+            Output::printMenue(directions);
+            
+            directionNumber = Input::userinputInt("W\204hlen sie eine Richtung: ", 0, 3);
+ 
             Direction direction = numberToDirection(directionNumber);
 
+            std::cout << std::to_string(latitude) << std::to_string(longitude) << std::to_string(directionNumber) << selectedShip->getName() << std::endl;
             shipPlaced = placeShip(latitude, longitude, direction, selectedShip);
+            std::cout << shipPlaced << std::endl;
         }
 
         shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 

@@ -174,7 +174,7 @@ Direction Board::numberToDirection(int number)  const {
         case 2:
             return Direction::South;
         case 3:
-            return Direction::East;
+            return Direction::West;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //exc. Klasse erstellen und exc. abfangen und verarbeiten 
     }
