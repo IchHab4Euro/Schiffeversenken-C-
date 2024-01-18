@@ -50,25 +50,43 @@ void GameLogic::startGame(){
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
 
-        while(!(board1->allShipsSunk()) || !(board2->allShipsSunk())){
+    while(!(board1->allShipsSunk())){
         board1->attack(board2);
-        board2->attack(board1);
+        //board2->attack(board1);
 
         Output::printPlayerBoard(board1);
-        Output::printPlayerBoard(board2);
+        //Output::printPlayerBoard(board2);
+        }
     }
-
-}
     
 
 void GameLogic::newGame() {
-    //Todo: Spielernamen abfragen 
+    
+    /*std::vector<Ship*> startingShipsPlayer = {
+            new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
+            new Ship("Testschiff", 2, false)
+        };
+    std::vector<Ship*> startingShipsComputer = {
+            new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
+            new Ship("Testschiff", 2, false)
+        };
+        */
+    std::vector<Ship*> startingShipsPlayer = {
+            new Ship("Schlachtschiff", 8, false)
+        };
+    std::vector<Ship*> startingShipsComputer = {
+            new Ship("Testschiff", 2, false)
+        };
+        
+
+    
+    //Todo: Spielernamen abfragen
     player1 = new Player("Rumpelstielschen");
     player2 = new Player("Computer");
-    board1 = new ComputerBoard();
+    board1 = new PlayerBoard();
     board2 = new ComputerBoard();
-    board1->init(startingShips);
-    board2->init(startingShips);
+    board1->init(startingShipsPlayer);
+    board2->init(startingShipsComputer);
     startGame();
 }
 
