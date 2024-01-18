@@ -71,5 +71,3 @@ Ship* PlayerBoard::getShipById(std::vector<Ship*> shipList, int shipId) {
     }
     return nullptr;
 }
-
-void PlayerBoard::attack(Board* board) {}

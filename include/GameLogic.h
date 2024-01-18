@@ -8,6 +8,8 @@
 #include "ComputerBoard.h"
 #include "Ship.h"
 #include <csignal>
+#include <sstream>
+#include <fstream>
 
 struct Player {
     Player(std::string name);
@@ -33,8 +35,11 @@ class GameLogic {
         };
 
         void newGame();
+        void saveGame();
         void loadGame();
         void startGame();
+    private:
+        bool phase;
 };
     //void signal_handler(int signal);
 #endif

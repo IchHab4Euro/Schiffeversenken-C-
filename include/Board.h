@@ -16,6 +16,8 @@ public:
     virtual void placeShips() = 0;
     virtual void attack(Board* board) = 0; 
     int getBoardSize();
+    std::vector<Ship*> getShipsNextToBoard();
+    std::vector<Ship*> getShipsOnBoard();
     BoardSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
     void setSunkenShips();
     bool allShipsSunk() const;
