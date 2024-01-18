@@ -141,6 +141,9 @@ void Output::printRow(Board* board, int pRow)  {
             case SegmentState::Ship:
                 symbol = '#';
                 break;
+            case SegmentState::ShipPlacement:
+                symbol = 'p';
+                break;
             default:
                 symbol = ' ';
                 break;

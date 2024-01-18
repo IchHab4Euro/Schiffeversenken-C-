@@ -62,6 +62,7 @@ std::string Input::userinputCoordinates(std::string pMessage, int pBoardSize)  {
         inputKorrekt = 0;
     }
     input = letter + std::to_string(numberI);
+    std::cout << input << std::endl;
     return input;
 }
 
@@ -84,5 +85,6 @@ int Input::userinputInt(std::string pMessage, int pLower, int pUpper)  {
             pMessage = "Bitte geben sie eine g\201ltige Zahl ein!";
         }
     }
+    std::cout << input << std::endl;
     return input;
 }
