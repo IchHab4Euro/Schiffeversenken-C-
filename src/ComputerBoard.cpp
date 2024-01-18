@@ -93,6 +93,8 @@ void ComputerBoard::attack(Board* board) {
                     std::cout << "Hit water at (" << newLat << ", " << newLon << ")" << std::endl;
                 }
                 if (boardSegmentToReveal->isShip()) {
+                    // Debug-Ausgabe
+                    std::cout << "Trying to hit Ship at (" << newLat << ", " << newLon << ")" << std::endl;
                     boardSegmentToReveal->setShipHit();
                     lastHitLat = newLat;
                     lastHitLon = newLon;
