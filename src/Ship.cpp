@@ -20,7 +20,7 @@ int Ship::getId() const {
 }
 
 bool Ship::isSunken(){
-    return this->sunk;
+    return sunk;
 }
 
 /*

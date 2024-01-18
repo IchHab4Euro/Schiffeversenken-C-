@@ -158,13 +158,13 @@ int Board::cordinateToLongitude(const std::string cordinate) const {
 
 Direction Board::numberToDirection(int number)  const { 
     switch (number) {
-        case 0:
-            return Direction::North;
         case 1:
-            return Direction::East;
+            return Direction::North;
         case 2:
-            return Direction::South;
+            return Direction::East;
         case 3:
+            return Direction::South;
+        case 4:
             return Direction::West;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //exc. Klasse erstellen und exc. abfangen und verarbeiten 
@@ -172,42 +172,47 @@ Direction Board::numberToDirection(int number)  const {
 }
 
 void Board::setSunkenShips() {
-    for (int i = 0; i < boardSize; i++) {
-        for (int j = 0; j < boardSize; j++) {
-            BoardSegment* segment = grid[i][j];
-            if (segment->isShipHit()) {
-                Ship* ship = segment->getShipOnSegment();
-                if (ship) {
-                    bool allSegmentsHit = true;
+    for (Ship* ship : shipsOnBoard) {
+        if (!ship->isSunken()) {
+            bool allHits = true;
 
-                    // Check if all Segments of the Ship are hitted
-                    for (int x = 0; x < boardSize; x++) {
-                        for (int y = 0; y < boardSize; y++) {
-                            if (grid[x][y]->getShipOnSegment() == ship && !grid[x][y]->isShipHit()) {
-                                allSegmentsHit = false;
-                                break;
-                            }
-                        }
-                        if (!allSegmentsHit) {
-                            break;
-                        }
-                    }
+            // Überprüfe alle Segmente des Schiffes
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    BoardSegment* segment = grid[i][j];
 
-                    if (allSegmentsHit) {
-                        ship->sunk = true;
+                    // Wenn das Segment zum Schiff gehört und nicht getroffen wurde
+                    if (segment->getShipOnSegment() == ship && 
+                        !(segment->isShipHit())) {
+                        allHits = false;
+                        break;
                     }
                 }
+                if (!allHits) break;
+            }
+
+            if (allHits) {
+                ship->sunk = true;
             }
         }
-
     }
 }
 
 bool Board::allShipsSunk() const {
+    bool allSunk = true;
     for (Ship* ship : shipsOnBoard) {
-        if (!ship->isSunken()) {
-            return false;
+        if (!(ship->isSunken())) {
+            allSunk = false;
+        } else {
+            std::cout << "Ship sunk: " << ship->getName() << std::endl;
         }
     }
-    return true;
+    
+    if (allSunk) {
+        std::cout << "All ships have been sunk!" << std::endl;
+    } else {
+        std::cout << "Not all ships are sunk yet." << std::endl;
+    }
+
+    return allSunk;
 }

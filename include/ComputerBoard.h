@@ -17,6 +17,8 @@ class ComputerBoard : public Board {
         Ship* shipHit = nullptr;
         bool firstHit = false;
         bool secondHit = false;
+
+        int exitCounter = 0; // muss wieder weg
         
         int lastHitLat = 0;
         int lastHitLon = 0;
