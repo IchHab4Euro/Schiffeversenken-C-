@@ -41,18 +41,17 @@ void PlayerBoard::placeShips() {
     }
 }
 
-Ship* PlayerBoard::shipSelection(){ //Todo: Output::shipSelection(ships)
-    std::cout << "Folgende Schiffe k\224nnen platziert werden:" << std::endl;
-        for (const Ship* ship : shipsNextToBoard) {
-            std::cout << ship->getId() << " Name: " << ship->getName() << ", L\204nge: " << ship->getLength() << std::endl;
-        }
-        int pickedShipId = 0;
-        //Todo: Input::shipSelection(ships)
-        while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
-            std::cout <<"Welches Schiff willst du platziere? (gebe eine g\201ltige Schiffs Id ein)" << std::endl;
-            std::cin >> pickedShipId; //was wenn String angeben
-        }
-        return getShipById(shipsNextToBoard, pickedShipId);
+Ship* PlayerBoard::shipSelection()  {
+    Output::printBoardWithMenue(this, shipsNextToBoard);
+    std::string message = "Welches Schiff willst du platzieren?";
+    int pickedShipId = 0;
+    while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
+        pickedShipId = Input::userinputInt(message, 1, shipsNextToBoard.size());
+        if (!checkContainsShip(shipsNextToBoard, pickedShipId))  {
+            message = "Sie haben dieses Schiff bereits platziert! Wählen sie ein neues";
+        }  
+    }
+    return getShipById(shipsNextToBoard, pickedShipId);
 }
 
 bool PlayerBoard::checkContainsShip(std::vector<Ship*> shipList, int idToCheck) {

@@ -60,11 +60,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
         break;
 
         case Direction::East://left, East
-            if(longitude - ship->getLength() < -1){
+            if(longitude + ship->getLength() > boardSize){
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                BoardSegmentToPlace = grid[latitude][longitude - i];
+                BoardSegmentToPlace = grid[latitude][longitude + i];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                 }
@@ -77,11 +77,11 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
         break;
 
         case Direction::West://right, West
-            if(longitude + ship->getLength() > boardSize){
+            if(longitude - ship->getLength() < -1){
                 return false;
             }
             for(int i = 0; i < ship->getLength(); i++){
-                BoardSegmentToPlace = grid[latitude][longitude + i];
+                BoardSegmentToPlace = grid[latitude][longitude - i];
                 if(BoardSegmentToPlace->isWater()){
                     BoardSegmentToPlace->fieldState = SegmentState::ShipPlacement;
                 }
@@ -111,24 +111,25 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
     }
 }
 
-bool Board::checkForColission() const{
-    for(int i = 0; i < boardSize; i++){
-        for(int j = 0; j < boardSize; j++){
-            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
-                if(grid[i - 1][j]->fieldState == SegmentState::Ship || //collision North
-                grid[i + 1][j]->fieldState == SegmentState::Ship || //collision South
-                grid[i][j - 1]->fieldState == SegmentState::Ship || //collision East
-                grid[i][j + 1]->fieldState == SegmentState::Ship || //collision West
-                grid[i - 1][j - 1]->fieldState == SegmentState::Ship || //collision North-East
-                grid[i - 1][j + 1]->fieldState == SegmentState::Ship || //collision North-West
-                grid[i + 1][j - 1]->fieldState == SegmentState::Ship || //collision South-East
-                grid[i + 1][j + 1]->fieldState == SegmentState::Ship    //collision South-West
-                )
-                return true;
+bool Board::checkForColission() {
+    for (int i = 0; i < boardSize; i++) {
+        for (int j = 0; j < boardSize; j++) {
+            if (grid[i][j]->fieldState == SegmentState::ShipPlacement) {
+                if ((i > 0 && grid[i - 1][j]->fieldState == SegmentState::Ship) || //collision North
+                    (i < boardSize - 1 && grid[i + 1][j]->fieldState == SegmentState::Ship) || //collision South
+                    (j > 0 && grid[i][j - 1]->fieldState == SegmentState::Ship) || //collision East
+                    (j < boardSize - 1 && grid[i][j + 1]->fieldState == SegmentState::Ship) || //collision West
+                    (i > 0 && j > 0 && grid[i - 1][j - 1]->fieldState == SegmentState::Ship) || //collision North-East
+                    (i > 0 && j < boardSize - 1 && grid[i - 1][j + 1]->fieldState == SegmentState::Ship) || //collision North-West
+                    (i < boardSize - 1 && j > 0 && grid[i + 1][j - 1]->fieldState == SegmentState::Ship) || //collision South-East
+                    (i < boardSize - 1 && j < boardSize - 1 && grid[i + 1][j + 1]->fieldState == SegmentState::Ship) //collision South-West
+                ) {
+                    return true;
+                }
             }
         }
     }
-    return false; 
+    return false;
 }
 
 void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
@@ -143,19 +144,16 @@ void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
 }
 
 int Board::cordinateToLatitude(const std::string cordinate) const {
-    if (cordinate.length() == 2){
-        int latitude = cordinate[0] - 'A';
-        return latitude;
-    }
-    return 0;
+    int latitude = cordinate[0] - 'A';
+    return latitude;
 }
 
 int Board::cordinateToLongitude(const std::string cordinate) const {
-    if (cordinate.length() == 2){
-        int longitude = cordinate[1] - '1';
-        return longitude;
+    int longitude = 0;
+    for (size_t i = 1; i < cordinate.size(); i++) {
+        longitude = longitude * 10 + (cordinate[i] - '0');
     }
-    return 0;
+    return longitude - 1;
 }
 
 Direction Board::numberToDirection(int number)  const { 

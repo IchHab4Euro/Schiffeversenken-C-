@@ -30,7 +30,7 @@ void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     std::cout << std::string(menueboxWidth, '-') << std::endl;
     
     int selection;
-    std::cout << "Bitte waehlen sie einen Menue Punkt aus: " << std::endl;
+    std::cout << "Bitte w\204hlen sie einen Menue Punkt aus: " << std::endl;
 }
 
 void Output::printBoxError(std::string errorMessage)  {
@@ -140,6 +140,9 @@ void Output::printRow(Board* board, int pRow)  {
                 break;
             case SegmentState::Ship:
                 symbol = '#';
+                break;
+            case SegmentState::ShipPlacement:
+                symbol = 'p';
                 break;
             default:
                 symbol = ' ';
@@ -263,7 +266,7 @@ void Output::printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue)  {
     {
         std::cout << std::string(8, '-');
     }
-    std::cout << "-" << std::string(8, ' ') << "Ihre Schiffe: " << std::endl;
+    std::cout << "-" << std::string(8, ' ') << "Zu platzierende Schiffe: " << std::endl;
 
     for (int i = 0; i < 10; i++)
     {
@@ -316,7 +319,7 @@ std::string Output::printShipNameAndLength(std::vector<Ship*> pMenue, int pMenue
     } else  {
         Ship* ship = pMenue[pMenuePos];
         std::string output;
-        output = ship->getName() + " Size: " + std::to_string(ship->getLength());
+        output = std::to_string(pMenue.at(pMenuePos)->getId()) + ". " + ship->getName() + " L\204nge: " + std::to_string(ship->getLength());
         return output;
     }
 }

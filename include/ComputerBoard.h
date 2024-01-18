@@ -3,6 +3,7 @@
 
 #include "Board.h"
 #include <iostream>
+#include <ctime>
 
 class ComputerBoard : public Board {
     public:
@@ -22,5 +23,6 @@ class ComputerBoard : public Board {
         int latOffsetReveal = 0;
         int lonOffsetReveal = 0;
         int neighboursRevealMode = 0;
+        int getRandomNumberWindows(int lowerBound, int upperBound);
 };
 #endif
