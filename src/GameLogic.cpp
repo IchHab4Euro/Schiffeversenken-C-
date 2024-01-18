@@ -45,17 +45,15 @@ void GameLogic::startGame(){
     phase = false;
     board1->placeShips();
     board2->placeShips();
-    phase = true;
-    saveGame();
+    
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
 
-    while(!(board1->allShipsSunk())){
+    while(!(board2->allShipsSunk())){
         board1->attack(board2);
-        //board2->attack(board1);
+        board2->attack(board1);
 
-        Output::printPlayerBoard(board1);
-        //Output::printPlayerBoard(board2);
+        Output::printBothBoards(board1, board2);
         }
     }
     

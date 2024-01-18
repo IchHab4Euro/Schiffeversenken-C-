@@ -21,6 +21,8 @@ public:
     BoardSegment* grid[10][10]; //nicht 10 fest sondern irgendwie über die BoardSize
     void setSunkenShips();
     bool allShipsSunk() const;
+    bool isValidPlacement(int latitude, int longitude, Direction direction, Ship* ship) const;
+    BoardSegment* getSegmentToPlace(int latitude, int longitude, Direction direction, int offset) const;
 
 protected:
     Direction numberToDirection(int number) const;

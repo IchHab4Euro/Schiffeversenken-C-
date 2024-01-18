@@ -20,6 +20,7 @@ int Board::getBoardSize() {
     return this->boardSize;
 }
 
+/*/
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
     BoardSegment* BoardSegmentToPlace;
     std::string testDirection = "test"; 
@@ -111,6 +112,111 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
     }
 }
 
+
+}
+*/
+bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
+    if (!isValidPlacement(latitude, longitude, direction, ship)) {
+        std::cout << "Ungültige Platzierung für das Schiff." << std::endl;
+        return false;
+    }
+
+    // Place Segments for the Ship
+    for (int i = 0; i < ship->getLength(); i++) {
+        BoardSegment* segmentToPlace = getSegmentToPlace(latitude, longitude, direction, i);
+        segmentToPlace->setShipOnSegment(ship);
+        segmentToPlace->fieldState = SegmentState::ShipPlacement;
+    }
+
+    // Check for collision after Segments are set 
+    if (checkForColission()) {
+        std::cout << "Kollision festgestellt, Platzierung nicht möglich." << std::endl;
+        replaceShipPlacement(SegmentState::Water, nullptr); // Entfernt vorläufige Platzierung
+        return false;
+    }
+
+    // Final Ship placement 
+    replaceShipPlacement(SegmentState::Ship, ship);
+    shipsOnBoard.push_back(ship);
+    std::cout << "Schiff platziert: " << ship->getName() << std::endl;
+    return true;
+}
+
+bool Board::isValidPlacement(int latitude, int longitude, Direction direction, Ship* ship) const {
+    for (int i = 0; i < ship->getLength(); i++) {
+        int latToCheck, lonToCheck;
+        switch (direction) {
+            case Direction::North:
+                latToCheck = latitude - i;
+                lonToCheck = longitude;
+                break;
+            case Direction::South:
+                latToCheck = latitude + i;
+                lonToCheck = longitude;
+                break;
+            case Direction::East:
+                latToCheck = latitude;
+                lonToCheck = longitude + i;
+                break;
+            case Direction::West:
+                latToCheck = latitude;
+                lonToCheck = longitude - i;
+                break;
+            default:
+                return false;
+        }
+
+        // check grid Area
+        if (latToCheck < 0 || latToCheck >= boardSize || lonToCheck < 0 || lonToCheck >= boardSize) {
+            return false;
+        }
+
+        // Check for collision
+        BoardSegment* segment = grid[latToCheck][lonToCheck];
+        if (segment->isShip() || segment->isShipPlacement()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+BoardSegment* Board::getSegmentToPlace(int latitude, int longitude, Direction direction, int offset) const {
+    int latToPlace, lonToPlace;
+    switch (direction) {
+        case Direction::North:
+            latToPlace = latitude - offset;
+            lonToPlace = longitude;
+            break;
+        case Direction::South:
+            latToPlace = latitude + offset;
+            lonToPlace = longitude;
+            break;
+        case Direction::East:
+            latToPlace = latitude;
+            lonToPlace = longitude + offset;
+            break;
+        case Direction::West:
+            latToPlace = latitude;
+            lonToPlace = longitude - offset;
+            break;
+        default:
+            throw std::invalid_argument("Ungültige Richtung für die Platzierung des Schiffs");
+    }
+
+    return grid[latToPlace][lonToPlace];
+}
+
+void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
+    for(int i = 0; i < boardSize; i++){
+        for(int j = 0; j < boardSize; j++){
+            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
+                grid[i][j]->fieldState = newState;
+                grid[i][j]->setShipOnSegment(shipToPlace);
+            }
+        }
+    }
+}
+
 bool Board::checkForColission() {
     for (int i = 0; i < boardSize; i++) {
         for (int j = 0; j < boardSize; j++) {
@@ -130,17 +236,6 @@ bool Board::checkForColission() {
         }
     }
     return false;
-}
-
-void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
-    for(int i = 0; i < boardSize; i++){
-        for(int j = 0; j < boardSize; j++){
-            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
-                grid[i][j]->fieldState = newState;
-                grid[i][j]->setShipOnSegment(shipToPlace);
-            }
-        }
-    }
 }
 
 int Board::cordinateToLatitude(const std::string cordinate) const {
