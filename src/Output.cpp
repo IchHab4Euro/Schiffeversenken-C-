@@ -136,10 +136,10 @@ void Output::printRow(Board* board, int pRow)  {
         for (int i = 0; i < 10; i++)  {
             BoardSegment* boardSegment = board->grid[pRow][i];
             if (boardSegment->isWater())  {
-                symbol = ' ';
+                symbol = '~';
             } 
             if (boardSegment->isShip())  {
-                symbol = '#';
+                symbol = 's';
             }
             if (boardSegment->isShipHit())  {
                 symbol = '#';
@@ -149,6 +149,18 @@ void Output::printRow(Board* board, int pRow)  {
                     color = RED;
                 }
             }
+            if (boardSegment->isRevealed())  {
+                symbol = ' ';
+            }
+            if (boardSegment->isShipPlacement())  {
+                symbol = 'p';
+            }
+            if (boardSegment->isWaterHit())  {
+                symbol = 'w';
+            }
+            
+            
+            
             std::cout << "|" << color << std::string(7, symbol) << RESET;
         }
         std::cout << "|" << std::endl;
@@ -208,6 +220,7 @@ void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
 }
 
 void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
+    std::string color;
     for (int j = 0; j < 3; j++)  {
         char letter = 'A';
         letter = letter+pRow;
@@ -217,31 +230,38 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             std::cout << std::string(7, ' ');   
         }
         for (int i = 0; i < 10; i++)  {
-            SegmentState stateField = pPlayer->grid[pRow][i]->fieldState;
-            char symbolP;
-            switch (stateField)  {
-            case SegmentState::Water:
+            BoardSegment* segmentP = pPlayer->grid[pRow][i];
+            char symbolP = ' ';
+            if (segmentP->isWater())  {
                 symbolP = ' ';
-                break;
-            case SegmentState::Ship:
-                symbolP = '#';
-                break;
-            default:
-                symbolP = ' ';
-                break;
             }
-            std::cout << "|" << std::string(7, symbolP);
+            if (segmentP->isShip())  {
+                symbolP = '#';
+            }
+            if (segmentP->isShipHit())  {
+                symbolP = '#';
+                if (segmentP->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
+                }
+            }
+            std::cout << "|" << color << std::string(7, symbolP) << RESET;
         }
         
         std::cout << "|" << std::string(9, ' ');
-        char symbolC; 
+        char symbolC = ' '; 
         for (int i = 0; i < 10; i++)  {
-            if (pComputer->grid[pRow][i]->isShipHit())  {                 
-                symbolC = 's';
-            } else  {
-                symbolC = ' ';
+            BoardSegment* segmentC = pComputer->grid[pRow][i];
+            if (segmentC->isShipHit())  {
+                symbolC = '#';
+                if (segmentC->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
+                }
             }
-            std::cout << "|" << std::string(7, symbolC);
+            std::cout << "|" << color << std::string(7, symbolC) << RESET;
         }
         if (j == 1)  {
             std::cout << "|" << std::string(4, ' ') << letter << std::endl;
