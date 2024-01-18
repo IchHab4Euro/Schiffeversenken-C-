@@ -30,14 +30,20 @@ void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     std::cout << std::string(menueboxWidth, '-') << std::endl;
     
     int selection;
-    std::cout << "Bitte w\204hlen sie einen Menue Punkt aus: " << std::endl;
 }
 
-void Output::printBoxError(std::string errorMessage)  {
+void Output::printBoxError(std::string errorMessage, bool textAdjust)  {
     std::string color;
     color = RED;
 
-    const int textboxWidth = boxWidth;
+    int textboxWidth;
+
+    if (textAdjust)  {
+        textboxWidth = errorMessage.size()+5;
+    } else  {
+        textboxWidth = boxWidth;
+    }
+
     std::string type = "Error";
 
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
@@ -52,7 +58,7 @@ void Output::printBoxError(std::string errorMessage)  {
     {
         std::string line = errorMessage.substr(start, textboxWidth - 5);
         std::string connection;
-        if (line.length() == textboxWidth-5)  {
+        if (line.length() == textboxWidth-5 && textAdjust == false)  {
             connection = "-";
         } else  {
             connection = std::string(textboxWidth - 4 - line.length(), ' ');
@@ -64,11 +70,17 @@ void Output::printBoxError(std::string errorMessage)  {
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
-void Output::printBoxMessage(std::string textMessage)  {
+void Output::printBoxMessage(std::string textMessage, bool textAdjust)  {
     std::string color;
     color = GREEN;
+    int textboxWidth;
 
-    const int textboxWidth = boxWidth;
+    if (textAdjust)  {
+        textboxWidth = textMessage.size()+5;
+    } else  {
+        textboxWidth = boxWidth;
+    }
+    
     std::string type = "Nachricht";
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
     int length = type.length();
@@ -78,15 +90,14 @@ void Output::printBoxMessage(std::string textMessage)  {
 
 
     size_t start = 0;
-    while (start < textMessage.length())
-    {
+    while (start < textMessage.length())  {
         std::string line = textMessage.substr(start, textboxWidth - 5);
         std::string connection;
-        if (line.length() == textboxWidth-5)  {
+        if (line.length() == textboxWidth-5 && textAdjust == false)  {
             connection = "-";
         } else  {
             connection = std::string(textboxWidth - 4 - line.length(), ' ');
-        }
+        }    
         
         std::cout << color << "| " << line << connection << " |" << RESET << std::endl;
         start += textboxWidth - 5;

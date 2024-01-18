@@ -15,27 +15,27 @@ void GameLogic::init() { //vlt umbennen zu
     Output::printWelcome(); //Todo: Press any Button to Continue, danach clear
     //Todo: Check for Autosafe
     //Todo: AutoSave durchführen
-    char inputMenu;
+    int inputMenu;
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
     while(1) {
-        Output::printMenue(menuePoints); //Todo: Zahlen vor die Menüopunkte + Zentral Ausrichten + Text drunter, dass Zahl eingeben soll
-        std::cin >> inputMenu;
+        Output::printMenue(menuePoints);
+        inputMenu = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, menuePoints.size());
         switch (inputMenu) {
-            case '1': //New Game 
+            case 1: //New Game 
                 newGame();
                 break;
-            case '2': //Load Game 
+            case 2: //Load Game 
                 //Todo: Print verfügbaren Speicherstände
                 break;
-            case '3': //Exit
+            case 3: //Exit
                 //Todo: Settings
                 break;
-            case '4':
+            case 4:
                 exit(1);
                 break;
             default:
                 //Todo: print Error
-                Output::printBoxError("Falsche Auswahl");
+                Output::printBoxError("Falsche Auswahl", false);
                 break;
         }
     }
@@ -48,15 +48,15 @@ void GameLogic::startGame(){
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
 
-    while(!(board1->allShipsSunk()) || !(board2->allShipsSunk())){
+        while(!(board1->allShipsSunk()) || !(board2->allShipsSunk())){
         board1->attack(board2);
         board2->attack(board1);
 
         Output::printPlayerBoard(board1);
         Output::printPlayerBoard(board2);
-        }
-
     }
+
+}
     
 
 void GameLogic::newGame() {

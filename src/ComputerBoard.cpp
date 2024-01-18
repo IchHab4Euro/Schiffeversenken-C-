@@ -57,22 +57,22 @@ void ComputerBoard::attack(Board* board) {
         bool validDirectionFound = false;
 
         while (!validDirectionFound) {
-            int revealDirection = getRandomNumber(0, 3);
+            int revealDirection = getRandomNumber(1, 4);
 
             switch (revealDirection) {
-                case 0: // North
+                case 1: // North
                     latOffsetReveal = -1;
                     neighboursRevealMode = 1;
                     break;
-                case 1: // East
+                case 2: // East
                     lonOffsetReveal = 1;
                     neighboursRevealMode = 0;
                     break;
-                case 2: // South
+                case 3: // South
                     latOffsetReveal = 1;
                     neighboursRevealMode = 1;
                     break;
-                case 3: // West
+                case 4: // West
                     lonOffsetReveal = -1;
                     neighboursRevealMode = 0;
                     break;

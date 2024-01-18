@@ -158,13 +158,13 @@ int Board::cordinateToLongitude(const std::string cordinate) const {
 
 Direction Board::numberToDirection(int number)  const { 
     switch (number) {
-        case 0:
-            return Direction::North;
         case 1:
-            return Direction::East;
+            return Direction::North;
         case 2:
-            return Direction::South;
+            return Direction::East;
         case 3:
+            return Direction::South;
+        case 4:
             return Direction::West;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //exc. Klasse erstellen und exc. abfangen und verarbeiten 

@@ -14,8 +14,8 @@ class Output  {
     public:
         Output(); 
         static void printMenue(std::vector<std::string> pMenuePoints);
-        static void printBoxError(std::string errorMessage);
-        static void printBoxMessage(std::string textMessage);
+        static void printBoxError(std::string errorMessage, bool textAdjust);
+        static void printBoxMessage(std::string textMessage, bool textAdjust);
         static void printPlayerBoard(Board* board);
         static void printBothBoards(Board* pBoardPlayer, Board* pBoardComputer);
         static void printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue);
@@ -24,7 +24,7 @@ class Output  {
         static void printLose();
 
     private:
-        static const int boxWidth = 30;
+        static const int boxWidth = 40;
         static void printRow(Board* board, int pRow);
         static void printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow);
         static int printRowMenue(Board* board, std::vector<Ship*> pMenue, int pRow, int pMenuePos);
