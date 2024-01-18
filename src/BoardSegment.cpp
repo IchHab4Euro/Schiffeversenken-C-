@@ -31,6 +31,10 @@ void BoardSegment::setWaterHit(){
     this->fieldState = SegmentState::WaterHit;
 }
 
+void BoardSegment::setShipHit() {
+    this->fieldState = SegmentState::ShipHit;
+}
+
 void BoardSegment::setRevealed() {
     this->fieldState = SegmentState::Revealed;
 }
