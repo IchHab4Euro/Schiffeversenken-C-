@@ -13,7 +13,10 @@ void ComputerBoard::placeShips() {
         while(!shipPlaced){
             int startFieldLat = getRandomNumber(0,9);
             int startFieldLong = getRandomNumber(0,9);
-            Direction direction = numberToDirection(getRandomNumber(0,3));
+            int directionNumber = getRandomNumber(0,3);
+            Direction direction = numberToDirection(directionNumber);
+
+            std::cout << "lat: " << startFieldLat << "long: " << startFieldLong << "direction Number: " << directionNumber << std::endl;
             
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
         }

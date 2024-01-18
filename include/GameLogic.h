@@ -26,9 +26,11 @@ class GameLogic {
         Board* board2;
         Player* player1;
         Player* player2;
-        std::vector<Ship*> startingShips = {
+        /*std::vector<Ship*> startingShips = {
             new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
-            new Ship("Testschiff", 2, false)
+            new Ship("Testschiff", 2, false)*/
+        std::vector<Ship*> startingShips = {
+            new Ship("Schlachtschiff", 9, false)
         };
 
         void newGame();
