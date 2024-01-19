@@ -22,15 +22,3 @@ int Ship::getId() const {
 bool Ship::isSunken(){
     return sunk;
 }
-
-/*
-bool Ship::isShipSunk() const{
-    for(BoardSegment* shipSegment : BoardSegments){
-        if(!(shipSegment->isShipHit())){
-            return false; 
-        }
-    }
-    return true; 
-
-}
-*/

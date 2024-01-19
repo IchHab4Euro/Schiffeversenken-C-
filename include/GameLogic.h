@@ -24,6 +24,8 @@ class GameLogic {
         //~GameLogic();
         void init();
 
+        void initShipConf();
+
         Board* board1;
         Board* board2;
         Player* player1;
@@ -36,6 +38,18 @@ class GameLogic {
         void startGame();
     private:
         bool gamePhase = false;
+
+        std::vector<Ship*> shipConf1Player;
+        std::vector<Ship*> shipConf1Computer;
+
+        std::vector<Ship*> shipConf2Player;
+        std::vector<Ship*> shipConf2Computer;
+
+        std::vector<Ship*> shipConf3Player;
+        std::vector<Ship*> shipConf3Computer;
+
+        std::vector<Ship*> shipConf4Player;
+        std::vector<Ship*> shipConf4Computer;
 };
     //void signal_handler(int signal);
 #endif

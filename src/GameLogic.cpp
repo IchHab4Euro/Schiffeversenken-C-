@@ -99,18 +99,18 @@ void GameLogic::saveGame()  {
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
     if (gamePhase == false)  {
-    std::string phaseS;
+    std::string gamePhaseValue;
 
     //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
     if (gamePhase == false)  {
         ships = board1->getShipsNextToBoard();
-        phaseS = "0";
+        gamePhaseValue = "0";
     } else  {
         ships = board1->getShipsOnBoard();
-        phaseS = "1";
+        gamePhaseValue = "1";
     }
     std::string saveString = playName + ";" + player1->name + ";" + std::to_string(gamePhase) + ";" + std::to_string(ships.size()) + ";";
-    std::string saveString = playName + ";" + player1->name + ";" + phaseS + ";";
+    std::string saveString = playName + ";" + player1->name + ";" + gamePhaseValue + ";";
     
 
     std::string shipconfig;
@@ -123,7 +123,7 @@ void GameLogic::saveGame()  {
         std::cout << ships.at(i)->getName() << std::endl;
         saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";"; //sunk == 1 wenn gesunken
     }
-    if (phase == false)  {
+    if (gamePhase == false)  {
         ships = board2->getShipsNextToBoard();
     } else  {
         ships = board2->getShipsOnBoard();
@@ -207,7 +207,9 @@ void GameLogic::saveGame()  {
         std::cout << "Datei konnte nicht ge\224ffnet werden!" << std::endl;
     } 
 }
+}
 
+/*
 void GameLogic::loadGame() {
     std::ifstream csvFileName("../FieldSave.csv");
     std::vector<std::string> gameNames;
@@ -315,5 +317,69 @@ void GameLogic::loadGame() {
     }
 
     board1->init(grid, nullptr);
+}
+*/
 
+void GameLogic::initShipConf() {
+
+    //shipConf1
+    shipConf1Player = {
+        new Ship("Schlachtschiff1", 5, false), 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Kreuzer2", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("Zerstörer2", 3, false),
+        new Ship("Zerstörer3", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+        new Ship("U-Boot3", 2, false),
+        new Ship("U-Boot4", 2, false),
+         };
+    shipConf1Computer = {
+        new Ship("Schlachtschiff1", 5, false), 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Kreuzer2", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("Zerstörer2", 3, false),
+        new Ship("Zerstörer3", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+        new Ship("U-Boot3", 2, false),
+        new Ship("U-Boot4", 2, false),
+        };
+    
+    //shipConf2
+    shipConf2Player = {
+        new Ship("Schlachtschiff1", 5, false), 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("Zerstörer2", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+        new Ship("U-Boot3", 2, false),
+        };
+    shipConf2Computer = {
+        new Ship("Schlachtschiff1", 5, false), 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("Zerstörer2", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+        new Ship("U-Boot3", 2, false),
+        };
+
+    
+    //shipConf3
+    shipConf3Player = { 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+         };
+    shipConf3Computer = { 
+        new Ship("Kreuzer1", 4, false),
+        new Ship("Zerstörer1", 3, false),
+        new Ship("U-Boot1", 1, false),
+        new Ship("U-Boot2", 2, false),
+    };
 }
