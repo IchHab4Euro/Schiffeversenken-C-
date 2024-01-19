@@ -1,8 +1,8 @@
-battleship: board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o
-	g++ main.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o -o BattleShip
+battleship: board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o boardsegment.o
+	g++ input.o output.o playerboard.o computerboard.o board.o ship.o gamelogic.o battleship.o boardsegment.o -o BattleShip
 
-battleship.o: src/BattleShip.cpp
-	g++ -c src/BattleShip.cpp
+boardsegment.o: src/BoardSegment.cpp
+	g++ -c src/BoardSegment.cpp
 
 board.o: src/Board.cpp include/Board.h
 	g++ -c src/Board.cpp
@@ -11,7 +11,7 @@ input.o: src/Input.cpp include/Input.h
 	g++ -c src/Input.cpp
 
 output.o: src/Output.cpp include/Output.h
-	g++ -c src/Output.cpp
+	g++ -w -c src/Output.cpp
 
 playerboard.o: src/PlayerBoard.cpp include/PlayerBoard.h
 	g++ -c src/PlayerBoard.cpp

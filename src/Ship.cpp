@@ -1,7 +1,5 @@
 #include "../include/Ship.h"
 
-int Ship::nextId = 1; 
-
 Ship::Ship(std::string name, int length, bool isSunken, int id) : name(name), length(length), sunk(sunk), id(id)  {
 
 }
