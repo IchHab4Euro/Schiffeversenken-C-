@@ -19,7 +19,7 @@ class PlayerBoard : public Board {
         void resetBoardPlacement(); //Mehr bei der reset BoardPlacement() Listen Inhalt leeren 
     
     private:
-        Ship* shipSelection(int ships); 
+        Ship* shipSelection(); 
         bool checkContainsShip(std::vector<Ship*> shipList, int idToCheck);
         Ship* getShipById(std::vector<Ship*> shipList, int shipId);
 };

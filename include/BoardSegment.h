@@ -9,6 +9,7 @@ enum class SegmentState {Ship, ShipHit, Water, WaterHit, Revealed, ShipPlacement
 class BoardSegment {
     public:
         BoardSegment(SegmentState initState);
+        ~BoardSegment();
         SegmentState fieldState;
         Ship* shipOnSegment;
         

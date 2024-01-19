@@ -4,67 +4,15 @@
 #include <vector>
 #include <algorithm>
 
-/*
-void PlayerBoard::placeShips() {
-    int ships = shipsNextToBoard.size();
-    while (!shipsNextToBoard.empty()) {
-
-        Ship* selectedShip = shipSelection(ships);
-
-        std::string shipCoordinates;
-        std::string message;
-        int longitude, latitude, directionNumber;
-        bool shipPlaced = false;  
-        while (!shipPlaced) {
-            message = "Du hast das Schiff: " + selectedShip->getName() + " mit einer Gr\224sse: " + std::to_string(selectedShip->getLength());
-            Output::printBoxMessage(message, true);
-            shipCoordinates = Input::userinputCoordinates("Wohin soll das Schiff platziert werden? Gib die Koordinate ein: ", Board::getBoardSize());
-            latitude = cordinateToLatitude(shipCoordinates);
-            longitude = cordinateToLongitude(shipCoordinates);
-            
-            Output::printBoxMessage("Bitte gib eine Richtung an, in der das Schiff platziert werden soll.", true);
-            std::vector<std::string> directions = {"North", "East", "South", "West"};
-            Output::printMenue(directions);
-            
-            directionNumber = Input::userinputInt("W\204hlen sie eine Richtung: ", 1, 4);
- 
-            Direction direction = numberToDirection(directionNumber);
-
-            shipPlaced = placeShip(latitude, longitude, direction, selectedShip);
-            std::cout << shipPlaced << std::endl;
-        }
-
-        shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
-                                      [&selectedShip](const Ship* ship) { return ship->getId() == selectedShip->getId(); }), 
-                       shipsNextToBoard.end());
-
-        shipsOnBoard.push_back(selectedShip);
-    }
-}
-
-Ship* PlayerBoard::shipSelection(int ships)  {
-    Output::printBoardWithMenue(this, shipsNextToBoard);
-    std::string message = "Welches Schiff willst du platzieren?";
-    int pickedShipId = 0;
-    while(!checkContainsShip(shipsNextToBoard,pickedShipId)){
-        pickedShipId = Input::userinputInt(message, 1, ships);
-        if (!checkContainsShip(shipsNextToBoard, pickedShipId))  {
-            message = "Sie haben dieses Schiff bereits platziert! Waehlen sie ein neues";
-        }  
-    }
-    return getShipById(shipsNextToBoard, pickedShipId);
-}*/
-
 void PlayerBoard::placeShips() {
     std::string message; 
     while (true) {
-        int shipsCount = shipsNextToBoard.size();
-        if (shipsCount == 0) {
+        if (shipsNextToBoard.size() == 0) {
             Output::printBoxMessage("Alle Schiffe wurden platziert.", true);
             break;
         }
 
-        Ship* selectedShip = shipSelection(shipsCount);
+        Ship* selectedShip = shipSelection();
         if (!selectedShip) {//if shipSelection is 0;true -> shipDeletet or FieldResetet
             continue;
         }
@@ -72,7 +20,7 @@ void PlayerBoard::placeShips() {
         bool shipPlaced = false;
         while (!shipPlaced) {
              message = "Du hast das Schiff: " + selectedShip->getName() + 
-                                  " mit einer Größe: " + std::to_string(selectedShip->getLength());
+                                  " mit einer Groeße: " + std::to_string(selectedShip->getLength());
             Output::printBoxMessage(message, true);
 
             std::string shipCoordinates = Input::userinputCoordinates("Wohin soll das Schiff platziert werden? Gib die Koordinate ein: ", getBoardSize());
@@ -99,12 +47,12 @@ void PlayerBoard::placeShips() {
     }
 }
 
-Ship* PlayerBoard::shipSelection(int ships) {
+Ship* PlayerBoard::shipSelection() {
     Output::printBoardWithMenue(this, shipsNextToBoard);
-    std::string message = "Welches Schiff willst du platzieren? (0 für Optionen)";
+    std::string message = "Welches Schiff willst du platzieren? (0 fuer Optionen)";
     Output::printBoxMessage(message, true);
     
-    int pickedShipId = Input::userinputInt("Deine Wahl: ", 0, ships);
+    int pickedShipId = Input::userinputInt("Deine Wahl: ", 0, shipsNextToBoard.size());
 
     if (pickedShipId == 0) {
         return handleShipPlacementOptions();
@@ -116,7 +64,7 @@ Ship* PlayerBoard::shipSelection(int ships) {
 Ship* PlayerBoard::handleShipPlacementOptions() {
     std::vector<std::string> menueMessage = {"Schiff entfernen" , "Neustart"};
     Output::printMenue(menueMessage);
-    int choice = Input::userinputInt("Wähle eine Option: ", 1, menueMessage.size());
+    int choice = Input::userinputInt("Waehle eine Option: ", 1, menueMessage.size());
 
     switch (choice) {
         case 1:
@@ -135,13 +83,16 @@ void PlayerBoard::removeShipProcedure() {
 }
 
 void PlayerBoard::resetBoardPlacement() {
-
-    for (int i = 0; i < boardSize; i++) { //ressetting every BoardSegment to Water.
-        for (int j = 0; j < boardSize; j++) {
-            grid[i][j]->setShipOnSegment(nullptr);
-            grid[i][j]->fieldState = SegmentState::Water;
+    //Ressetting Grid
+    for (int lat = 0; lat < boardSize; lat++) {
+        for (int lon = 0; lon < boardSize; lon++) {
+            delete grid[lat][lon];
+            grid[lat][lon] = new BoardSegment(SegmentState::Water);
         }
     }
+    //Ressetting Ships
+    this->shipsNextToBoard = initShipsReset;
+    this->shipsOnBoard.clear();
 }
     
 
@@ -159,6 +110,8 @@ void PlayerBoard::removeShip(Ship* shipToRemove) {
             }
         }
     }
+
+    shipsNextToBoard.push_back(shipToRemove);
 
     // Delete Ship from the OnBoardList
     shipsOnBoard.erase(std::remove(shipsOnBoard.begin(), shipsOnBoard.end(), shipToRemove), shipsOnBoard.end());

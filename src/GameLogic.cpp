@@ -42,14 +42,18 @@ void GameLogic::init() { //vlt umbennen zu
 }
 
 void GameLogic::startGame(){
-    if (phase == false)  {
+
+    if(!gamePhase){
         board1->placeShips();
         board2->placeShips();
-        phase = true;
-        saveGame();
+    
+        Output::printPlayerBoard(board1);
+        Output::printPlayerBoard(board2);
+
+        gamePhase = true;
     }
-    Output::printPlayerBoard(board1);
-    Output::printPlayerBoard(board2);
+
+
     while(!(board2->allShipsSunk())){
         board1->attack(board2);
         board2->attack(board1);
@@ -60,32 +64,32 @@ void GameLogic::startGame(){
     
 
 void GameLogic::newGame() {
-    
-    /*std::vector<Ship*> startingShipsPlayer = {
-            new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
-            new Ship("Testschiff", 2, false)
-        };
-    std::vector<Ship*> startingShipsComputer = {
-            new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
-            new Ship("Testschiff", 2, false)
-        };
-        */
     std::vector<Ship*> startingShipsPlayer = {
-            new Ship("Schlachtschiff", 8, false)
+            new Ship("Schlachtschiff", 8, false), new Ship("Dampfer",3,false)
         };
     std::vector<Ship*> startingShipsComputer = {
             new Ship("Testschiff", 2, false)
         };
-        
 
-    
     //Todo: Spielernamen abfragen
     player1 = new Player("Rumpelstielschen");
     player2 = new Player("Computer");
+
+    std::vector<BoardSegment*> initSegments;
+
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
-    board1->init(nullptr, startingShipsPlayer);
-    board2->init(nullptr, startingShipsComputer);
+
+    for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
+        initSegments.push_back(new BoardSegment(SegmentState::Water));
+    }
+    board1->init(initSegments, startingShipsPlayer);
+    initSegments.clear();
+    for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
+        initSegments.push_back(new BoardSegment(SegmentState::Water));
+    }
+    board2->init(initSegments, startingShipsComputer);
+    gamePhase = false;
     startGame();
 }
 
@@ -94,10 +98,11 @@ void GameLogic::saveGame()  {
     std::vector<Ship*> ships;
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
-    std::string phaseString;
+    if (gamePhase == false)  {
+    std::string phaseS;
 
     //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
-    if (phase == false)  {
+    if (gamePhase == false)  {
         ships = board1->getShipsNextToBoard();
         phaseString = "0";
     } else  {
@@ -254,9 +259,9 @@ void GameLogic::loadGame() {
 
     std::getline(ss, tempFileInput, ';');
     if (tempFileInput == "1")  {
-        phase = true;
+       gamePhase = true;
     } else  {
-        phase = false;
+       gamePhase = false;
     }
 
     std::getline(ss, tempFileInput, ';');
@@ -308,5 +313,6 @@ void GameLogic::loadGame() {
         }
     }
 
+    board1->init(grid, nullptr);
 
 }
