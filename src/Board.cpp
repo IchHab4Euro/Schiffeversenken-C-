@@ -186,39 +186,39 @@ Direction Board::numberToDirection(int number)  const {
 }
 
 void Board::setSunkenShips() {
-    for (Ship* ship : shipsOnBoard) {
-        if (!ship->isSunken()) {
-            bool allHits = true;
 
-            // Überprüfe alle Segmente des Schiffes
-            for (int i = 0; i < boardSize; i++) {
-                for (int j = 0; j < boardSize; j++) {
-                    BoardSegment* segment = grid[i][j];
-
-                    // Wenn das Segment zum Schiff gehört und nicht getroffen wurde
-                    if (segment->getShipOnSegment() == ship && 
-                        !(segment->isShipHit())) {
-                        allHits = false;
-                        break;
+    for(int i = 0; i < boardSize; i++) {
+        for(int j = 0; j < boardSize; j++) {
+            BoardSegment* segmentToCheck = grid[i][j];
+    
+            if(segmentToCheck->isShipHit()){
+                bool shipSunken = true;
+                Ship* shipToCheck = segmentToCheck->getShipOnSegment();
+                for(int h = 0; h < boardSize; h++) {
+                    for(int k = 0; k < boardSize; k++) {
+                        BoardSegment* segmentToCheck = grid[h][k];
+                        if(segmentToCheck->getShipOnSegment() == shipToCheck && !(segmentToCheck->isShipHit())) {
+                            shipSunken = false;
+                        }
                     }
                 }
-                if (!allHits) break;
+                if(shipSunken){
+                    shipToCheck->setSunken();
+                }
             }
-
-            if (allHits) {
-                ship->sunk = true;
-            }
+            
         }
     }
 }
 
 bool Board::allShipsSunk() const {
     bool allSunk = true;
-    for (Ship* ship : shipsOnBoard) {
-        if (!(ship->isSunken())) {
+    for (int i = 0; i < shipsOnBoard.size(); i++) {
+        Ship* shipToCheck = shipsOnBoard[i];
+        if (!(shipToCheck->isSunken())) {
             allSunk = false;
         } else {
-            std::cout << "Ship sunk: " << ship->getName() << std::endl;
+            std::cout << "Ship sunk: " << shipToCheck->getName() << std::endl;
         }
     }
     

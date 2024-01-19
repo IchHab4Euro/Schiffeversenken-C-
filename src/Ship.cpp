@@ -21,3 +21,7 @@ int Ship::getId() const {
 bool Ship::isSunken(){
     return sunk;
 }
+
+void Ship::setSunken() {
+    this->sunk = true;
+}

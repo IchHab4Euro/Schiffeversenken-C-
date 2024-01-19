@@ -12,6 +12,8 @@ public:
     int getId() const;
     bool isSunken();
 
+    void setSunken();
+
     std::string name;
     int length;
     int id; 
