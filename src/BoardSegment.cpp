@@ -2,6 +2,9 @@
 
 BoardSegment::BoardSegment(SegmentState initState) : fieldState(initState), shipOnSegment(nullptr) {}
 
+BoardSegment::~BoardSegment(){
+}
+
 bool BoardSegment::isShip() {
     return fieldState == SegmentState::Ship;
 }

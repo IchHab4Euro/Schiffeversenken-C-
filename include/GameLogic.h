@@ -35,7 +35,7 @@ class GameLogic {
         void loadGame();
         void startGame();
     private:
-        bool phase;
+        bool gamePhase = false;
 };
     //void signal_handler(int signal);
 #endif
