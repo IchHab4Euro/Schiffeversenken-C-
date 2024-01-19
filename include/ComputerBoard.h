@@ -38,5 +38,17 @@ class ComputerBoard : public Board {
         int moveCounter = 0; //counts the lenght of the Ship
 
         int getRandomNumberWindows(int lowerBound, int upperBound);
+
+        void handleFirstHit(Board* enemyBoard);
+        void handleSecondHit(Board* enemyBoard);
+        void handleFollowingHits(Board* enemyBoard);
+        void resetHitStatus(Board* enemyBoard);
+        bool isInvalidTarget (BoardSegment* segment);
+        void updateSegmentStatus(BoardSegment* segment);
+        void resetHitStatus();
+        void setRevealDirection(int direction);
+        bool isValidPosition(int lat, int lon);
+        bool updateSegmentForSecondHit(BoardSegment* segment, int newLat, int newLon, Board* enemyBoard);
+        void changeDirection();
 };
 #endif

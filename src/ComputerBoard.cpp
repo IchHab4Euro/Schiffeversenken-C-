@@ -29,7 +29,7 @@ void ComputerBoard::placeShips() {
     }
 }
 
-
+/*
 void ComputerBoard::attack(Board* board) {
     if (!firstHit) {
        
@@ -160,7 +160,155 @@ void ComputerBoard::attack(Board* board) {
         moveCounter = 0;
     }
 }
+*/
 
+void ComputerBoard::attack(Board* enemyBoard) {
+    if (!firstHit) {
+        handleFirstHit(enemyBoard);
+    } else if (firstHit && !secondHit) {
+        handleSecondHit(enemyBoard);
+    } else if (firstHit && secondHit) {
+        handleFollowingHits(enemyBoard);
+    }
+
+    if (shipHit != nullptr && shipHit->isSunken()) {
+        resetHitStatus();
+    }
+}
+
+void ComputerBoard::handleFirstHit(Board* enemyBoard) {
+    BoardSegment* targetSegment;
+    do {
+        lastHitLat = getRandomNumber(0, boardSize - 1);
+        lastHitLon = getRandomNumber(0, boardSize - 1);
+        targetSegment = enemyBoard->grid[lastHitLat][lastHitLon];
+    } while (isInvalidTarget(targetSegment));
+
+    updateSegmentStatus(targetSegment);
+}
+
+void ComputerBoard::handleSecondHit(Board* enemyBoard) {
+    bool validDirectionFound = false;
+    while (!validDirectionFound) {
+        setRevealDirection(getRandomNumber(1, 4));
+        int newLat = lastHitLat + latOffsetReveal;
+        int newLon = lastHitLon + lonOffsetReveal;
+
+        if (isValidPosition(newLat, newLon)) {
+            BoardSegment* segmentToReveal = enemyBoard->grid[newLat][newLon];
+            validDirectionFound = updateSegmentForSecondHit(segmentToReveal, newLat, newLon, enemyBoard);
+        }
+    }
+}
+
+void ComputerBoard::handleFollowingHits(Board* enemyBoard) {
+    lastHitLat = lastHitLat + latOffsetReveal;
+    lastHitLon = lastHitLon + lonOffsetReveal;
+    moveCounter++;
+    if(isValidPosition(lastHitLat,lastHitLon)) {
+        BoardSegment* boardSegmentToHit  = enemyBoard->grid[lastHitLat][lastHitLon];
+        if(isInvalidTarget(boardSegmentToHit)){
+            changeDirection();
+            handleFollowingHits(enemyBoard);
+        }
+        if(boardSegmentToHit->isWater()){
+            boardSegmentToHit->setWaterHit();
+            changeDirection();
+        }
+        if(boardSegmentToHit->isShip()){
+            boardSegmentToHit->setShipHit();
+            revealNeighbors(enemyBoard,lastHitLat,lastHitLon,neighboursRevealMode);
+            enemyBoard->setSunkenShips();
+        }
+    }
+    else {
+        changeDirection();
+        handleFollowingHits(enemyBoard);
+    }
+}
+
+void ComputerBoard::changeDirection() {
+    if(latOffsetReveal != 0) {
+        latOffsetReveal = latOffsetReveal * (-1);
+        lastHitLat = lastHitLat + moveCounter * latOffsetReveal;  
+        }
+    if(lonOffsetReveal != 0) {
+        lonOffsetReveal = lonOffsetReveal * (-1);
+        lastHitLon = lastHitLon + moveCounter * lonOffsetReveal;  
+        }
+        moveCounter = 0;
+}
+    
+
+void ComputerBoard::resetHitStatus() {
+    shipHit = nullptr;
+    firstHit = false;
+    secondHit = false;
+    moveCounter = 0;
+}
+
+bool ComputerBoard::isInvalidTarget(BoardSegment* segment) {
+    return segment->isWaterHit() || segment->isShipHit() || segment->isRevealed();
+}
+
+void ComputerBoard::updateSegmentStatus(BoardSegment* segment) {
+    if (segment->isWater()) {
+        segment->setWaterHit();
+    } else if (segment->isShip()) {
+        segment->setShipHit();
+        shipHit = segment->getShipOnSegment();
+        firstHit = true;
+    }
+}
+
+void ComputerBoard::setRevealDirection(int direction) {
+    switch (direction) {
+        case 1: // North
+            latOffsetReveal = -1;
+            lonOffsetReveal = 0;
+            neighboursRevealMode = 1;
+            break;
+        case 2: // East
+            latOffsetReveal = 0;
+            lonOffsetReveal = 1;
+            neighboursRevealMode = 0;
+            break;
+        case 3: // South
+            latOffsetReveal = 1;
+            lonOffsetReveal = 0;
+            neighboursRevealMode = 1;
+            break;
+        case 4: // West
+            latOffsetReveal = 0;
+            lonOffsetReveal = -1;
+            neighboursRevealMode = 0;
+            break;
+        default:
+            break;
+    }
+}
+
+bool ComputerBoard::isValidPosition(int lat, int lon) {
+    return lat >= 0 && lat < boardSize && lon >= 0 && lon < boardSize;
+}
+
+bool ComputerBoard::updateSegmentForSecondHit(BoardSegment* segment, int newLat, int newLon, Board* enemyBoard) {
+    if (segment->isWater()) {
+        segment->setWaterHit();
+        return true;
+    }
+    if (segment->isShip()) {
+        segment->setShipHit();
+        lastHitLat = newLat;
+        lastHitLon = newLon;
+        revealNeighbors(enemyBoard, lastHitLat, lastHitLon,neighboursRevealMode);
+        secondHit = true;
+        moveCounter++;
+        enemyBoard->setSunkenShips();
+        return true;
+    }
+    return false;
+}
 
 void ComputerBoard::revealNeighbors(Board* enemyBoardToReveal, int latSegmentToCheck, int lonSegmentToCheck, int revealMode) {
     const int verticalOffsets[] = {-1, 1};

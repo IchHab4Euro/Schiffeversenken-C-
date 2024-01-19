@@ -93,7 +93,7 @@ void GameLogic::newGame() {
     std::vector<BoardSegment*> initSegments;
 
     //Create two boards
-    board1 = new PlayerBoard();
+    board1 = new ComputerBoard();
     board2 = new ComputerBoard();
 
     //Fill the vector with BordSegments with state Water
