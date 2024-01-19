@@ -29,7 +29,6 @@ bool BoardSegment::isRevealed() {
     return fieldState == SegmentState::Revealed;
 }
 
-
 void BoardSegment::setWaterHit(){
     this->fieldState = SegmentState::WaterHit;
 }

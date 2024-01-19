@@ -9,17 +9,17 @@ class ComputerBoard : public Board {
     public:
         ComputerBoard() : Board() {}
         void placeShips() override;
-        void attack(Board* board) override;
+        void attack(Board* enemyBoard) override;
 
     private:
-        void revealNeighbors(Board* boardToReveal, int latSegmentToCheck, int lonSegmentToCheck, int revealMode);
+        void revealNeighbors(Board* enemyBoardToReveal, int latSegmentToCheck, int lonSegmentToCheck, int revealMode);
         int getRandomNumber(int lowerBound, int upperBound);
+        
+        int exitCounter = 0; // muss wieder weg
+        
         Ship* shipHit = nullptr;
         bool firstHit = false;
         bool secondHit = false;
-
-        int exitCounter = 0; // muss wieder weg
-        
         int lastHitLat = 0;
         int lastHitLon = 0;
         int latOffsetReveal = 0;
@@ -28,5 +28,11 @@ class ComputerBoard : public Board {
         int moveCounter = 0;
 
         int getRandomNumberWindows(int lowerBound, int upperBound);
+
+        //void processAttack(BoardSegment* targetSegment);
+        //void attemptSecondHit(Board* enemyBoard);
+        //void continueAttackOnShip(Board* enemyBoard);
+        //void resetAttackState();
+        
 };
 #endif

@@ -33,8 +33,8 @@ class GameLogic {
         std::string gameName;
 
         void newGame();
-        void saveGame();
-        void loadGame();
+        //void saveGame();
+        //void loadGame();
         void startGame();
     private:
         bool gamePhase = false;

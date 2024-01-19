@@ -25,7 +25,7 @@ void GameLogic::init() { //vlt umbennen zu
                 newGame();
                 break;
             case 2: 
-                loadGame();
+                //loadGame();
                 break;
             case 3: //Exit
                 //Todo: Settings
@@ -50,16 +50,19 @@ void GameLogic::startGame(){
         Output::printPlayerBoard(board1);
         Output::printPlayerBoard(board2);
         gamePhase = true;
-        saveGame();
+        //saveGame();
     }
 
 
     while(!(board2->allShipsSunk())){
         board1->attack(board2);
-        board2->attack(board1);
+        //board2->attack(board1);
 
-        Output::printBothBoards(board1, board2);
+        Output::printPlayerBoard(board2);
+
+        //Output::printBothBoards(board1, board2);
     }
+    
 }
     
 
@@ -77,7 +80,7 @@ void GameLogic::newGame() {
 
     std::vector<BoardSegment*> initSegments;
 
-    board1 = new PlayerBoard();
+    board1 = new ComputerBoard();
     board2 = new ComputerBoard();
 
     for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
@@ -92,6 +95,8 @@ void GameLogic::newGame() {
     gamePhase = false;
     startGame();
 }
+
+/*
 
 void GameLogic::saveGame()  {
     std::string playName;
@@ -213,6 +218,7 @@ void GameLogic::saveGame()  {
     }   
 }
 }
+*/
 
 /*
 void GameLogic::loadGame() {
