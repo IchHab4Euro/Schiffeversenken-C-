@@ -94,17 +94,17 @@ void GameLogic::saveGame()  {
     std::vector<Ship*> ships;
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
-    std::string phaseS;
+    std::string phaseString;
 
     //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
     if (phase == false)  {
         ships = board1->getShipsNextToBoard();
-        phaseS = "0";
+        phaseString = "0";
     } else  {
         ships = board1->getShipsOnBoard();
-        phaseS = "1";
+        phaseString = "1";
     }
-    std::string saveString = playName + ";" + player1->name + ";" + phaseS + ";";
+    std::string saveString = playName + ";" + player1->name + ";" + phaseString + ";";
     
 
     std::string shipconfig;
