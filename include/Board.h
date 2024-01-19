@@ -12,7 +12,7 @@ class Board {
 
 public:
     Board();
-    void init(BoardSegment* initGrid, std::vector<Ship*> initShips);
+    void init(BoardSegment* initGrid[10][10], std::vector<Ship*> initShips); //Ändern falls boardsize variabel
     virtual void placeShips() = 0;
     virtual void attack(Board* board) = 0; 
     int getBoardSize();

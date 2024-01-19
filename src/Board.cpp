@@ -7,7 +7,7 @@ Board::Board(){
 }
 
 //Nicht fertig
-void Board::init(BoardSegment* initGrid[int][int], std::vector<Ship*> initShips) {
+void Board::init(BoardSegment* initGrid[10][10], std::vector<Ship*> initShips) {
     //setup grid
     if (initGrid == nullptr)  {
         for(int lat = 0; lat < boardSize; lat++){

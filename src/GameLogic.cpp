@@ -42,20 +42,21 @@ void GameLogic::init() { //vlt umbennen zu
 }
 
 void GameLogic::startGame(){
-    phase = false;
-    board1->placeShips();
-    board2->placeShips();
-    
+    if (phase == false)  {
+        board1->placeShips();
+        board2->placeShips();
+        phase = true;
+        saveGame();
+    }
     Output::printPlayerBoard(board1);
     Output::printPlayerBoard(board2);
-
     while(!(board2->allShipsSunk())){
         board1->attack(board2);
         board2->attack(board1);
 
         Output::printBothBoards(board1, board2);
-        }
     }
+}
     
 
 void GameLogic::newGame() {
@@ -93,12 +94,34 @@ void GameLogic::saveGame()  {
     std::vector<Ship*> ships;
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
+    std::string phaseS;
+
+    //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
     if (phase == false)  {
         ships = board1->getShipsNextToBoard();
+        phaseS = "0";
     } else  {
         ships = board1->getShipsOnBoard();
+        phaseS = "1";
     }
-    std::string saveString = playName + ";" + player1->name + ";" + std::to_string(phase) + ";" + std::to_string(ships.size()) + ";";
+    std::string saveString = playName + ";" + player1->name + ";" + phaseS + ";";
+    
+
+    std::string shipconfig;
+    shipconfig = std::to_string(ships.size()) + ";";
+    std::cout << std::to_string(ships.size())  << std::endl;
+    if (ships.size() != 0)  {
+        /* code */
+    }
+    for (int i = 0; i < ships.size(); i++)  {
+        std::cout << ships.at(i)->getName() << std::endl;
+        saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";"; //sunk == 1 wenn gesunken
+    }
+    if (phase == false)  {
+        ships = board2->getShipsNextToBoard();
+    } else  {
+        ships = board2->getShipsOnBoard();
+    }
     for (int i = 0; i < ships.size(); i++)  {
         saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";";
     }
@@ -235,8 +258,23 @@ void GameLogic::loadGame() {
     } else  {
         phase = false;
     }
+
+    std::getline(ss, tempFileInput, ';');
+    int ships = std::stoi(tempFileInput);
+    std::vector<Ship*> startingShipsPlayer;
+    std::vector<Ship*> startingshipsComputer;
+    switch (ships)  {
+    case 1:
+        for (int i = 0; i < ships; i++)  {
+            std::getline(ss, tempFileInput, ';');
+            startingShipsPlayer.push_back(new Ship("Schlachtschiff", 5, true));
+        }
+        
+        break;
     
-    //Schiffe erstellen
+    default:
+        break;
+    }
 
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
@@ -270,6 +308,5 @@ void GameLogic::loadGame() {
         }
     }
 
-    board1->init(grid, nullptr);
 
 }

@@ -15,7 +15,7 @@ public:
     std::string name;
     int length;
     int id; 
-    bool sunk;
+    bool sunk = false;
     
     static int nextId; 
 
