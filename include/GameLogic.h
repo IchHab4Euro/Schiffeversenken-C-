@@ -8,6 +8,8 @@
 #include "ComputerBoard.h"
 #include "Ship.h"
 #include <csignal>
+#include <sstream>
+#include <fstream>
 
 struct Player {
     Player(std::string name);
@@ -26,15 +28,14 @@ class GameLogic {
         Board* board2;
         Player* player1;
         Player* player2;
-
-        std::vector<Ship*> startingShips = {
-            new Ship("Schlachtschiff", 5, false), new Ship("Kreuzer1", 4, false), new Ship("Kreuzer2", 4, false),
-            new Ship("Testschiff", 2, false)
-        };
+        std::string gameName;
 
         void newGame();
+        void saveGame();
         void loadGame();
         void startGame();
+    private:
+        bool phase;
 };
     //void signal_handler(int signal);
 #endif

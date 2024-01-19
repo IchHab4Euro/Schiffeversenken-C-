@@ -14,7 +14,7 @@ void ComputerBoard::placeShips() {
         while(!shipPlaced){
             int startFieldLat = getRandomNumber(0,9);
             int startFieldLong = getRandomNumber(0,9);
-            int directionNumber = getRandomNumber(0,3);
+            int directionNumber = getRandomNumber(1,4);
             Direction direction = numberToDirection(directionNumber);
 
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
@@ -24,47 +24,56 @@ void ComputerBoard::placeShips() {
 }
 
 void ComputerBoard::attack(Board* board) {
-    if(!firstHit || shipHit->isSunken()){
-        firstHit = false;
-        secondHit = false;
-        BoardSegment* boardSegmentToHit;
-        do{
-            lastHitLat = getRandomNumber(0,boardSize - 1);
-            lastHitLon = getRandomNumber(0,boardSize - 1);
-            boardSegmentToHit = board->grid[lastHitLat][lastHitLon];
-        } while(boardSegmentToHit->isWaterHit() || boardSegmentToHit->isShipHit() || boardSegmentToHit->isRevealed());
+    if (!firstHit) {
+        // Debug-Ausgabe
+        std::cout << "Entering initial attack phase..." << std::endl;
 
-        if(boardSegmentToHit->isWater()) {
+        BoardSegment* boardSegmentToHit;
+        do {
+            lastHitLat = getRandomNumber(0, boardSize - 1);
+            lastHitLon = getRandomNumber(0, boardSize - 1);
+            boardSegmentToHit = board->grid[lastHitLat][lastHitLon];
+        } while (boardSegmentToHit->isWaterHit() || boardSegmentToHit->isShipHit() || boardSegmentToHit->isRevealed());
+
+        if (boardSegmentToHit->isWater()) {
             boardSegmentToHit->setWaterHit();
+            // Debug-Ausgabe
+            std::cout << "Hit water at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
         }
-        if(boardSegmentToHit->isShip()) {
+        if (boardSegmentToHit->isShip()) {
             boardSegmentToHit->setShipHit();
             shipHit = boardSegmentToHit->getShipOnSegment();
-            neighboursRevealMode = 2;
-            revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
             firstHit = true;
+            // Debug-Ausgabe
+            std::cout << "Hit ship at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
         }
     }
-    else if(firstHit && !secondHit) {
+    else if (firstHit && !secondHit) {
+        // Debug-Ausgabe
+        std::cout << "Entering second hit phase..." << std::endl;
+
         bool validDirectionFound = false;
-
         while (!validDirectionFound) {
-            int revealDirection = getRandomNumber(0, 3); 
+            int revealDirection = getRandomNumber(1, 4);
 
-            switch (revealDirection) { 
-                case 0: // North
+            switch (revealDirection) {
+                case 1: // North
                     latOffsetReveal = -1;
+                    lonOffsetReveal = 0;
                     neighboursRevealMode = 1;
                     break;
-                case 1: // East
+                case 2: // East
+                    latOffsetReveal = 0;
                     lonOffsetReveal = 1;
                     neighboursRevealMode = 0;
                     break;
-                case 2: // South
+                case 3: // South
                     latOffsetReveal = 1;
+                    lonOffsetReveal = 0;
                     neighboursRevealMode = 1;
                     break;
-                case 3: // West
+                case 4: // West
+                    latOffsetReveal = 0;
                     lonOffsetReveal = -1;
                     neighboursRevealMode = 0;
                     break;
@@ -77,28 +86,89 @@ void ComputerBoard::attack(Board* board) {
 
             if (newLat >= 0 && newLat < boardSize && newLon >= 0 && newLon < boardSize) {
                 BoardSegment* boardSegmentToReveal = board->grid[newLat][newLon];
+                std::cout << "Completet Check for number in grid newLat: " << newLat << "new Lon: " << newLon << std::endl;
 
                 if (boardSegmentToReveal->isWater()) {
                     boardSegmentToReveal->setWaterHit();
                     validDirectionFound = true;
-
-                if (boardSegmentToReveal->isShip()) {
+                    // Debug-Ausgabe
+                    std::cout << "Hit water at (" << newLat << ", " << newLon << ")" << std::endl;
+                }
+                if (boardSegmentToReveal->isShip()) { //second Hit found right direction
+                    // Debug-Ausgabe
+                    std::cout << "Trying to hit Ship at (" << newLat << ", " << newLon << ")" << std::endl;
                     boardSegmentToReveal->setShipHit();
                     lastHitLat = newLat;
                     lastHitLon = newLon;
                     revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
                     secondHit = true;
+                    moveCounter++;
                     validDirectionFound = true;
-                    }
+                    board->setSunkenShips();
+                    // Debug-Ausgabe
+                    std::cout << "Hit ship at (" << newLat << ", " << newLon << ")" << std::endl;
                 }
             }
         }
     }
-    else if (!(shipHit->isSunken())) {
-        int lastHitLat = lastHitLat + latOffsetReveal;
-        int lastHitLon = lastHitLon + lonOffsetReveal;
-        board->grid[lastHitLat][lastHitLon]->setShipHit();
-        revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
+    else if (shipHit != nullptr && !shipHit->isSunken() && secondHit) {
+        // Debug-Ausgabe
+        std::cout << "Continuing to attack previously hit ship..." << std::endl;
+
+        lastHitLat = lastHitLat + latOffsetReveal;
+        lastHitLon = lastHitLon + lonOffsetReveal;
+        BoardSegment* boardSegmentToHit  = board->grid[lastHitLat][lastHitLon];
+
+        if(boardSegmentToHit->isShip()) { //Ship Hit 
+            boardSegmentToHit->setShipHit();
+            moveCounter++;
+            revealNeighbors(board, lastHitLat, lastHitLon, neighboursRevealMode);
+            board->setSunkenShips();
+            // Debug-Ausgabe
+            std::cout << "Continuing attack on ship at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
+            
+        }
+        else if(boardSegmentToHit->isWater()) {
+            moveCounter++;
+            boardSegmentToHit->setWaterHit();
+            // Debug-Ausgabe
+            std::cout << "Hit water at (" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
+            if(latOffsetReveal != 0) {
+                latOffsetReveal = latOffsetReveal * (-1);
+                lastHitLat = lastHitLat + (moveCounter * latOffsetReveal);  
+            }
+            if(lonOffsetReveal != 0) {
+                lonOffsetReveal = lonOffsetReveal * (-1);
+                lastHitLon = lastHitLon + (moveCounter * lonOffsetReveal);  
+            }
+            moveCounter = 0;
+            // Debug-Ausgabe
+            std::cout << "neuer lastHit nach Richtungswechsel wegen Wasser(" << lastHitLat << ", " << lastHitLon << ")" << std::endl;
+            
+        }
+        else{
+            if(latOffsetReveal != 0) {
+                latOffsetReveal = latOffsetReveal * (-1);
+                lastHitLat = lastHitLat + moveCounter * latOffsetReveal;  
+            }
+            if(lonOffsetReveal != 0) {
+                lonOffsetReveal = lonOffsetReveal * (-1);
+                lastHitLon = lastHitLon + moveCounter * lonOffsetReveal;  
+            }
+            moveCounter = 0;
+            attack(board);
+            // Debug-Ausgabe
+            std::cout << "Changing attack direction due to obstacle." << std::endl;
+        }
+    }
+    if (shipHit != nullptr && shipHit->isSunken()) {
+        shipHit = nullptr;
+        firstHit = false;
+        secondHit = false;
+        moveCounter = 0;
+        // Debug-Ausgabe
+        std::cout << "Resetting attack state after sinking a ship." << std::endl;
+        exit(0);
     }
 }
 
@@ -106,8 +176,27 @@ void ComputerBoard::revealNeighbors(Board* boardToReveal, int latSegmentToCheck,
     const int verticalOffsets[] = {-1, 1};
     const int horizontalOffsets[] = {-1, 1};
 
+    // Diagonalen immer aufdecken
+    std::cout << "Revealing neighbors in all diagonal directions." << std::endl;
+    for (int latOffset : verticalOffsets) {
+        for (int lonOffset : horizontalOffsets) {
+            int newLat = latSegmentToCheck + latOffset;
+            int newLon = lonSegmentToCheck + lonOffset;
+
+            if (newLat >= 0 && newLat < boardSize && newLon >= 0 && newLon < boardSize) {
+                BoardSegment* boardSegmentToReveal = boardToReveal->grid[newLat][newLon];
+                if (boardSegmentToReveal->isWater()) {
+                    boardSegmentToReveal->setRevealed();
+                    // Debug-Ausgabe
+                    std::cout << "Revealed segment at (" << newLat << ", " << newLon << ")" << std::endl;
+                }
+            }
+        }
+    }
+
     switch (revealMode) {
-        case 0: // North + South ;above + below 
+        case 0: // North + South; above + below 
+            std::cout << "Revealing neighbors in North and South direction." << std::endl;
             for (int latOffset : verticalOffsets) {
                 int newLat = latSegmentToCheck + latOffset;
 
@@ -115,12 +204,15 @@ void ComputerBoard::revealNeighbors(Board* boardToReveal, int latSegmentToCheck,
                     BoardSegment* boardSegmentToReveal = boardToReveal->grid[newLat][lonSegmentToCheck];
                     if (boardSegmentToReveal->isWater()) {
                         boardSegmentToReveal->setRevealed();
+                        // Debug-Ausgabe
+                        std::cout << "Revealed segment at (" << newLat << ", " << lonSegmentToCheck << ")" << std::endl;
                     }
                 }
             }
             break;
 
         case 1: // West + East; left + right
+            std::cout << "Revealing neighbors in West and East direction." << std::endl;
             for (int lonOffset : horizontalOffsets) {
                 int newLon = lonSegmentToCheck + lonOffset;
 
@@ -128,29 +220,16 @@ void ComputerBoard::revealNeighbors(Board* boardToReveal, int latSegmentToCheck,
                     BoardSegment* boardSegmentToReveal = boardToReveal->grid[latSegmentToCheck][newLon];
                     if (boardSegmentToReveal->isWater()) {
                         boardSegmentToReveal->setRevealed();
-                    }
-                }
-            }
-            break;
-
-        case 2: // North-East + Soth-East + Soth-West + North-West; diagonal
-            for (int latOffset : verticalOffsets) {
-                for (int lonOffset : horizontalOffsets) {
-                    int newLat = latSegmentToCheck + latOffset;
-                    int newLon = lonSegmentToCheck + lonOffset;
-
-                    if (newLat >= 0 && newLat < boardSize && newLon >= 0 && newLon < boardSize) {
-                        BoardSegment* boardSegmentToReveal = boardToReveal->grid[newLat][newLon];
-                        if (boardSegmentToReveal->isWater()) {
-                            boardSegmentToReveal->setRevealed();
-                        }
+                        // Debug-Ausgabe
+                        std::cout << "Revealed segment at (" << latSegmentToCheck << ", " << newLon << ")" << std::endl;
                     }
                 }
             }
             break;
 
         default:
-            // Ungültiger revealMode ---> Fehlerbehandlung!!!
+            // Ungültiger revealMode ---> Fehlerbehandlung
+            std::cerr << "Invalid revealMode: " << revealMode << std::endl;
             break;
     }
 }

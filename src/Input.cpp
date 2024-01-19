@@ -72,7 +72,7 @@ int Input::userinputInt(std::string pMessage, int pLower, int pUpper)  {
     {
         std::cout << pMessage << std::endl;
         //Kontrolliert ob die Eingabe eine Zahl ist
-        while (!(std::cin >> input))  {
+        while (!(std::cin >> input) || std::cin.peek() != '\n')  {
             std::cout << "Bitte geben sie eine Zahl ein!" << std::endl;
             std::cin.clear();               //Fehlerstatus von cin wird zurückgesetzt
             std::cin.ignore(1000, '\n');    //Ersten 1000 Zeichen werden ignoriert; Alle Zeichen bis zu einem Enter werden überlesen

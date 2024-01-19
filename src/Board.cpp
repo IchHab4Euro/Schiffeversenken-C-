@@ -6,12 +6,16 @@
 Board::Board(){
 }
 
-void Board::init(std::vector<Ship*> initShips) {
+//Nicht fertig
+void Board::init(BoardSegment* initGrid, std::vector<Ship*> initShips) {
     //setup grid
-    for(int lat = 0; lat < boardSize; lat++){
+
+    if (initGrid == nullptr)  {
+        for(int lat = 0; lat < boardSize; lat++){
         for(int lon = 0; lon < boardSize; lon++){
-            grid[lat][lon] = new BoardSegment(SegmentState::Water);
+            initGrid[lat][lon] = new BoardSegment(SegmentState::Water);
         }
+    }    
     }
     shipsNextToBoard = initShips;
 }
@@ -20,6 +24,7 @@ int Board::getBoardSize() {
     return this->boardSize;
 }
 
+/*/
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
     BoardSegment* BoardSegmentToPlace;
     std::string testDirection = "test"; 
@@ -111,6 +116,111 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
     }
 }
 
+
+}
+*/
+bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
+    if (!isValidPlacement(latitude, longitude, direction, ship)) {
+        std::cout << "Ungültige Platzierung für das Schiff." << std::endl;
+        return false;
+    }
+
+    // Place Segments for the Ship
+    for (int i = 0; i < ship->getLength(); i++) {
+        BoardSegment* segmentToPlace = getSegmentToPlace(latitude, longitude, direction, i);
+        segmentToPlace->setShipOnSegment(ship);
+        segmentToPlace->fieldState = SegmentState::ShipPlacement;
+    }
+
+    // Check for collision after Segments are set 
+    if (checkForColission()) {
+        std::cout << "Kollision festgestellt, Platzierung nicht möglich." << std::endl;
+        replaceShipPlacement(SegmentState::Water, nullptr); // Entfernt vorläufige Platzierung
+        return false;
+    }
+
+    // Final Ship placement 
+    replaceShipPlacement(SegmentState::Ship, ship);
+    shipsOnBoard.push_back(ship);
+    std::cout << "Schiff platziert: " << ship->getName() << std::endl;
+    return true;
+}
+
+bool Board::isValidPlacement(int latitude, int longitude, Direction direction, Ship* ship) const {
+    for (int i = 0; i < ship->getLength(); i++) {
+        int latToCheck, lonToCheck;
+        switch (direction) {
+            case Direction::North:
+                latToCheck = latitude - i;
+                lonToCheck = longitude;
+                break;
+            case Direction::South:
+                latToCheck = latitude + i;
+                lonToCheck = longitude;
+                break;
+            case Direction::East:
+                latToCheck = latitude;
+                lonToCheck = longitude + i;
+                break;
+            case Direction::West:
+                latToCheck = latitude;
+                lonToCheck = longitude - i;
+                break;
+            default:
+                return false;
+        }
+
+        // check grid Area
+        if (latToCheck < 0 || latToCheck >= boardSize || lonToCheck < 0 || lonToCheck >= boardSize) {
+            return false;
+        }
+
+        // Check for collision
+        BoardSegment* segment = grid[latToCheck][lonToCheck];
+        if (segment->isShip() || segment->isShipPlacement()) {
+            return false;
+        }
+    }
+    return true;
+}
+
+BoardSegment* Board::getSegmentToPlace(int latitude, int longitude, Direction direction, int offset) const {
+    int latToPlace, lonToPlace;
+    switch (direction) {
+        case Direction::North:
+            latToPlace = latitude - offset;
+            lonToPlace = longitude;
+            break;
+        case Direction::South:
+            latToPlace = latitude + offset;
+            lonToPlace = longitude;
+            break;
+        case Direction::East:
+            latToPlace = latitude;
+            lonToPlace = longitude + offset;
+            break;
+        case Direction::West:
+            latToPlace = latitude;
+            lonToPlace = longitude - offset;
+            break;
+        default:
+            throw std::invalid_argument("Ungültige Richtung für die Platzierung des Schiffs");
+    }
+
+    return grid[latToPlace][lonToPlace];
+}
+
+void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
+    for(int i = 0; i < boardSize; i++){
+        for(int j = 0; j < boardSize; j++){
+            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
+                grid[i][j]->fieldState = newState;
+                grid[i][j]->setShipOnSegment(shipToPlace);
+            }
+        }
+    }
+}
+
 bool Board::checkForColission() {
     for (int i = 0; i < boardSize; i++) {
         for (int j = 0; j < boardSize; j++) {
@@ -132,17 +242,6 @@ bool Board::checkForColission() {
     return false;
 }
 
-void Board::replaceShipPlacement(SegmentState newState, Ship* shipToPlace) {
-    for(int i = 0; i < boardSize; i++){
-        for(int j = 0; j < boardSize; j++){
-            if(grid[i][j]->fieldState == SegmentState::ShipPlacement){
-                grid[i][j]->fieldState = newState;
-                grid[i][j]->setShipOnSegment(shipToPlace);
-            }
-        }
-    }
-}
-
 int Board::cordinateToLatitude(const std::string cordinate) const {
     int latitude = cordinate[0] - 'A';
     return latitude;
@@ -158,13 +257,13 @@ int Board::cordinateToLongitude(const std::string cordinate) const {
 
 Direction Board::numberToDirection(int number)  const { 
     switch (number) {
-        case 0:
-            return Direction::North;
         case 1:
-            return Direction::East;
+            return Direction::North;
         case 2:
-            return Direction::South;
+            return Direction::East;
         case 3:
+            return Direction::South;
+        case 4:
             return Direction::West;
         default:
             throw std::invalid_argument("Invalid number for Direction"); //exc. Klasse erstellen und exc. abfangen und verarbeiten 
@@ -172,32 +271,55 @@ Direction Board::numberToDirection(int number)  const {
 }
 
 void Board::setSunkenShips() {
-    for (int i = 0; i < boardSize; i++) {
-        for (int j = 0; j < boardSize; j++) {
-            BoardSegment* segment = grid[i][j];
-            if (segment->isShipHit()) {
-                Ship* ship = segment->getShipOnSegment();
-                if (ship) {
-                    bool allSegmentsHit = true;
+    for (Ship* ship : shipsOnBoard) {
+        if (!ship->isSunken()) {
+            bool allHits = true;
 
-                    // Check if all Segments of the Ship are hitted
-                    for (int x = 0; x < boardSize; x++) {
-                        for (int y = 0; y < boardSize; y++) {
-                            if (grid[x][y]->getShipOnSegment() == ship && !grid[x][y]->isShipHit()) {
-                                allSegmentsHit = false;
-                                break;
-                            }
-                        }
-                        if (!allSegmentsHit) {
-                            break;
-                        }
-                    }
+            // Überprüfe alle Segmente des Schiffes
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    BoardSegment* segment = grid[i][j];
 
-                    if (allSegmentsHit) {
-                        ship->sunk = true;
+                    // Wenn das Segment zum Schiff gehört und nicht getroffen wurde
+                    if (segment->getShipOnSegment() == ship && 
+                        !(segment->isShipHit())) {
+                        allHits = false;
+                        break;
                     }
                 }
+                if (!allHits) break;
+            }
+
+            if (allHits) {
+                ship->sunk = true;
             }
         }
     }
+}
+
+bool Board::allShipsSunk() const {
+    bool allSunk = true;
+    for (Ship* ship : shipsOnBoard) {
+        if (!(ship->isSunken())) {
+            allSunk = false;
+        } else {
+            std::cout << "Ship sunk: " << ship->getName() << std::endl;
+        }
+    }
+    
+    if (allSunk) {
+        std::cout << "All ships have been sunk!" << std::endl;
+    } else {
+        std::cout << "Not all ships are sunk yet." << std::endl;
+    }
+
+    return allSunk;
+}
+
+std::vector<Ship*> Board::getShipsNextToBoard()  {
+    return shipsNextToBoard;
+}
+
+std::vector<Ship*> Board::getShipsOnBoard() {
+    return shipsOnBoard;
 }
