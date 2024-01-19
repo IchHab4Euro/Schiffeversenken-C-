@@ -34,10 +34,13 @@ protected:
     int const boardSize = 10;
     
 
+    BoardSegment* initGridReset;
+    std::vector<Ship*> initShipsReset;
     std::vector<Ship*> shipsNextToBoard;
     std::vector<Ship*> shipsOnBoard;
      
 private:
+    
     
     
     //Sammlung aller Spielfelder ungeordnet
