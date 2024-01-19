@@ -12,6 +12,10 @@
 #include <fstream>
 #include <random>
 
+/*
+    struct Player
+    represents a Player
+*/
 struct Player {
     Player(std::string name);
     static int nextID;
@@ -19,12 +23,18 @@ struct Player {
     std::string name;
 };
 
+/*
+    class GameLogic
+    Controlls the running Game
+*/
 class GameLogic {
     public:
         GameLogic();
-        //~GameLogic();
+        
+        //init the alle needed relations
         void init();
 
+        //inits all avialable ShipConfigs
         void initShipConf();
 
         Board* board1;
@@ -33,14 +43,23 @@ class GameLogic {
         Player* player2;
         std::string gameName;
 
+        //starts a new Game
         void newGame();
+        
+        //saves a Game
         void saveGame();
+        
+        //loads a Game
         void loadGame();
+        
+        //starting a Game after new Game or load Game
         void startGame();
     private:
+        //hold the game Phase true = placment Phase; false = attacking Phase
         bool gamePhase = false;
         int getRandomNumber(int lowerBound, int upperBound);
 
+        //the predefined Konfigs of Ships, different number of Ships
         std::vector<Ship*> shipConf1Player;
         std::vector<Ship*> shipConf1Computer;
 

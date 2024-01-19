@@ -11,21 +11,27 @@
 #define RESET "\033[0m"
 #define BLUE "\033[1;34m"
 
+/*
+    static class Output
+    handles the Output on the CommandLine
+*/
 class Output  {
     public:
         Output(); 
-        static void printMenue(std::vector<std::string> pMenuePoints);
-        static void printBoxError(std::string errorMessage, bool textAdjust);
-        static void printBoxMessage(std::string textMessage, bool textAdjust);
-        static void printPlayerBoard(Board* board);
-        static void printBothBoards(Board* pBoardPlayer, Board* pBoardComputer);
-        static void printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue);
-        static void printWelcome();
-        static void printWin();
-        static void printLose();
+        static void printMenue(std::vector<std::string> pMenuePoints); //prints a Menue with given Points
+        static void printBoxError(std::string errorMessage, bool textAdjust); //prints an error inside a box
+        static void printBoxMessage(std::string textMessage, bool textAdjust); //prints Message inside a box
+        static void printPlayerBoard(Board* board);//prints one Board
+        static void printBothBoards(Board* pBoardPlayer, Board* pBoardComputer); //prints the Board of the Player an the Enemy (Computer -> Ships are not visible)
+        static void printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue);//in ship Placment Phase Board + Ships to place
+        static void printWelcome(); //Welcome Message
+        static void printWin(); //Win Message
+        static void printLose(); //Lose Message
 
     private:
         static const int boxWidth = 40;
+
+        //helper Methods for printing the Board:
         static void printRow(Board* board, int pRow);
         static void printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow);
         static int printRowMenue(Board* board, std::vector<Ship*> pMenue, int pRow, int pMenuePos);
