@@ -39,7 +39,9 @@ void PlayerBoard::placeShips() {
                 Output::printBoxMessage("Alle Schiffe wurden platziert.", true);
             }
         }
-
+        //Debug ausgabe
+        std::cout << "Schips on Board Size: " << shipsOnBoard.size() <<std::endl;
+        std::cout << "Schips on NextToBoard Size: " << shipsNextToBoard.size() <<std::endl;
         shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
                                       [&selectedShip](const Ship* ship) { return ship->getId() == selectedShip->getId(); }), 
                        shipsNextToBoard.end());
@@ -115,7 +117,7 @@ void PlayerBoard::removeShip(Ship* shipToRemove) {
 
     // Delete Ship from the OnBoardList
     shipsOnBoard.erase(std::remove(shipsOnBoard.begin(), shipsOnBoard.end(), shipToRemove), shipsOnBoard.end());
-    std::cout << "Schiff " << shipToRemove->getName() << " wurde entfernt." << std::endl;
+    Output::printBoxMessage("Schiff " + shipToRemove->getName() + " wurde entfernt.", true);
 }
 
 bool PlayerBoard::checkContainsShip(std::vector<Ship*> shipList, int idToCheck) {

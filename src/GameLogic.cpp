@@ -98,17 +98,19 @@ void GameLogic::saveGame()  {
     std::vector<Ship*> ships;
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
-    std::string phaseString;
+    if (gamePhase == false)  {
+    std::string gamePhaseValue;
 
     //String: Spielname;Spielername;Phase
     //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
     ships = board1->getShipsOnBoard();
     if (gamePhase == false)  {
-        phaseString = "0";
+        gamePhaseValue = "0";
     } else  {
-        phaseString = "1";
+        gamePhaseValue = "1";
     }
-    std::string saveString = playName + ";" + player1->name + ";" + phaseString + ";";
+    std::string saveString = playName + ";" + player1->name + ";" + std::to_string(gamePhase) + ";" + std::to_string(ships.size()) + ";";
+    std::string saveString = playName + ";" + player1->name + ";" + gamePhaseValue + ";";
     
     //Shipconfig: Schiffsanzahl;S1Sunken;S2Sunken,S3Sunken
     std::string shipconfig;
@@ -210,7 +212,9 @@ void GameLogic::saveGame()  {
         std::cout << "Datei konnte nicht ge\224ffnet werden!" << std::endl;
     }   
 }
+}
 
+/*
 void GameLogic::loadGame() {
     std::ifstream csvFileName("../FieldSave.csv");
     std::vector<std::string> gameNames;
@@ -346,5 +350,6 @@ void GameLogic::loadGame() {
     }
     board2->init(initSegments, startingShipsPlayer);
 
-    startGame();
+    board1->init(grid, nullptr);
+
 }

@@ -57,7 +57,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 
     // Final Ship placement 
     replaceShipPlacement(SegmentState::Ship, ship);
-    shipsOnBoard.push_back(ship);
     std::cout << "Schiff platziert: " << ship->getName() << std::endl;
     return true;
 }
