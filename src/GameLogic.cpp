@@ -353,3 +353,11 @@ void GameLogic::loadGame() {
     board1->init(grid, nullptr);
 
 }
+*/
+
+void GameLogic::initShipConf() {
+    
+    //shipConf1
+    shipConf1Player = {new Ship("Schlachtschiff",5,false)};
+    shipConf1Computer = {new Ship("Schlachtschiff",5,false)};
+}
