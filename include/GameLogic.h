@@ -47,9 +47,6 @@ class GameLogic {
 
         std::vector<Ship*> shipConf3Player;
         std::vector<Ship*> shipConf3Computer;
-
-        std::vector<Ship*> shipConf4Player;
-        std::vector<Ship*> shipConf4Computer;
 };
     //void signal_handler(int signal);
 #endif
