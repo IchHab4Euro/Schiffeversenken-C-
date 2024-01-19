@@ -248,6 +248,11 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             if (segmentP->isWater())  {
                 symbolP = ' ';
             }
+            if (segmentP->isWaterHit())  {
+                symbolP = '~';
+                color = BLUE;
+            }
+            
             if (segmentP->isShip())  {
                 symbolP = '#';
             }
@@ -275,7 +280,7 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
                 }
             }
             if (segmentC->isWaterHit())  {
-                symbolC = '#';
+                symbolC = '~';
                 color = BLUE;
             }
             

@@ -32,8 +32,7 @@ void ComputerBoard::placeShips() {
 /*
 void ComputerBoard::attack(Board* board) {
     if (!firstHit) {
-       
-
+        
         BoardSegment* boardSegmentToHit;
         do {
             lastHitLat = getRandomNumber(0, boardSize - 1);

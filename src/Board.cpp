@@ -196,8 +196,8 @@ void Board::setSunkenShips() {
                 Ship* shipToCheck = segmentToCheck->getShipOnSegment();
                 for(int h = 0; h < boardSize; h++) {
                     for(int k = 0; k < boardSize; k++) {
-                        BoardSegment* segmentToCheck = grid[h][k];
-                        if(segmentToCheck->getShipOnSegment() == shipToCheck && !(segmentToCheck->isShipHit())) {
+                        BoardSegment* segmentToCheckOfShip = grid[h][k];
+                        if(segmentToCheckOfShip->getShipOnSegment() == shipToCheck && !(segmentToCheckOfShip->isShipHit())) {
                             shipSunken = false;
                         }
                     }

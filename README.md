@@ -10,3 +10,9 @@ Um alle .o Dateien zu löschen muss man "mingw32-make clean" eingaben
 
 Windows:
 Bei Benutzung auf Windows, muss der Zufallszahlengenerator eventuell auf generateRandomNumberWindows in der ComputerBoard Klasse umgestellt werden
+
+Symbole auf dem Feld:
+#=Schiff
+#Rot=Schiff getroffen
+#Grau=Schiff sunken
+~Blau=Water Hit
