@@ -83,9 +83,8 @@ void GameLogic::newGame() {
     player2 = new Player("Computer");
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
-    BoardSegment =
-    board1->init(startingShipsPlayer);
-    board2->init(startingShipsComputer);
+    board1->init(nullptr, startingShipsPlayer);
+    board2->init(nullptr, startingShipsComputer);
     startGame();
 }
 
@@ -271,6 +270,6 @@ void GameLogic::loadGame() {
         }
     }
 
-    board1->init()
+    board1->init(grid, nullptr);
 
 }
