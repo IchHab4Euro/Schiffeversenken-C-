@@ -10,6 +10,7 @@
 #include <csignal>
 #include <sstream>
 #include <fstream>
+#include <random>
 
 struct Player {
     Player(std::string name);
@@ -33,11 +34,12 @@ class GameLogic {
         std::string gameName;
 
         void newGame();
-        //void saveGame();
-        //void loadGame();
+        void saveGame();
+        void loadGame();
         void startGame();
     private:
         bool gamePhase = false;
+        int getRandomNumber(int lowerBound, int upperBound);
 
         std::vector<Ship*> shipConf1Player;
         std::vector<Ship*> shipConf1Computer;

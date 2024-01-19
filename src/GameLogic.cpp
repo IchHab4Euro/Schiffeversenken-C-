@@ -2,6 +2,7 @@
 
 int Player::nextID = 0;
 
+//Initialize a player
 Player::Player(std::string name) : name(name) {
     playerID = this->nextID;
     this->nextID++;
@@ -10,12 +11,10 @@ Player::Player(std::string name) : name(name) {
 GameLogic::GameLogic() {
 }
 
-void GameLogic::init() { //vlt umbennen zu
-    //std::signal(SIGINT,signal_handler); Autosafe aktivieren
+//Menue to choose between New Game, Load Game and Settings
+void GameLogic::init() { 
     initShipConf();
-    Output::printWelcome(); //Todo: Press any Button to Continue, danach clear
-    //Todo: Check for Autosafe
-    //Todo: AutoSave durchführen
+    Output::printWelcome(); 
     int inputMenu;
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
     while(1) {
@@ -25,8 +24,8 @@ void GameLogic::init() { //vlt umbennen zu
             case 1: //New Game 
                 newGame();
                 break;
-            case 2: 
-                //loadGame();
+            case 2: //Load Game
+                loadGame();
                 break;
             case 3: //Exit
                 //Todo: Settings
@@ -35,77 +34,88 @@ void GameLogic::init() { //vlt umbennen zu
                 exit(1);
                 break;
             default:
-                //Todo: print Error
-                Output::printBoxError("Falsche Auswahl", false);
                 break;
         }
     }
 }
 
+//Start a game
 void GameLogic::startGame(){
+    //If your not loading a saved game gamePhase is false and ships get placed
     if(!gamePhase){
         board1->placeShips();
         board2->placeShips();
-    
-        Output::printPlayerBoard(board1);
-        Output::printPlayerBoard(board2);
         gamePhase = true;
-        //saveGame();
     }
-
-    Output::printPlayerBoard(board1);
-    Output::printPlayerBoard(board2);
-
-
+    //Print both boards
+    Output::printBothBoards(board1, board2);
+    //Choose who starts to play
+    int zufallAnfang = getRandomNumber(0,1);
+    if (zufallAnfang == 0)  {
+        Output::printBoxMessage("Sie duerfen anfangen!", true);
+    } else  {
+        Output::printBoxMessage("Der Computer faengt an!", true);
+    }
+    
+    //While not all ships are sunken both player attack the other board
     while(!(board1->allShipsSunk())){
-        std::cout << "Test" << std::endl;
-        board1->attack(board2);
-        //board2->attack(board1);
-
-        Output::printPlayerBoard(board2);
-
-        //Output::printBothBoards(board1, board2);
+        if (zufallAnfang == 0)  {
+            board1->attack(board2);
+            board2->attack(board1);
+        } else  {
+            board2->attack(board1);
+            board1->attack(board2);
+        }
+        Output::printBothBoards(board1, board2);
     }
     
 }
     
 
 void GameLogic::newGame() {
-    std::vector<Ship*> startingShipsPlayer = shipConf3Player;
-    std::vector<Ship*> startingShipsComputer = shipConf3Computer;
-    //Todo: Spielernamen abfragen
-    player1 = new Player("Rumpelstielschen");
+    //Create Ships base on a pattern
+    std::vector<Ship*> startingShipsPlayer = shipConf1Player;
+    std::vector<Ship*> startingShipsComputer = shipConf1Computer;
+
+    //Ask the user for his name
+    std::cout << "Bitte geben sie ihren Namen ein: " << std::endl;
+    std::string playerName;
+    std::cin >> playerName;
+    player1 = new Player(playerName);
     player2 = new Player("Computer");
 
+    //Create a vector of BoardSegments
     std::vector<BoardSegment*> initSegments;
 
-    board1 = new ComputerBoard();
+    //Create two boards
+    board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
+    //Fill the vector with BordSegments with state Water
     for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
         initSegments.push_back(new BoardSegment(SegmentState::Water));
     }
-    board1->init(initSegments, startingShipsPlayer);
+    board1->init(initSegments, startingShipsPlayer, false);
     initSegments.clear();
     for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
         initSegments.push_back(new BoardSegment(SegmentState::Water));
     }
-    board2->init(initSegments, startingShipsComputer);
+    board2->init(initSegments, startingShipsComputer, false);
     gamePhase = false;
     startGame();
 }
 
-/*
-
+//Save the game 
 void GameLogic::saveGame()  {
+    //Create a string to save the data
     std::string playName;
     std::vector<Ship*> ships;
+    //Ask for Playername
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
     std::string gamePhaseValue;
 
-    //String: Spielname;Spielername;Phase
-    //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
+    //Add Playname, Playername and Phase to the String
     ships = board1->getShipsOnBoard();
     if (gamePhase == false)  {
         gamePhaseValue = "0";
@@ -115,7 +125,7 @@ void GameLogic::saveGame()  {
     
     std::string saveString = playName + ";" + player1->name + ";" + gamePhaseValue + ";";
     
-    //Shipconfig: Schiffsanzahl;S1Sunken;S2Sunken,S3Sunken
+    //Add the ship config, which consists of the shipnumber + a value to decide if its sunk or not for the Playerships
     std::string shipconfig;
     shipconfig = std::to_string(ships.size()) + ";";
 
@@ -129,7 +139,7 @@ void GameLogic::saveGame()  {
         shipconfig = shipconfig + sunken + ";"; //sunk == 1 wenn gesunken
     }
 
-    //ComputerString
+    //Add a value to decide if its sunk or not for the Computerships
     ships = board2->getShipsOnBoard();
 
     for (int i = 0; i < ships.size(); i++)  {
@@ -144,7 +154,7 @@ void GameLogic::saveGame()  {
 
     saveString = saveString + shipconfig + std::to_string(board1->getBoardSize()) + ";";
 
-
+    //Add the States of each BoardSegment to the String for the Playerboard
     std::string boardStringPlayer;
     for(int i = 0; i < board1->getBoardSize(); i++)  {
         for (int j = 0; j < board1->getBoardSize(); j++)  {
@@ -181,6 +191,7 @@ void GameLogic::saveGame()  {
 
     saveString = saveString + boardStringPlayer;
 
+    //Add the States of each BoardSegment to the String for the Computerboard
     std::string boardStringComputer;
     for(int i = 0; i < board2->getBoardSize(); i++)  {
         for (int j = 0; j < board1->getBoardSize(); j++)  {
@@ -215,7 +226,7 @@ void GameLogic::saveGame()  {
         }    
     }
 
-    saveString = saveString + boardStringPlayer;
+    saveString = saveString + boardStringComputer;
 
     std::ofstream csvFile("../FieldSave.csv", std::ios_base::app);
 
@@ -227,11 +238,13 @@ void GameLogic::saveGame()  {
     }   
 }
 
+//Load a existing Game
 void GameLogic::loadGame() {
     std::ifstream csvFileName("../FieldSave.csv");
     std::vector<std::string> gameNames;
     std::string gameName;
 
+    //Read the first word of each line to get the Playname
     if (csvFileName.is_open()) {
         std::string lineN;
 
@@ -250,6 +263,7 @@ void GameLogic::loadGame() {
         return;
     }
     
+    //Let the user choose which play he wants to load
     int game;
     std::ifstream csvFile("../FieldSave.csv");
     Output::printMenue(gameNames);
@@ -267,6 +281,7 @@ void GameLogic::loadGame() {
         csvFile.close();
     }
 
+    //Load Playname, playername and phase
     std::stringstream ss(line);
     std::string tempFileInput;
     bool tempPhase;
@@ -285,6 +300,7 @@ void GameLogic::loadGame() {
        gamePhase = false;
     }
 
+    //Produce based on the shipnumber ships with a pattern
     std::getline(ss, tempFileInput, ';');
     int shipNumber = std::stoi(tempFileInput);
     std::vector<Ship*> startingShipsPlayer;
@@ -302,6 +318,7 @@ void GameLogic::loadGame() {
         startingshipsComputer = shipConf3Computer;
     }
 
+    //Set ships to sunken or not
     for (int i = 0; i < startingShipsPlayer.size(); i++)  {
         std::getline(ss, tempFileInput, ';');
         if (tempFileInput == "1")  {
@@ -322,13 +339,13 @@ void GameLogic::loadGame() {
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
+    //Set all States of the BoardSegments of the Playerboard
     std::getline(ss, tempFileInput, ';');
     int boardSize = std::stoi(tempFileInput);
     std::vector<BoardSegment*> initSegmentsPlayer;
     std::cout << "Player" << std::endl;
     for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
         std::getline(ss, tempFileInput, ';');
-        std::cout << tempFileInput;
         if (tempFileInput == "r")  {
             initSegmentsPlayer.push_back(new BoardSegment(SegmentState::Revealed));
         }
@@ -358,14 +375,13 @@ void GameLogic::loadGame() {
             initSegmentsPlayer.push_back(new BoardSegment(SegmentState::WaterHit));
         }     
     }
-    std::cout << std::endl;
-    board1->init(initSegmentsPlayer, startingShipsPlayer);
+    //Initialize the board
+    board1->init(initSegmentsPlayer, startingShipsPlayer, gamePhase);
     std::vector<BoardSegment*> initSegmentsComputer;
     
-    std::cout << "Computer" << std::endl;
+    //Set all States of the BoardSegments of the Computerboard
     for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
         std::getline(ss, tempFileInput, ';');
-        std::cout << tempFileInput;
         if (tempFileInput == "r")  {
             initSegmentsComputer.push_back(new BoardSegment(SegmentState::Revealed));
         }
@@ -395,13 +411,13 @@ void GameLogic::loadGame() {
             initSegmentsComputer.push_back(new BoardSegment(SegmentState::WaterHit));
         }     
     }
-
-    board2->init(initSegmentsComputer, startingshipsComputer);
-
+    //Initialize the board
+    board2->init(initSegmentsComputer, startingshipsComputer, gamePhase);
+    //Start the game
     startGame();
 }
 
-
+//Initialize Patterns to create ships
 void GameLogic::initShipConf() {
 
     shipConf1Player = {
@@ -449,4 +465,13 @@ void GameLogic::initShipConf() {
     shipConf3Computer = {
         new Ship("Schlachtschiff",5,false, 1),
         new Ship("U-Boot",2,false, 2)};
+}
+
+//Get a random number
+int GameLogic::getRandomNumber(int lowerBound, int upperBound){
+    std::random_device randomNummerGen;
+    std::mt19937 gen(randomNummerGen());
+    std::uniform_int_distribution<int> distrubution(lowerBound,upperBound);
+
+    return distrubution(gen);
 }

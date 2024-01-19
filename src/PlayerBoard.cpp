@@ -36,7 +36,7 @@ void PlayerBoard::placeShips() {
 
             shipPlaced = placeShip(latitude, longitude, direction, selectedShip);
             if (!shipPlaced) {
-                Output::printBoxMessage("Alle Schiffe wurden platziert.", true);
+                Output::printBoxMessage("Schiff konnte nicht platziert worden.", true);
             }
         }
         //Debug ausgabe

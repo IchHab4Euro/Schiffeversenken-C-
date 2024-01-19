@@ -12,7 +12,7 @@ class Board {
 
 public:
     Board();
-    void init(std::vector<BoardSegment*> initBoardSegments, std::vector<Ship*> initShips);
+    void init(std::vector<BoardSegment*> initBoardSegments, std::vector<Ship*> initShips, bool gamePhase);
     virtual void placeShips() = 0;
     virtual void attack(Board* board) = 0; 
     int getBoardSize();

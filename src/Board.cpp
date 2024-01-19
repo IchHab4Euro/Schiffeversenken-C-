@@ -8,7 +8,7 @@ Board::Board(){
 }
 
 //Nicht fertig
-void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> initShips) {
+void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> initShips, bool gamePhase) {
     // Setup grid
     if (initSegments.empty()) {
         for (int lat = 0; lat < boardSize; lat++) {
@@ -25,9 +25,12 @@ void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> ini
         }
     }
 
-    // Set shipsNextToBoard
-    shipsNextToBoard = initShips;
-    initShipsReset = initShips;
+    if (gamePhase == true)  {
+        shipsOnBoard = initShips;
+    } else  {
+        shipsNextToBoard = initShips;
+        initShipsReset = initShips;
+    }
 }
 
 int Board::getBoardSize() {
@@ -37,7 +40,6 @@ int Board::getBoardSize() {
 
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
     if (!isValidPlacement(latitude, longitude, direction, ship)) {
-        std::cout << "Ungültige Platzierung für das Schiff." << std::endl;
         return false;
     }
 
@@ -50,7 +52,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
 
     // Check for collision after Segments are set 
     if (checkForColission()) {
-        std::cout << "Kollision festgestellt, Platzierung nicht möglich." << std::endl;
         replaceShipPlacement(SegmentState::Water, nullptr); // Entfernt vorläufige Platzierung
         return false;
     }
