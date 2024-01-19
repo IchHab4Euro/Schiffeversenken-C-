@@ -39,9 +39,6 @@ void PlayerBoard::placeShips() {
                 Output::printBoxMessage("Schiff konnte nicht platziert worden.", true);
             }
         }
-        //Debug ausgabe
-        std::cout << "Schips on Board Size: " << shipsOnBoard.size() <<std::endl;
-        std::cout << "Schips on NextToBoard Size: " << shipsNextToBoard.size() <<std::endl;
         shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
                                       [&selectedShip](const Ship* ship) { return ship->getId() == selectedShip->getId(); }), 
                        shipsNextToBoard.end());
@@ -66,7 +63,7 @@ Ship* PlayerBoard::shipSelection() {
 Ship* PlayerBoard::handleShipPlacementOptions() {
     std::vector<std::string> menueMessage = {"Schiff entfernen" , "Neustart"};
     Output::printMenue(menueMessage);
-    int choice = Input::userinputInt("Waehle eine Option: ", 1, menueMessage.size());
+    int choice = Input::userinputInt("W\204hle eine Option: ", 1, menueMessage.size());
 
     switch (choice) {
         case 1:

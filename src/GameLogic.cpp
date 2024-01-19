@@ -27,9 +27,6 @@ void GameLogic::init() {
             case 2: //Load Game
                 loadGame();
                 break;
-            case 3: //Exit
-                //Todo: Settings
-                break;
             case 4:
                 exit(1);
                 break;
@@ -44,6 +41,7 @@ void GameLogic::startGame(){
     //If your not loading a saved game gamePhase is false and ships get placed
     if(!gamePhase){
         board1->placeShips();
+        std::cout << "Computer places ships" << std::endl;
         board2->placeShips();
         gamePhase = true;
     }
@@ -56,9 +54,25 @@ void GameLogic::startGame(){
     } else  {
         Output::printBoxMessage("Der Computer faengt an!", true);
     }
-    
+    int save = 5;
     //While not all ships are sunken both player attack the other board
     while(!(board1->allShipsSunk() || board2->allShipsSunk())){
+        //SaveGame possible at the start and every 5 Attacks
+        if (save == 5)  {
+            int saveGame = Input::userinputInt("M\224chten sie das Spiel Speichern (0:Ja, 1:Nein)", 0, 1);
+            if (saveGame == 0)  {
+                this->saveGame();
+                saveGame = Input::userinputInt("M\224chten sie das Spiel nun abbrechen? (0:Ja, 1:Nein)", 0, 1);
+                if (saveGame == 0)  {
+                    exit(1);
+                }
+            } 
+            save = 0;  
+        } else  {
+            save++;
+        }
+
+        
         if (zufallAnfang == 0)  {
             board1->attack(board2);
             board2->attack(board1);
@@ -177,7 +191,8 @@ void GameLogic::saveGame()  {
             }
             if (boardsegmentP->isShipHit())  {
                 symbol = "#";
-                boardStringPlayer = boardStringPlayer + symbol + ";";
+                shipID = std::to_string(boardsegmentP->getShipOnSegment()->getId());
+                boardStringPlayer = boardStringPlayer + symbol + ";" + shipID + ";";
             }
             if (boardsegmentP->isShipPlacement())  {
                 symbol = "p";
@@ -214,7 +229,8 @@ void GameLogic::saveGame()  {
             }
             if (boardsegmentC->isShipHit())  {
                 symbol = "#";
-                boardStringComputer = boardStringComputer + symbol + ";";
+                shipID = std::to_string(boardsegmentC->getShipOnSegment()->getId());
+                boardStringComputer = boardStringComputer + symbol + ";" + shipID + ";";
             }
             if (boardsegmentC->isShipPlacement())  {
                 symbol = "p";
@@ -348,7 +364,6 @@ void GameLogic::loadGame() {
     std::getline(ss, tempFileInput, ';');
     int boardSize = std::stoi(tempFileInput);
     std::vector<BoardSegment*> initSegmentsPlayer;
-    std::cout << "Player" << std::endl;
     for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
         std::getline(ss, tempFileInput, ';');
         if (tempFileInput == "r")  {
@@ -429,9 +444,9 @@ void GameLogic::initShipConf() {
         new Ship("Schlachtschiff",5,false, 1),
         new Ship("Kreuzer1",4,false, 2),
         new Ship("Kreuzer2",4,false, 3),
-        new Ship("Zerstörer1",3,false, 4),
-        new Ship("Zerstörer2",3,false, 5),
-        new Ship("Zerstörer3",3,false, 6),
+        new Ship("Zerst\224rer1",3,false, 4),
+        new Ship("Zerst\224rer2",3,false, 5),
+        new Ship("Zerst\224rer3",3,false, 6),
         new Ship("U-Boot1",2,false, 7),
         new Ship("U-Boot2",2,false, 8),
         new Ship("U-Boot3",2,false, 9),
@@ -441,9 +456,9 @@ void GameLogic::initShipConf() {
         new Ship("Schlachtschiff",5,false, 1),
         new Ship("Kreuzer1",4,false, 2),
         new Ship("Kreuzer2",4,false, 3),
-        new Ship("Zerstörer1",3,false, 4),
-        new Ship("Zerstörer2",3,false, 5),
-        new Ship("Zerstörer3",3,false, 6),
+        new Ship("Zerst\224rer1",3,false, 4),
+        new Ship("Zerst\224rer2",3,false, 5),
+        new Ship("Zerst\224rer3",3,false, 6),
         new Ship("U-Boot1",2,false, 7),
         new Ship("U-Boot2",2,false, 8),
         new Ship("U-Boot3",2,false, 9),
@@ -452,14 +467,14 @@ void GameLogic::initShipConf() {
     shipConf2Player = {
         new Ship("Schlachtschiff",5,false, 1),
         new Ship("Kreuzer",4,false, 2),
-        new Ship("Zerstörer",3,false, 3),
+        new Ship("Zerst\224rer",3,false, 3),
         new Ship("U-Boot1",2,false, 4),
         new Ship("U-Boot2",2,false, 5)};
 
     shipConf2Computer = {
         new Ship("Schlachtschiff",5,false, 1),
         new Ship("Kreuzer",4,false, 2),
-        new Ship("Zerstörer",3,false, 3),
+        new Ship("Zerst\224rer",3,false, 3),
         new Ship("U-Boot1",2,false, 4),
         new Ship("U-Boot2",2,false, 5)};
     
