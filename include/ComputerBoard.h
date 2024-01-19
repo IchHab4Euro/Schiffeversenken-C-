@@ -5,34 +5,38 @@
 #include <iostream>
 #include <ctime>
 
+/*
+    class ComputerBoard inherits from Board 
+    represent the Board of a Computer 
+    overrides the Method placeShips(), atack()
+*/
 class ComputerBoard : public Board {
     public:
         ComputerBoard() : Board() {}
+        
+        //placing all Ships 
         void placeShips() override;
+        
+        //atacking enemy board
         void attack(Board* enemyBoard) override;
 
     private:
+        //reveals All Neighbous Segments arround a Ship after a Hit -> no Ships next to a other
         void revealNeighbors(Board* enemyBoardToReveal, int latSegmentToCheck, int lonSegmentToCheck, int revealMode);
+        
+        //returns randomNumber()
         int getRandomNumber(int lowerBound, int upperBound);
         
-        int exitCounter = 0; // muss wieder weg
-        
-        Ship* shipHit = nullptr;
-        bool firstHit = false;
-        bool secondHit = false;
-        int lastHitLat = 0;
-        int lastHitLon = 0;
-        int latOffsetReveal = 0;
-        int lonOffsetReveal = 0;
-        int neighboursRevealMode = 0;
-        int moveCounter = 0;
+        Ship* shipHit = nullptr; //holds the last hitten Ship
+        bool firstHit = false; //if first Hit on Ship
+        bool secondHit = false; //if second Hit on Ship
+        int lastHitLat = 0; //where the last Hit was Lat
+        int lastHitLon = 0; //where the last Hit was Lon
+        int latOffsetReveal = 0; //the direction of the ShipLat
+        int lonOffsetReveal = 0; //the direction of the ShipLon
+        int neighboursRevealMode = 0; //the mode how to reveal Neighbors -> depends on Ship direction
+        int moveCounter = 0; //counts the lenght of the Ship
 
         int getRandomNumberWindows(int lowerBound, int upperBound);
-
-        //void processAttack(BoardSegment* targetSegment);
-        //void attemptSecondHit(Board* enemyBoard);
-        //void continueAttackOnShip(Board* enemyBoard);
-        //void resetAttackState();
-        
 };
 #endif

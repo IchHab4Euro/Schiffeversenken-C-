@@ -4,6 +4,10 @@
 #include <string>
 #include <vector>
 
+/*
+    class Ship
+    represents a Ship
+*/
 class Ship {
 public:
     Ship(std::string name, int length, bool sunk, int ID);
@@ -11,16 +15,12 @@ public:
     int getLength() const;
     int getId() const;
     bool isSunken();
-
     void setSunken();
 
     std::string name;
     int length;
     int id; 
     bool sunk = false;
-    
-    static int nextId; 
-
 private:
     
 };

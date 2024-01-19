@@ -7,7 +7,6 @@ Board::Board(){
 
 }
 
-//Nicht fertig
 void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> initShips) {
     // Setup grid
     if (initSegments.empty()) {
