@@ -2,9 +2,8 @@
 
 int Ship::nextId = 1; 
 
-Ship::Ship(std::string name, int length, bool isSunken) : name(name), length(length), sunk(sunk) {
-    id = nextId;
-    nextId++;
+Ship::Ship(std::string name, int length, bool isSunken, int id) : name(name), length(length), sunk(sunk), id(id)  {
+
 }
 
 std::string Ship::getName() const {

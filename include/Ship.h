@@ -6,7 +6,7 @@
 
 class Ship {
 public:
-    Ship(std::string name, int length, bool sunk);
+    Ship(std::string name, int length, bool sunk, int ID);
     std::string getName() const;
     int getLength() const;
     int getId() const;

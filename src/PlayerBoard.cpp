@@ -20,7 +20,7 @@ void PlayerBoard::placeShips() {
         bool shipPlaced = false;
         while (!shipPlaced) {
              message = "Du hast das Schiff: " + selectedShip->getName() + 
-                                  " mit einer Groeße: " + std::to_string(selectedShip->getLength());
+                                  " mit einer Gr\224ße: " + std::to_string(selectedShip->getLength());
             Output::printBoxMessage(message, true);
 
             std::string shipCoordinates = Input::userinputCoordinates("Wohin soll das Schiff platziert werden? Gib die Koordinate ein: ", getBoardSize());
@@ -31,7 +31,7 @@ void PlayerBoard::placeShips() {
             std::vector<std::string> directions = {"North", "East", "South", "West"};
             Output::printMenue(directions);
 
-            int directionNumber = Input::userinputInt("Wähle eine Richtung: ", 1, 4);
+            int directionNumber = Input::userinputInt("W\204hle eine Richtung: ", 1, 4);
             Direction direction = numberToDirection(directionNumber);
 
             shipPlaced = placeShip(latitude, longitude, direction, selectedShip);

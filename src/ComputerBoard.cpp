@@ -12,9 +12,9 @@ void ComputerBoard::placeShips() {
 
         bool shipPlaced = false; 
         while(!shipPlaced){
-            int startFieldLat = getRandomNumber(0,9);
-            int startFieldLong = getRandomNumber(0,9);
-            int directionNumber = getRandomNumber(1,4);
+            int startFieldLat = getRandomNumberWindows(0,9);
+            int startFieldLong = getRandomNumberWindows(0,9);
+            int directionNumber = getRandomNumberWindows(1,4);
             Direction direction = numberToDirection(directionNumber);
 
             shipPlaced = placeShip(startFieldLat, startFieldLong, direction, shipToPlace);
