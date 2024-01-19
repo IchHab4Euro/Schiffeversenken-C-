@@ -18,6 +18,27 @@ bool BoardSegment::isWater() {
     return fieldState == SegmentState::Water;
 }
 
+bool BoardSegment::isWaterHit() {
+    return fieldState == SegmentState::WaterHit;
+}
+
+bool BoardSegment::isRevealed() {
+    return fieldState == SegmentState::Revealed;
+}
+
+
+void BoardSegment::setWaterHit(){
+    this->fieldState = SegmentState::WaterHit;
+}
+
+void BoardSegment::setShipHit() {
+    this->fieldState = SegmentState::ShipHit;
+}
+
+void BoardSegment::setRevealed() {
+    this->fieldState = SegmentState::Revealed;
+}
+
 void BoardSegment::setShipOnSegment(Ship* ship) {
     this->shipOnSegment = ship;
 }

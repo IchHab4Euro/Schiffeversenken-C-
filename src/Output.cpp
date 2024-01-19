@@ -30,14 +30,20 @@ void  Output::printMenue(std::vector<std::string> pMenuePoints)  {
     std::cout << std::string(menueboxWidth, '-') << std::endl;
     
     int selection;
-    std::cout << "Bitte w\204hlen sie einen Menue Punkt aus: " << std::endl;
 }
 
-void Output::printBoxError(std::string errorMessage)  {
+void Output::printBoxError(std::string errorMessage, bool textAdjust)  {
     std::string color;
     color = RED;
 
-    const int textboxWidth = boxWidth;
+    int textboxWidth;
+
+    if (textAdjust)  {
+        textboxWidth = errorMessage.size()+5;
+    } else  {
+        textboxWidth = boxWidth;
+    }
+
     std::string type = "Error";
 
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
@@ -52,7 +58,7 @@ void Output::printBoxError(std::string errorMessage)  {
     {
         std::string line = errorMessage.substr(start, textboxWidth - 5);
         std::string connection;
-        if (line.length() == textboxWidth-5)  {
+        if (line.length() == textboxWidth-5 && textAdjust == false)  {
             connection = "-";
         } else  {
             connection = std::string(textboxWidth - 4 - line.length(), ' ');
@@ -64,11 +70,17 @@ void Output::printBoxError(std::string errorMessage)  {
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
 }
 
-void Output::printBoxMessage(std::string textMessage)  {
+void Output::printBoxMessage(std::string textMessage, bool textAdjust)  {
     std::string color;
     color = GREEN;
+    int textboxWidth;
 
-    const int textboxWidth = boxWidth;
+    if (textAdjust)  {
+        textboxWidth = textMessage.size()+5;
+    } else  {
+        textboxWidth = boxWidth;
+    }
+    
     std::string type = "Nachricht";
     std::cout << color << std::string(textboxWidth, '-') << RESET << std::endl;
     int length = type.length();
@@ -78,15 +90,14 @@ void Output::printBoxMessage(std::string textMessage)  {
 
 
     size_t start = 0;
-    while (start < textMessage.length())
-    {
+    while (start < textMessage.length())  {
         std::string line = textMessage.substr(start, textboxWidth - 5);
         std::string connection;
-        if (line.length() == textboxWidth-5)  {
+        if (line.length() == textboxWidth-5 && textAdjust == false)  {
             connection = "-";
         } else  {
             connection = std::string(textboxWidth - 4 - line.length(), ' ');
-        }
+        }    
         
         std::cout << color << "| " << line << connection << " |" << RESET << std::endl;
         start += textboxWidth - 5;
@@ -123,6 +134,7 @@ void Output::printPlayerBoard(Board* pBoard)  {
 
 void Output::printRow(Board* board, int pRow)  {
     char symbol;
+    std::string color;
     char letter = 'A';
     letter = letter+pRow;
     for (int j = 0; j < 3; j++)  {
@@ -133,22 +145,35 @@ void Output::printRow(Board* board, int pRow)  {
         }
         
         for (int i = 0; i < 10; i++)  {
-            SegmentState state = board->grid[pRow][i]->fieldState;
-            switch (state)  {
-            case SegmentState::Water:
-                symbol = ' ';
-                break;
-            case SegmentState::Ship:
-                symbol = '#';
-                break;
-            case SegmentState::ShipPlacement:
-                symbol = 'p';
-                break;
-            default:
-                symbol = ' ';
-                break;
+            color = RESET;
+            BoardSegment* boardSegment = board->grid[pRow][i];
+            if (boardSegment->isWater())  {
+                symbol = '~';
+            } 
+            if (boardSegment->isShip())  {
+                symbol = 's';
             }
-            std::cout << "|" << std::string(7, symbol);
+            if (boardSegment->isShipHit())  {
+                symbol = '#';
+                if (boardSegment->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
+                }
+            }
+            if (boardSegment->isRevealed())  {
+                symbol = ' ';
+            }
+            if (boardSegment->isShipPlacement())  {
+                symbol = 'p';
+            }
+            if (boardSegment->isWaterHit())  {
+                symbol = 'w';
+            }
+            
+            
+            
+            std::cout << "|" << color << std::string(7, symbol) << RESET;
         }
         std::cout << "|" << std::endl;
     }
@@ -207,6 +232,7 @@ void Output::printBothBoards(Board* pBoardPlayer, Board* pBoardComputer)  {
 }
 
 void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
+    std::string color;
     for (int j = 0; j < 3; j++)  {
         char letter = 'A';
         letter = letter+pRow;
@@ -216,31 +242,44 @@ void Output::printRowTwoBoards(Board* pPlayer, Board* pComputer, int pRow)  {
             std::cout << std::string(7, ' ');   
         }
         for (int i = 0; i < 10; i++)  {
-            SegmentState stateField = pPlayer->grid[pRow][i]->fieldState;
-            char symbolP;
-            switch (stateField)  {
-            case SegmentState::Water:
+            color = RESET;
+            BoardSegment* segmentP = pPlayer->grid[pRow][i];
+            char symbolP = ' ';
+            if (segmentP->isWater())  {
                 symbolP = ' ';
-                break;
-            case SegmentState::Ship:
-                symbolP = '#';
-                break;
-            default:
-                symbolP = ' ';
-                break;
             }
-            std::cout << "|" << std::string(7, symbolP);
+            if (segmentP->isShip())  {
+                symbolP = '#';
+            }
+            if (segmentP->isShipHit())  {
+                symbolP = '#';
+                if (segmentP->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
+                }
+            }
+            std::cout << "|" << color << std::string(7, symbolP) << RESET;
         }
         
-        std::cout << "|" << std::string(9, ' ');
-        char symbolC; 
+        std::cout << "|" << std::string(9, ' '); 
         for (int i = 0; i < 10; i++)  {
-            if (pComputer->grid[pRow][i]->isShipHit())  {                 
-                symbolC = 's';
-            } else  {
-                symbolC = ' ';
+            char symbolC = ' ';
+            BoardSegment* segmentC = pComputer->grid[pRow][i];
+            if (segmentC->isShipHit())  {
+                symbolC = '#';
+                if (segmentC->getShipOnSegment()->isSunken())  {
+                    color = GREY;
+                } else  {
+                    color = RED;
+                }
             }
-            std::cout << "|" << std::string(7, symbolC);
+            if (segmentC->isWaterHit())  {
+                symbolC = '#';
+                color = BLUE;
+            }
+            
+            std::cout << "|" << color << std::string(7, symbolC) << RESET;
         }
         if (j == 1)  {
             std::cout << "|" << std::string(4, ' ') << letter << std::endl;

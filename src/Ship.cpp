@@ -2,7 +2,7 @@
 
 int Ship::nextId = 1; 
 
-Ship::Ship(std::string name, int length, bool isSunken) : name(name), length(length), isSunken(isSunken) {
+Ship::Ship(std::string name, int length, bool isSunken) : name(name), length(length), sunk(sunk) {
     id = nextId;
     nextId++;
 }
@@ -17,6 +17,10 @@ int Ship::getLength() const {
 
 int Ship::getId() const {
     return id;
+}
+
+bool Ship::isSunken(){
+    return sunk;
 }
 
 /*
