@@ -1,8 +1,8 @@
 battleship: main.o board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o
 	g++ main.o board.o input.o output.o playerboard.o computerboard.o ship.o gamelogic.o battleship.o -o BattleShip
 
-main.o: src/Main.cpp
-	g++ -c src/Main.cpp
+battleship.o: src/BattleShip.cpp
+	g++ 
 
 board.o: src/Board.cpp include/Board.h
 	g++ -c src/Board.cpp

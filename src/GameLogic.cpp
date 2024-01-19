@@ -58,7 +58,7 @@ void GameLogic::startGame(){
     }
     
     //While not all ships are sunken both player attack the other board
-    while(!(board1->allShipsSunk())){
+    while(!(board1->allShipsSunk() || board2->allShipsSunk())){
         if (zufallAnfang == 0)  {
             board1->attack(board2);
             board2->attack(board1);
@@ -68,7 +68,12 @@ void GameLogic::startGame(){
         }
         Output::printBothBoards(board1, board2);
     }
-    
+    if (board1->allShipsSunk())  {
+        Output::printLose();
+    }
+    if (board2->allShipsSunk())  {
+        Output::printWin();
+    }
 }
     
 

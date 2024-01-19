@@ -15,9 +15,9 @@ void ComputerBoard::placeShips() {
         bool shipPlaced = false;
         while (!shipPlaced) {
             // Generate random starting coordinates and direction
-            int startLatitude = getRandomNumberWindows(0, 9);
-            int startLongitude = getRandomNumberWindows(0, 9);
-            int directionNumber = getRandomNumberWindows(1, 4);
+            int startLatitude = getRandomNumber(0, 9);
+            int startLongitude = getRandomNumber(0, 9);
+            int directionNumber = getRandomNumber(1, 4);
             Direction placementDirection = numberToDirection(directionNumber);
 
             // Attempt to place the ship at the generated location -> if not try again wit outher position
