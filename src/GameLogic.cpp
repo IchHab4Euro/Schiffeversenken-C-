@@ -49,8 +49,8 @@ void GameLogic::startGame(){
     
         Output::printPlayerBoard(board1);
         Output::printPlayerBoard(board2);
-
         gamePhase = true;
+        saveGame();
     }
 
 
@@ -98,41 +98,38 @@ void GameLogic::saveGame()  {
     std::vector<Ship*> ships;
     std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
     std::cin >> playName;
-    if (gamePhase == false)  {
-    std::string phaseS;
+    std::string phaseString;
 
+    //String: Spielname;Spielername;Phase
     //Wenn Schiffe nicht geplaced 0 wenn geplaced 1
+    ships = board1->getShipsOnBoard();
     if (gamePhase == false)  {
-        ships = board1->getShipsNextToBoard();
         phaseString = "0";
     } else  {
-        ships = board1->getShipsOnBoard();
         phaseString = "1";
     }
     std::string saveString = playName + ";" + player1->name + ";" + phaseString + ";";
     
-
+    //Shipconfig: Schiffsanzahl;S1Sunken;S2Sunken,S3Sunken
     std::string shipconfig;
     shipconfig = std::to_string(ships.size()) + ";";
-    std::cout << std::to_string(ships.size())  << std::endl;
-    if (ships.size() != 0)  {
-        /* code */
-    }
+
     for (int i = 0; i < ships.size(); i++)  {
-        std::cout << ships.at(i)->getName() << std::endl;
-        saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";"; //sunk == 1 wenn gesunken
-    }
-    if (phase == false)  {
-        ships = board2->getShipsNextToBoard();
-    } else  {
-        ships = board2->getShipsOnBoard();
-    }
-    for (int i = 0; i < ships.size(); i++)  {
-        saveString = saveString + std::to_string(ships.at(i)->isSunken()) + ";";
+        std::cout << ships.at(i)->getName();
+        shipconfig = shipconfig + std::to_string(ships.at(i)->isSunken()) + ";"; //sunk == 1 wenn gesunken
     }
 
-    saveString = saveString + std::to_string(board1->getBoardSize()) + ";";
+    //ComputerString
+    ships = board2->getShipsOnBoard();
 
+    for (int i = 0; i < ships.size(); i++)  {
+        shipconfig = shipconfig + std::to_string(ships.at(i)->isSunken()) + ";";
+    }
+
+    saveString = saveString + shipconfig + std::to_string(board1->getBoardSize()) + ";";
+
+
+    std::string boardStringPlayer;
     for(int i = 0; i < board1->getBoardSize(); i++)  {
         for (int j = 0; j < board1->getBoardSize(); j++)  {
             BoardSegment* boardsegmentP = board1->grid[i][j];
@@ -140,31 +137,35 @@ void GameLogic::saveGame()  {
             std::string shipID;
             if (boardsegmentP->isRevealed())  {
                 symbol = "r";
-                saveString = saveString + symbol + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ";";
             }
             if (boardsegmentP->isShip())  {
                 symbol = "s";
                 shipID = std::to_string(boardsegmentP->getShipOnSegment()->getId());
-                saveString = saveString + symbol + ":" + shipID + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ":" + shipID + ";";
             }
             if (boardsegmentP->isShipHit())  {
                 symbol = "#";
-                saveString = saveString + symbol + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ";";
             }
             if (boardsegmentP->isShipPlacement())  {
                 symbol = "p";
-                saveString = saveString + symbol + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ";";
             }
             if (boardsegmentP->isWater())  {
                 symbol = "w";
-                saveString = saveString + symbol + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ";";
             }
             if (boardsegmentP->isWaterHit())  {
                 symbol = "h";
-                saveString = saveString + symbol + ";";
+                boardStringPlayer = boardStringPlayer + symbol + ";";
             }
         }
-    }    
+    }  
+
+    saveString = saveString + boardStringPlayer;
+
+    std::string boardStringComputer;
     for(int i = 0; i < board2->getBoardSize(); i++)  {
         for (int j = 0; j < board1->getBoardSize(); j++)  {
             BoardSegment* boardsegmentC = board2->grid[i][j];
@@ -172,31 +173,34 @@ void GameLogic::saveGame()  {
             std::string shipID;
             if (boardsegmentC->isRevealed())  {
                 symbol = "r";
-                saveString = saveString + symbol + ";";
+                boardStringComputer = boardStringComputer + symbol + ";";
             }
             if (boardsegmentC->isShip())  {
                 symbol = "s";
                 shipID = std::to_string(boardsegmentC->getShipOnSegment()->getId());
-                saveString = saveString + symbol + ":" + shipID + ";";
+                boardStringComputer = boardStringComputer + symbol + ":" + shipID + ";";
             }
             if (boardsegmentC->isShipHit())  {
                 symbol = "#";
-                saveString = saveString + symbol + ";";
+                boardStringComputer = boardStringComputer + symbol + ";";
             }
             if (boardsegmentC->isShipPlacement())  {
                 symbol = "p";
-                saveString = saveString + symbol + ";";
+                boardStringComputer = boardStringComputer + symbol + ";";
             }
             if (boardsegmentC->isWater())  {
                 symbol = "w";
-                saveString = saveString + symbol + ";";
+                boardStringComputer = boardStringComputer + symbol + ";";
             }
             if (boardsegmentC->isWaterHit())  {
                 symbol = "h";
-                saveString = saveString + symbol + ";";
+                boardStringComputer = boardStringComputer + symbol + ";";
             }
-        }
-    }    
+        }    
+    }
+
+    saveString = saveString + boardStringPlayer;
+
     std::ofstream csvFile("../FieldSave.csv", std::ios_base::app);
 
     if (csvFile.is_open())  {
@@ -204,19 +208,20 @@ void GameLogic::saveGame()  {
         csvFile.close();
     } else  {
         std::cout << "Datei konnte nicht ge\224ffnet werden!" << std::endl;
-    } 
+    }   
 }
 
 void GameLogic::loadGame() {
     std::ifstream csvFileName("../FieldSave.csv");
     std::vector<std::string> gameNames;
+    std::string gameName;
 
     if (csvFileName.is_open()) {
         std::string lineN;
 
         while (std::getline(csvFileName, lineN)) {
             std::stringstream ss(lineN);
-            std::string gameName;
+            
             if (std::getline(ss, gameName, ';')) {
                 gameNames.push_back(gameName);
             }
@@ -265,18 +270,25 @@ void GameLogic::loadGame() {
     }
 
     std::getline(ss, tempFileInput, ';');
-    int ships = std::stoi(tempFileInput);
+    int shipNumber = std::stoi(tempFileInput);
     std::vector<Ship*> startingShipsPlayer;
     std::vector<Ship*> startingshipsComputer;
-    switch (ships)  {
+    switch (shipNumber)  {
     case 1:
-        for (int i = 0; i < ships; i++)  {
-            std::getline(ss, tempFileInput, ';');
-            startingShipsPlayer.push_back(new Ship("Schlachtschiff", 5, true));
-        }
-        
+        //Pattern1
         break;
-    
+    case 3:
+        //Pattern2
+        break;
+    case 5:
+        //Pattern3
+        break;
+    case 7:
+        //Pattern4
+        break;
+    case 10:
+        //Pattern5
+        break;    
     default:
         break;
     }
@@ -286,33 +298,53 @@ void GameLogic::loadGame() {
 
     std::getline(ss, tempFileInput, ';');
     int boardSize = std::stoi(tempFileInput);
-
-    BoardSegment* grid[boardSize][boardSize];
-    for(int lat = 0; lat < boardSize; lat++){
-        for(int lon = 0; lon < boardSize; lon++){
-            SegmentState segmentStateL;
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "r")  {
-                segmentStateL = SegmentState::Revealed;
-            }
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "s")  {
-                segmentStateL = SegmentState::Ship;
-            }
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "#")  {
-                segmentStateL = SegmentState::ShipHit;
-            }
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "p")  {
-                segmentStateL = SegmentState::ShipPlacement;
-            }
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "w")  {
-                segmentStateL = SegmentState::Water;
-            }
-            if (std::getline(ss, tempFileInput, ';') && tempFileInput == "h")  {
-                segmentStateL = SegmentState::WaterHit;
-            }
-            grid[lat][lon] = new BoardSegment(SegmentState::Water);
+    std::vector<BoardSegment*> initSegments;
+    
+    for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "r")  {
+                initSegments.push_back(new BoardSegment(SegmentState::Revealed));
         }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "s")  {
+                initSegments.push_back(new BoardSegment(SegmentState::Ship));
+                
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "#")  {
+            initSegments.push_back(new BoardSegment(SegmentState::ShipHit));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "p")  {
+            initSegments.push_back(new BoardSegment(SegmentState::ShipPlacement));
+         }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "w")  {
+            initSegments.push_back(new BoardSegment(SegmentState::Water));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "h")  {
+            initSegments.push_back(new BoardSegment(SegmentState::WaterHit));
+        }     
     }
+    board1->init(initSegments, startingShipsPlayer);
+    initSegments.clear();
+    
+    for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "r")  {
+                initSegments.push_back(new BoardSegment(SegmentState::Revealed));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "s")  {
+                initSegments.push_back(new BoardSegment(SegmentState::Ship));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "#")  {
+            initSegments.push_back(new BoardSegment(SegmentState::ShipHit));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "p")  {
+            initSegments.push_back(new BoardSegment(SegmentState::ShipPlacement));
+         }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "w")  {
+            initSegments.push_back(new BoardSegment(SegmentState::Water));
+        }
+        if (std::getline(ss, tempFileInput, ';') && tempFileInput == "h")  {
+            initSegments.push_back(new BoardSegment(SegmentState::WaterHit));
+        }     
+    }
+    board2->init(initSegments, startingShipsPlayer);
 
-    board1->init(grid, nullptr);
-
+    startGame();
 }

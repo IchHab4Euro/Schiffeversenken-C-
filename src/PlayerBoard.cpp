@@ -52,7 +52,7 @@ Ship* PlayerBoard::shipSelection() {
     std::string message = "Welches Schiff willst du platzieren? (0 fuer Optionen)";
     Output::printBoxMessage(message, true);
     
-    int pickedShipId = Input::userinputInt("Deine Wahl: ", 0, shipsNextToBoard.size());
+    int pickedShipId = Input::userinputInt("Deine Wahl: ", 0, shipsNextToBoard.size() + shipsOnBoard.size());
 
     if (pickedShipId == 0) {
         return handleShipPlacementOptions();
