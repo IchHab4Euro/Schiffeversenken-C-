@@ -107,7 +107,7 @@ void GameLogic::newGame() {
     std::vector<BoardSegment*> initSegments;
 
     //Create two boards
-    board1 = new ComputerBoard();
+    board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
     //Fill the vector with BordSegments with state Water
@@ -494,4 +494,8 @@ int GameLogic::getRandomNumber(int lowerBound, int upperBound){
     std::uniform_int_distribution<int> distrubution(lowerBound,upperBound);
 
     return distrubution(gen);
+}
+
+void destruct()  {
+    
 }
