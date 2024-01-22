@@ -17,6 +17,7 @@ class Board {
 public:
     
     Board();
+    ~Board();
     void init(std::vector<BoardSegment*> initBoardSegments, std::vector<Ship*> initShips, bool gamePhase);
     
     //to initialize the Board with a grid and and the ships

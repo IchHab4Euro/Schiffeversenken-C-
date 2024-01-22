@@ -3,9 +3,17 @@
 #include <iostream>
 #include <fstream>
 
-Board::Board(){
+Board::Board(){}
 
-
+Board::~Board()  {
+    for (int lat = 0; lat < boardSize; lat++) {
+        for (int lon = 0; lon < boardSize; lon++) {
+            delete this->grid[lat][lon];
+        }
+    }
+    for (int i = 0; i < shipsOnBoard.size(); i++)  {
+        delete shipsOnBoard.at(i);
+    }
 }
 
 void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> initShips, bool gamePhase) {

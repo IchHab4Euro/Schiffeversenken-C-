@@ -8,12 +8,10 @@ Player::Player(std::string name) : name(name) {
     this->nextID++;
 }
 
-GameLogic::GameLogic() {
-}
+GameLogic::GameLogic() {}
 
 //Menue to choose between New Game, Load Game and Settings
 void GameLogic::init() { 
-    initShipConf();
     Output::printWelcome();
     sigObj=this;
     std::signal(SIGINT,signal_handler);
@@ -24,6 +22,7 @@ void GameLogic::init() {
 
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
     while(1) {
+        initShipConf();
         Output::printMenue(menuePoints);
         inputMenu = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, menuePoints.size());
         switch (inputMenu) {
@@ -92,9 +91,14 @@ void GameLogic::startGame(){
     }
     if (board1->allShipsSunk())  {
         Output::printLose();
-    }
-    if (board2->allShipsSunk())  {
+        delete board1;
+        delete board2;
+        gamePhase = false;
+    } else {
         Output::printWin();
+        delete board1;
+        delete board2;
+        gamePhase = false;
     }
 }
     
