@@ -37,10 +37,11 @@ void ComputerBoard::attack(Board* enemyBoard) {
         handleFollowingHits(enemyBoard);
     }
 
+    enemyBoard->setSunkenShips();
+
     if (shipHit != nullptr && shipHit->isSunken()) { //if ship is sunken
         resetHitStatus();
     }
-    enemyBoard->setSunkenShips();
 }
 
 void ComputerBoard::handleFirstHit(Board* enemyBoard) {
