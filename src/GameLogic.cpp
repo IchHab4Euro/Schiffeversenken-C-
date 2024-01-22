@@ -92,7 +92,7 @@ void GameLogic::startGame(){
     
 
 void GameLogic::newGame() {
-    //Create Ships base on a pattern
+    //Create Ships based on a pattern
     std::vector<Ship*> startingShipsPlayer = shipConf1Player;
     std::vector<Ship*> startingShipsComputer = shipConf1Computer;
 
@@ -103,22 +103,13 @@ void GameLogic::newGame() {
     player1 = new Player(playerName);
     player2 = new Player("Computer");
 
-    //Create a vector of BoardSegments
-    std::vector<BoardSegment*> initSegments;
-
     //Create two boards
     board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
-    //Fill the vector with BordSegments with state Water
-    for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
-        initSegments.push_back(new BoardSegment(SegmentState::Water));
-    }
-    board1->init(initSegments, startingShipsPlayer, false);
-    initSegments.clear();
-    for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
-        initSegments.push_back(new BoardSegment(SegmentState::Water));
-    }
+    //Create a vector of BoardSegmentscl
+    std::vector<BoardSegment*> initSegments;
+    board1->init(initSegments,startingShipsPlayer, false);
     board2->init(initSegments, startingShipsComputer, false);
     gamePhase = false;
     startGame();

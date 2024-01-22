@@ -49,8 +49,6 @@ class ComputerBoard : public Board {
         int neighboursRevealMode = 0; //the mode how to reveal Neighbors -> depends on Ship direction
         int moveCounter = 0; //counts the lenght of the Ship
 
-        int getRandomNumberWindows(int lowerBound, int upperBound);
-
-        
+        int getRandomNumberWindows(int lowerBound, int upperBound);        
 };
 #endif

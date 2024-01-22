@@ -23,7 +23,6 @@ void ComputerBoard::placeShips() {
             // Attempt to place the ship at the generated location -> if not try again wit outher position
             shipPlaced = placeShip(startLatitude, startLongitude, placementDirection, shipToPlace);
         }
-
         // Add the ship to the list of ships on the board after successful placement
         shipsOnBoard.push_back(shipToPlace);
     }
@@ -41,6 +40,7 @@ void ComputerBoard::attack(Board* enemyBoard) {
     if (shipHit != nullptr && shipHit->isSunken()) { //if ship is sunken
         resetHitStatus();
     }
+    enemyBoard->setSunkenShips();
 }
 
 void ComputerBoard::handleFirstHit(Board* enemyBoard) {
@@ -85,7 +85,6 @@ void ComputerBoard::handleFollowingHits(Board* enemyBoard) {
         if(boardSegmentToHit->isShip()){
             boardSegmentToHit->setShipHit();
             revealNeighbors(enemyBoard,lastHitLat,lastHitLon,neighboursRevealMode);
-            enemyBoard->setSunkenShips();
         }
     }
     else {
@@ -171,7 +170,6 @@ bool ComputerBoard::updateSegmentForSecondHit(BoardSegment* segment, int newLat,
         revealNeighbors(enemyBoard, lastHitLat, lastHitLon,neighboursRevealMode);
         secondHit = true;
         moveCounter++;
-        enemyBoard->setSunkenShips();
         return true;
     }
     return false;//already hit or uncovered

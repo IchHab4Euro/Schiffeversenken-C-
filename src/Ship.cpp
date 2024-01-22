@@ -21,5 +21,5 @@ bool Ship::isSunken(){
 }
 
 void Ship::setSunken() {
-    this->sunk = true;
+    sunk = true;
 }

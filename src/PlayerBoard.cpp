@@ -63,7 +63,7 @@ Ship* PlayerBoard::shipSelection() {
 Ship* PlayerBoard::handleShipPlacementOptions() {
     std::vector<std::string> menueMessage = {"Schiff entfernen" , "Neustart"};
     Output::printMenue(menueMessage);
-    int choice = Input::userinputInt("W\204hle eine Option: ", 1, menueMessage.size());
+    int choice = Input::userinputInt("Waehle eine Option: ", 1, menueMessage.size());
 
     switch (choice) {
         case 1:

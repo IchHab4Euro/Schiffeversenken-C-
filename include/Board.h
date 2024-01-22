@@ -68,7 +68,7 @@ protected:
     //returns the Longitude throw a given cordinate as String Like: A1
     int cordinateToLongitude(const std::string cordinate) const;
     
-    //checks for Collisions with outher Ships
+    //checks for Collisions with other Ships
     bool checkForColission();
     
     //replaces the placement of the ship with the given state
@@ -84,9 +84,7 @@ protected:
     std::vector<Ship*> shipsOnBoard;
      
 private:
-    
-    
-    
-    //Sammlung aller Spielfelder ungeordnet
+   
+
 };
 #endif
