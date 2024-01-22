@@ -104,7 +104,7 @@ void GameLogic::newGame() {
     player2 = new Player("Computer");
 
     //Create two boards
-    board1 = new PlayerBoard();
+    board1 = new ComputerBoard();
     board2 = new ComputerBoard();
 
     //Create a vector of BoardSegmentscl
@@ -487,6 +487,3 @@ int GameLogic::getRandomNumber(int lowerBound, int upperBound){
     return distrubution(gen);
 }
 
-void destruct()  {
-    
-}
