@@ -12,8 +12,14 @@ GameLogic::GameLogic() {}
 
 //Menue to choose between New Game, Load Game and Settings
 void GameLogic::init() { 
-    Output::printWelcome(); 
+    Output::printWelcome();
+    sigObj=this;
+    std::signal(SIGINT,signal_handler);
     int inputMenu;
+    
+    //Todo: Check for AUTOSAFE -> Ask player for opening
+    
+
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
     while(1) {
         initShipConf();
@@ -60,6 +66,8 @@ void GameLogic::startGame(){
         if (save == 5)  {
             int saveGame = Input::userinputInt("M\224chten sie das Spiel Speichern (0:Ja, 1:Nein)", 0, 1);
             if (saveGame == 0)  {
+                Output::printBoxMessage("Mit welchem Namen soll das Spiel gespeichert werden.", true);
+                std::cin >> gameName;
                 this->saveGame();
                 saveGame = Input::userinputInt("M\224chten sie das Spiel nun abbrechen? (0:Ja, 1:Nein)", 0, 1);
                 if (saveGame == 0)  {
@@ -101,9 +109,11 @@ void GameLogic::newGame() {
     std::vector<Ship*> startingShipsComputer = shipConf1Computer;
 
     //Ask the user for his name
-    std::cout << "Bitte geben sie ihren Namen ein: " << std::endl;
+    Output::printBoxMessage("Geben Sie ihren Namen ein", true);
     std::string playerName;
     std::cin >> playerName;
+    gameName = "AUTOSAFE";
+
     player1 = new Player(playerName);
     player2 = new Player("Computer");
 
@@ -122,11 +132,8 @@ void GameLogic::newGame() {
 //Save the game 
 void GameLogic::saveGame()  {
     //Create a string to save the data
-    std::string playName;
+    gameName;
     std::vector<Ship*> ships;
-    //Ask for Playername
-    std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
-    std::cin >> playName;
     std::string gamePhaseValue;
 
     //Add Playname, Playername and Phase to the String
@@ -137,7 +144,7 @@ void GameLogic::saveGame()  {
         gamePhaseValue = "1";
     }
     
-    std::string saveString = playName + ";" + player1->name + ";" + gamePhaseValue + ";";
+    std::string saveString = gameName + ";" + player1->name + ";" + gamePhaseValue + ";";
     
     //Add the ship config, which consists of the shipnumber + a value to decide if its sunk or not for the Playerships
     std::string shipconfig;
@@ -254,9 +261,11 @@ void GameLogic::saveGame()  {
     }   
 }
 
+
+
 //Load a existing Game
 void GameLogic::loadGame() {
-    std::ifstream csvFileName("../FieldSave.csv");
+    std::ifstream csvFileName(SAFEFILE);
     std::vector<std::string> gameNames;
     std::string gameName;
 
@@ -281,7 +290,7 @@ void GameLogic::loadGame() {
     
     //Let the user choose which play he wants to load
     int game;
-    std::ifstream csvFile("../FieldSave.csv");
+    std::ifstream csvFile(SAFEFILE);
     Output::printMenue(gameNames);
     game = Input::userinputInt("W\204hlen sie einen der Spielst\204nde: ", 1, gameNames.size());
     std::string line;
@@ -482,6 +491,10 @@ void GameLogic::initShipConf() {
         new Ship("U-Boot",2,false, 2)};
 }
 
+void signal_handler(int signal) {
+    GameLogic::sigObj->saveGame();
+}
+
 //Get a random number
 int GameLogic::getRandomNumber(int lowerBound, int upperBound){
     std::random_device randomNummerGen;
@@ -490,4 +503,5 @@ int GameLogic::getRandomNumber(int lowerBound, int upperBound){
 
     return distrubution(gen);
 }
+
 
