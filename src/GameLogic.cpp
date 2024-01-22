@@ -18,9 +18,7 @@ void GameLogic::init() {
     int inputMenu;
     
     //Todo: Check for AUTOSAFE -> Ask player for opening
-    
-
-    std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
+    std::vector<std::string> menuePoints {"New Game", "Load Game", "Exit"};
     while(1) {
         initShipConf();
         Output::printMenue(menuePoints);
@@ -46,7 +44,7 @@ void GameLogic::startGame(){
     //If your not loading a saved game gamePhase is false and ships get placed
     if(!gamePhase){
         board1->placeShips();
-        std::cout << "Computer places ships" << std::endl;
+        std::cout << "Computer platziert seine Schiffe" << std::endl;
         board2->placeShips();
         gamePhase = true;
     }
@@ -55,9 +53,9 @@ void GameLogic::startGame(){
     //Choose who starts to play
     int zufallAnfang = getRandomNumber(0,1);
     if (zufallAnfang == 0)  {
-        Output::printBoxMessage("Sie duerfen anfangen!", true);
+        Output::printBoxMessage("Sie d\201rfen anfangen!", true);
     } else  {
-        Output::printBoxMessage("Der Computer faengt an!", true);
+        Output::printBoxMessage("Der Computer f\204ngt an!", true);
     }
     int save = 5;
     //While not all ships are sunken both player attack the other board
@@ -118,7 +116,7 @@ void GameLogic::newGame() {
     player2 = new Player("Computer");
 
     //Create two boards
-    board1 = new ComputerBoard();
+    board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
     //Create a vector of BoardSegmentscl
@@ -260,8 +258,6 @@ void GameLogic::saveGame()  {
         std::cout << "Datei konnte nicht ge\224ffnet werden!" << std::endl;
     }   
 }
-
-
 
 //Load a existing Game
 void GameLogic::loadGame() {

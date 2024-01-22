@@ -20,7 +20,7 @@ void PlayerBoard::placeShips() {
         bool shipPlaced = false;
         while (!shipPlaced) {
              message = "Du hast das Schiff: " + selectedShip->getName() + 
-                                  " mit einer Gr\224ße: " + std::to_string(selectedShip->getLength());
+                                  " mit einer Gr\224\341e: " + std::to_string(selectedShip->getLength());
             Output::printBoxMessage(message, true);
 
             std::string shipCoordinates = Input::userinputCoordinates("Wohin soll das Schiff platziert werden? Gib die Koordinate ein: ", getBoardSize());
@@ -94,7 +94,6 @@ void PlayerBoard::resetBoardPlacement() {
     this->shipsOnBoard.clear();
 }
     
-
 void PlayerBoard::removeShip(Ship* shipToRemove) {
     if (shipToRemove == nullptr) {
         Output::printBoxError ("Das Schiff existiert nicht!", true); 
@@ -134,7 +133,6 @@ Ship* PlayerBoard::getShipById(std::vector<Ship*> shipList, int shipId) {
     }
     return nullptr;
 }
-
 
 void PlayerBoard::attack(Board* enemyBoard) {
     std::string message;
