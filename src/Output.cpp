@@ -397,7 +397,7 @@ void Output::printRules(std::string playerName) {
   ^^^^^ ^^^^^^^^^^^^^^^^^^^^^
     ^^^^      ^^^^     ^^^    ^^
          ^^^^      ^^^
-         )" <<
+)" <<
 "Hallo " << playerName <<  R"( Willkommen bei Schiffeversenken.
 
 Das Spiel besteht aus zwei Phasen: 

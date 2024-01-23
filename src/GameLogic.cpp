@@ -22,12 +22,10 @@ void GameLogic::init() {
     
     sigObj=this;
     std::signal(SIGINT,signal_handler);
-    
-    std::cout<<"test"<<std::endl; 
+     
     int inputMenu;
     loadAutosafe();
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
-    std::cout<<"test"<<std::endl; 
     while(1) {
         initShipConf();
         Output::printMenue(menuePoints);
@@ -680,10 +678,10 @@ void GameLogic::loadAutosafe()  {
             board2->init(initSegmentsComputer, startingshipsComputer, gamePhase);
             //Start the game
             startGame();
-        } else  {
-            Output::printBoxError("Ihre FieldSave Methode wurde nicht gefunden!", true);
         }
-    }  
+    } else  {
+        Output::printBoxError("Ihre FieldSave Methode wurde nicht gefunden!", true);
+    } 
 }
 
 //Delete the Autosafe
@@ -719,11 +717,13 @@ void GameLogic::settings()  {
     Output::printMenue(settings);
     int settingsChoice = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, settings.size());
     if (settingsChoice == 1)  {
-        std::vector<std::string> shipconfigs {"10 Schiffe", "5 Schiffe", "2 Schiffe"};
-        shipConfigChoice = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, shipconfigs.size());
+        std::vector<std::string> shipConfigs {"10 Schiffe", "5 Schiffe", "2 Schiffe"};
+        Output::printMenue(shipConfigs);
+        shipConfigChoice = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, shipConfigs.size());
     }
     if (settingsChoice == 2)  {
         std::vector<std::string> gameModes {"Player vs Computer", "Computer vs Computer"};
+        Output::printMenue(gameModes);
         gameMode = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, gameModes.size());
     }
     
