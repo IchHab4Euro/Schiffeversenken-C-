@@ -13,6 +13,16 @@ GameLogic::GameLogic() {}
 //Menue to choose between New Game, Load Game and Settings
 void GameLogic::init() { 
     Output::printWelcome();
+    
+    //Ask the user for his name
+    Output::printBoxMessage("Geben Sie ihren Namen ein", true);
+    std::string playerName;
+    std::cin >> playerName;
+    player1 = new Player(playerName);
+    player2 = new Player("Computer");
+
+    Output::printRules(playerName);
+    
     sigObj=this;
     std::signal(SIGINT,signal_handler);
     int inputMenu;
@@ -106,14 +116,9 @@ void GameLogic::newGame() {
     std::vector<Ship*> startingShipsPlayer = shipConf1Player;
     std::vector<Ship*> startingShipsComputer = shipConf1Computer;
 
-    //Ask the user for his name
-    Output::printBoxMessage("Geben Sie ihren Namen ein", true);
-    std::string playerName;
-    std::cin >> playerName;
+    
     gameName = "AUTOSAFE";
 
-    player1 = new Player(playerName);
-    player2 = new Player("Computer");
 
     //Create two boards
     board1 = new PlayerBoard();
