@@ -398,7 +398,7 @@ void Output::printRules(std::string playerName) {
     ^^^^      ^^^^     ^^^    ^^
          ^^^^      ^^^
          )" <<
-    "Hallo " << playerName <<  R"( Willkommen bei Schiffeversenken.
+"Hallo " << playerName <<  R"( Willkommen bei Schiffeversenken.
 
 Das Spiel besteht aus zwei Phasen: 
 1. die Platzierungsphase: Beide Spieler platzieren ihre Schiffe auf dem Spielfeld. Dabei waehlt man die Koordinaten des Schiffes und seine Ausrichtung (Norden, Osten, Sueden, Westen).

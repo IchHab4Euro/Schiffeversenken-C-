@@ -38,6 +38,7 @@ class GameLogic {
         //inits all avialable ShipConfigs
         void initShipConf();
 
+        std::string playerName; 
         Board* board1;
         Board* board2;
         Player* player1;

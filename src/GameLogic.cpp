@@ -16,18 +16,18 @@ void GameLogic::init() {
     
     //Ask the user for his name
     Output::printBoxMessage("Geben Sie ihren Namen ein", true);
-    std::string playerName;
     std::cin >> playerName;
-    player1 = new Player(playerName);
-    player2 = new Player("Computer");
 
     Output::printRules(playerName);
     
     sigObj=this;
     std::signal(SIGINT,signal_handler);
+    
+    std::cout<<"test"<<std::endl; 
     int inputMenu;
     loadAutosafe();
     std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
+    std::cout<<"test"<<std::endl; 
     while(1) {
         initShipConf();
         Output::printMenue(menuePoints);
@@ -133,11 +133,6 @@ void GameLogic::newGame() {
     default:
         break;
     }
-    //Ask the user for his name
-    Output::printBoxMessage("Geben Sie ihren Namen ein", true);
-    std::string playerName;
-    std::cin >> playerName;
-    gameName = "AUTOSAFE";
 
     //gameMode == 1 is the gamemode Player vs Computer
     if (gameMode == 1)  {
@@ -537,7 +532,7 @@ void GameLogic::loadAutosafe()  {
     if (csvFile.is_open()) {
         while (std::getline(csvFile, line)) {
             if (line.find("AUTOSAFE") != std::string::npos)  {
-                Output::printBoxMessage("Ihr letztes Spiel wurde abgebrochen.", true);
+                Output::printBoxError("Ihr letztes Spiel wurde abgebrochen.", true);
                 int choice = Input::userinputInt("Wollen sie ihr letztes Spiel laden (0:Ja 1:Nein)", 0, 1);
                 if (choice == 0)  {
                     break;
