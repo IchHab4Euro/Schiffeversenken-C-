@@ -8,7 +8,7 @@
 /*
     class ComputerBoard inherits from Board 
     represent the Board of a Computer 
-    overrides the Method placeShips(), atack()
+    overrides the Methods placeShips(), atack()
 */
 class ComputerBoard : public Board {
     public:
@@ -26,6 +26,18 @@ class ComputerBoard : public Board {
         
         //returns randomNumber()
         int getRandomNumber(int lowerBound, int upperBound);
+
+        //Helper-Methods for the attack
+        void handleFirstHit(Board* enemyBoard); //randomly hitting the enemy Board. Hitting Ship -> firstHit = true
+        void handleSecondHit(Board* enemyBoard); //looking for a second ship element. secondHit -> safe the dircetion of the ship
+        void handleFollowingHits(Board* enemyBoard); //if firstHit + secondHit -> Direction is known -> Attacking Ship until it is sunk
+        bool isInvalidTarget (BoardSegment* segment); //checking weather the segment alredy has been hit or is reveales
+        void updateSegmentStatus(BoardSegment* segment); //Water Segment -> Water Hit, Ship -> Ship Hit
+        void resetHitStatus(); //after Ship is sunk -> resseting variables
+        void setRevealDirection(int direction); //sets variables through direction
+        bool isValidPosition(int lat, int lon); //checks if posiotion is inside grind bounds
+        bool updateSegmentForSecondHit(BoardSegment* segment, int newLat, int newLon, Board* enemyBoard); //ship or water hit -> true
+        void changeDirection(); //modify variables for new direcion -> new position 
         
         Ship* shipHit = nullptr; //holds the last hitten Ship
         bool firstHit = false; //if first Hit on Ship
@@ -37,18 +49,6 @@ class ComputerBoard : public Board {
         int neighboursRevealMode = 0; //the mode how to reveal Neighbors -> depends on Ship direction
         int moveCounter = 0; //counts the lenght of the Ship
 
-        int getRandomNumberWindows(int lowerBound, int upperBound);
-
-        void handleFirstHit(Board* enemyBoard);
-        void handleSecondHit(Board* enemyBoard);
-        void handleFollowingHits(Board* enemyBoard);
-        void resetHitStatus(Board* enemyBoard);
-        bool isInvalidTarget (BoardSegment* segment);
-        void updateSegmentStatus(BoardSegment* segment);
-        void resetHitStatus();
-        void setRevealDirection(int direction);
-        bool isValidPosition(int lat, int lon);
-        bool updateSegmentForSecondHit(BoardSegment* segment, int newLat, int newLon, Board* enemyBoard);
-        void changeDirection();
+        int getRandomNumberWindows(int lowerBound, int upperBound);        
 };
 #endif

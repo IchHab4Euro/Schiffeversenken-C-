@@ -8,16 +8,19 @@ Player::Player(std::string name) : name(name) {
     this->nextID++;
 }
 
-GameLogic::GameLogic() {
-}
+GameLogic::GameLogic() {}
 
 //Menue to choose between New Game, Load Game and Settings
 void GameLogic::init() { 
-    initShipConf();
-    Output::printWelcome(); 
+    Output::printWelcome();
+    sigObj=this;
+    std::signal(SIGINT,signal_handler);
     int inputMenu;
-    std::vector<std::string> menuePoints {"New Game", "Load Game", "Settings", "Exit"};
+    
+    //Todo: Check for AUTOSAFE -> Ask player for opening
+    std::vector<std::string> menuePoints {"New Game", "Load Game", "Exit"};
     while(1) {
+        initShipConf();
         Output::printMenue(menuePoints);
         inputMenu = Input::userinputInt("Bitte w\204hlen sie einen Men\201 Punkt aus: ", 1, menuePoints.size());
         switch (inputMenu) {
@@ -41,7 +44,7 @@ void GameLogic::startGame(){
     //If your not loading a saved game gamePhase is false and ships get placed
     if(!gamePhase){
         board1->placeShips();
-        std::cout << "Computer places ships" << std::endl;
+        std::cout << "Computer platziert seine Schiffe" << std::endl;
         board2->placeShips();
         gamePhase = true;
     }
@@ -50,9 +53,9 @@ void GameLogic::startGame(){
     //Choose who starts to play
     int zufallAnfang = getRandomNumber(0,1);
     if (zufallAnfang == 0)  {
-        Output::printBoxMessage("Sie duerfen anfangen!", true);
+        Output::printBoxMessage("Sie d\201rfen anfangen!", true);
     } else  {
-        Output::printBoxMessage("Der Computer faengt an!", true);
+        Output::printBoxMessage("Der Computer f\204ngt an!", true);
     }
     int save = 5;
     //While not all ships are sunken both player attack the other board
@@ -61,6 +64,8 @@ void GameLogic::startGame(){
         if (save == 5)  {
             int saveGame = Input::userinputInt("M\224chten sie das Spiel Speichern (0:Ja, 1:Nein)", 0, 1);
             if (saveGame == 0)  {
+                Output::printBoxMessage("Mit welchem Namen soll das Spiel gespeichert werden.", true);
+                std::cin >> gameName;
                 this->saveGame();
                 saveGame = Input::userinputInt("M\224chten sie das Spiel nun abbrechen? (0:Ja, 1:Nein)", 0, 1);
                 if (saveGame == 0)  {
@@ -84,41 +89,39 @@ void GameLogic::startGame(){
     }
     if (board1->allShipsSunk())  {
         Output::printLose();
-    }
-    if (board2->allShipsSunk())  {
+        delete board1;
+        delete board2;
+        gamePhase = false;
+    } else {
         Output::printWin();
+        delete board1;
+        delete board2;
+        gamePhase = false;
     }
 }
     
 
 void GameLogic::newGame() {
-    //Create Ships base on a pattern
+    //Create Ships based on a pattern
     std::vector<Ship*> startingShipsPlayer = shipConf1Player;
     std::vector<Ship*> startingShipsComputer = shipConf1Computer;
 
     //Ask the user for his name
-    std::cout << "Bitte geben sie ihren Namen ein: " << std::endl;
+    Output::printBoxMessage("Geben Sie ihren Namen ein", true);
     std::string playerName;
     std::cin >> playerName;
+    gameName = "AUTOSAFE";
+
     player1 = new Player(playerName);
     player2 = new Player("Computer");
 
-    //Create a vector of BoardSegments
-    std::vector<BoardSegment*> initSegments;
-
     //Create two boards
-    board1 = new ComputerBoard();
+    board1 = new PlayerBoard();
     board2 = new ComputerBoard();
 
-    //Fill the vector with BordSegments with state Water
-    for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
-        initSegments.push_back(new BoardSegment(SegmentState::Water));
-    }
-    board1->init(initSegments, startingShipsPlayer, false);
-    initSegments.clear();
-    for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
-        initSegments.push_back(new BoardSegment(SegmentState::Water));
-    }
+    //Create a vector of BoardSegmentscl
+    std::vector<BoardSegment*> initSegments;
+    board1->init(initSegments,startingShipsPlayer, false);
     board2->init(initSegments, startingShipsComputer, false);
     gamePhase = false;
     startGame();
@@ -127,11 +130,8 @@ void GameLogic::newGame() {
 //Save the game 
 void GameLogic::saveGame()  {
     //Create a string to save the data
-    std::string playName;
+    gameName;
     std::vector<Ship*> ships;
-    //Ask for Playername
-    std::cout << "Bitte gebe einen Spielname ein: " << std::endl;
-    std::cin >> playName;
     std::string gamePhaseValue;
 
     //Add Playname, Playername and Phase to the String
@@ -142,7 +142,7 @@ void GameLogic::saveGame()  {
         gamePhaseValue = "1";
     }
     
-    std::string saveString = playName + ";" + player1->name + ";" + gamePhaseValue + ";";
+    std::string saveString = gameName + ";" + player1->name + ";" + gamePhaseValue + ";";
     
     //Add the ship config, which consists of the shipnumber + a value to decide if its sunk or not for the Playerships
     std::string shipconfig;
@@ -261,7 +261,7 @@ void GameLogic::saveGame()  {
 
 //Load a existing Game
 void GameLogic::loadGame() {
-    std::ifstream csvFileName("../FieldSave.csv");
+    std::ifstream csvFileName(SAFEFILE);
     std::vector<std::string> gameNames;
     std::string gameName;
 
@@ -286,7 +286,7 @@ void GameLogic::loadGame() {
     
     //Let the user choose which play he wants to load
     int game;
-    std::ifstream csvFile("../FieldSave.csv");
+    std::ifstream csvFile(SAFEFILE);
     Output::printMenue(gameNames);
     game = Input::userinputInt("W\204hlen sie einen der Spielst\204nde: ", 1, gameNames.size());
     std::string line;
@@ -487,6 +487,10 @@ void GameLogic::initShipConf() {
         new Ship("U-Boot",2,false, 2)};
 }
 
+void signal_handler(int signal) {
+    GameLogic::sigObj->saveGame();
+}
+
 //Get a random number
 int GameLogic::getRandomNumber(int lowerBound, int upperBound){
     std::random_device randomNummerGen;
@@ -495,3 +499,5 @@ int GameLogic::getRandomNumber(int lowerBound, int upperBound){
 
     return distrubution(gen);
 }
+
+

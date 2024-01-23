@@ -1,6 +1,6 @@
 #include "../include/Ship.h"
 
-Ship::Ship(std::string name, int length, bool isSunken, int id) : name(name), length(length), sunk(sunk), id(id)  {
+Ship::Ship(std::string name, int length, bool isSunken, int id) : name(name), length(length), sunk(isSunken), id(id)  {
 
 }
 
@@ -21,5 +21,5 @@ bool Ship::isSunken(){
 }
 
 void Ship::setSunken() {
-    this->sunk = true;
+    sunk = true;
 }

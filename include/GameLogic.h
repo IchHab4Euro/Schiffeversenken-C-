@@ -1,5 +1,6 @@
 #ifndef GAMELOGIC_H
 #define GAMELOGIC_H
+#define SAFEFILE "../FieldSave.csv"
 
 #include "GameLogic.h"
 #include "Output.h"
@@ -41,7 +42,7 @@ class GameLogic {
         Board* board2;
         Player* player1;
         Player* player2;
-        std::string gameName;
+        static inline GameLogic* sigObj;
 
         //starts a new Game
         void newGame();
@@ -54,9 +55,11 @@ class GameLogic {
         
         //starting a Game after new Game or load Game
         void startGame();
+        
     private:
         //hold the game Phase true = placment Phase; false = attacking Phase
         bool gamePhase = false;
+        std::string gameName = "AUTOSAFE";
         int getRandomNumber(int lowerBound, int upperBound);
 
         //the predefined Konfigs of Ships, different number of Ships
@@ -69,5 +72,5 @@ class GameLogic {
         std::vector<Ship*> shipConf3Player;
         std::vector<Ship*> shipConf3Computer;
 };
-    //void signal_handler(int signal);
+    void signal_handler(int signal);
 #endif

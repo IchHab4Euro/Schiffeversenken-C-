@@ -3,8 +3,17 @@
 #include <iostream>
 #include <fstream>
 
-Board::Board(){
+Board::Board(){}
 
+Board::~Board()  {
+    for (int lat = 0; lat < boardSize; lat++) {
+        for (int lon = 0; lon < boardSize; lon++) {
+            delete this->grid[lat][lon];
+        }
+    }
+    for (int i = 0; i < shipsOnBoard.size(); i++)  {
+        delete shipsOnBoard.at(i);
+    }
 }
 
 void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> initShips, bool gamePhase) {
@@ -24,18 +33,17 @@ void Board::init(std::vector<BoardSegment*> initSegments, std::vector<Ship*> ini
         }
     }
 
-    if (gamePhase == true)  {
+    if (gamePhase == true)  { //ships already placed
         shipsOnBoard = initShips;
     } else  {
         shipsNextToBoard = initShips;
-        initShipsReset = initShips;
+        initShipsReset = initShips; //for resetting the whole board
     }
 }
 
 int Board::getBoardSize() {
     return this->boardSize;
 }
-
 
 bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* ship) {
     if (!isValidPlacement(latitude, longitude, direction, ship)) {
@@ -45,7 +53,6 @@ bool Board::placeShip(int latitude, int longitude, Direction direction, Ship* sh
     // Place Segments for the Ship
     for (int i = 0; i < ship->getLength(); i++) {
         BoardSegment* segmentToPlace = getSegmentToPlace(latitude, longitude, direction, i);
-        segmentToPlace->setShipOnSegment(ship);
         segmentToPlace->fieldState = SegmentState::ShipPlacement;
     }
 
@@ -185,28 +192,29 @@ Direction Board::numberToDirection(int number)  const {
     }
 }
 
-void Board::setSunkenShips() {
 
+void Board::setSunkenShips() {
     for(int i = 0; i < boardSize; i++) {
         for(int j = 0; j < boardSize; j++) {
             BoardSegment* segmentToCheck = grid[i][j];
-    
+
             if(segmentToCheck->isShipHit()){
                 bool shipSunken = true;
                 Ship* shipToCheck = segmentToCheck->getShipOnSegment();
                 for(int h = 0; h < boardSize; h++) {
                     for(int k = 0; k < boardSize; k++) {
                         BoardSegment* segmentToCheckOfShip = grid[h][k];
-                        if(segmentToCheckOfShip->getShipOnSegment() == shipToCheck && !(segmentToCheckOfShip->isShipHit())) {
-                            shipSunken = false;
+                        if(segmentToCheckOfShip->getShipOnSegment() != nullptr){
+                            if(segmentToCheckOfShip->getShipOnSegment() == shipToCheck && !(segmentToCheckOfShip->isShipHit())) {
+                                shipSunken = false;
+                            }
                         }
                     }
                 }
                 if(shipSunken){
                     shipToCheck->setSunken();
                 }
-            }
-            
+            }   
         }
     }
 }
@@ -238,3 +246,4 @@ std::vector<Ship*> Board::getShipsNextToBoard()  {
 std::vector<Ship*> Board::getShipsOnBoard() {
     return shipsOnBoard;
 }
+
