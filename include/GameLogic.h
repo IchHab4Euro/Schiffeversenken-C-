@@ -43,6 +43,8 @@ class GameLogic {
         Board* board2;
         Player* player1;
         Player* player2;
+        //hold the game Phase false = placment Phase; true = attacking Phase
+        bool gamePhase = false;
         static inline GameLogic* sigObj;
 
         //starts a new Game
@@ -58,8 +60,7 @@ class GameLogic {
         void startGame();
         
     private:
-        //hold the game Phase true = placment Phase; false = attacking Phase
-        bool gamePhase = false;
+        
         int shipConfigChoice = 1;
         int gameMode = 1;
         std::string gameName = "AUTOSAFE";
