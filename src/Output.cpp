@@ -418,7 +418,7 @@ Schiff getroffen:
 
 Schiff versenkt: 
 
-Speichern: Du kannst waehrend des Spiels speichern. Du wirst alle 5 Zuege gefragt, ob du speichern möchtest. Übrigens: Wenn du das Spiel aus Versehen schliesst, wird dein Spiel automatisch gespeichert.
+Speichern: Du kannst waehrend des Spiels speichern. Du wirst alle 5 Zuege gefragt, ob du speichern willst. Uebrigens: Wenn du das Spiel aus Versehen schliesst, wird dein Spiel automatisch gespeichert.
 
 Viel Spass beim Spielen!
 

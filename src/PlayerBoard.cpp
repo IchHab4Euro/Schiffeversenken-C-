@@ -36,7 +36,7 @@ void PlayerBoard::placeShips() {
 
             shipPlaced = placeShip(latitude, longitude, direction, selectedShip);
             if (!shipPlaced) {
-                Output::printBoxMessage("Schiff konnte nicht platziert worden.", true);
+                Output::printBoxMessage("Schiff konnte nicht platziert werden.", true);
             }
         }
         shipsNextToBoard.erase(std::remove_if(shipsNextToBoard.begin(), shipsNextToBoard.end(), 
@@ -128,7 +128,7 @@ bool PlayerBoard::checkContainsShip(std::vector<Ship*> shipList, int idToCheck) 
 Ship* PlayerBoard::getShipById(std::vector<Ship*> shipList, int shipId) {
     for(Ship* ship : shipList) {
         if(ship->getId() == shipId) {
-            return ship; //alternative als diese Methode was wenn if nicht zutrifft was wir returnt
+            return ship; 
         }
     }
     return nullptr;
