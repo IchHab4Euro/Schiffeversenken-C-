@@ -386,6 +386,45 @@ void Output::printWelcome()  {
     )" << std::endl;
 }
 
+void Output::printRules(std::string playerName) {
+    std::cout <<
+    R"(              |    |    |                 
+             )_)  )_)  )_)              
+            )___))___))___)\            
+           )____)____)_____)\\
+         _____|____|____|____\\\__
+---------\                   /---------
+  ^^^^^ ^^^^^^^^^^^^^^^^^^^^^
+    ^^^^      ^^^^     ^^^    ^^
+         ^^^^      ^^^
+)" <<
+"Hallo " << playerName <<  R"( Willkommen bei Schiffeversenken.
+
+Das Spiel besteht aus zwei Phasen: 
+1. die Platzierungsphase: Beide Spieler platzieren ihre Schiffe auf dem Spielfeld. Dabei waehlt man die Koordinaten des Schiffes und seine Ausrichtung (Norden, Osten, Sueden, Westen).
+Jedes Segment eines Schiffes wird automatisch in der angegebenen Richtung platziert. 
+Wenn du dein Schiff doch lieber an einer anderen Stelle platzieren moechtest, kannst du es einfach wieder loeschen, auch ein kompletter Neuanfang ist moeglich.
+
+2. Die Angriffsphase: Einer der beiden Spieler beginnt nach dem Zufallsprinzip die Schiffe des Gegners anzugreifen. Ein Schiff ist versenkt, wenn alle Segmente eines Schiffes getroffen wurden.
+Sind alle Schiffe des Gegners versenkt, hat man gewonnen. 
+
+Folgende Feldzustaende sind moeglich
+
+Schiff-Segment: 
+
+Wasser Treffer:
+
+Schiff getroffen:
+
+Schiff versenkt: 
+
+Speichern: Du kannst waehrend des Spiels speichern. Du wirst alle 5 Zuege gefragt, ob du speichern möchtest. Übrigens: Wenn du das Spiel aus Versehen schliesst, wird dein Spiel automatisch gespeichert.
+
+Viel Spass beim Spielen!
+
+Melde dich gerne bei Fragen :)"<< std::endl; 
+}
+
 void Output::printWin()  {
     std::cout << R"(
          _____  _           _             _                  

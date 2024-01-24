@@ -38,6 +38,7 @@ class GameLogic {
         //inits all avialable ShipConfigs
         void initShipConf();
 
+        std::string playerName; 
         Board* board1;
         Board* board2;
         Player* player1;
@@ -59,8 +60,13 @@ class GameLogic {
     private:
         //hold the game Phase true = placment Phase; false = attacking Phase
         bool gamePhase = false;
+        int shipConfigChoice = 1;
+        int gameMode = 1;
         std::string gameName = "AUTOSAFE";
         int getRandomNumber(int lowerBound, int upperBound);
+        void loadAutosafe();
+        void deleteAutosafe();
+        void settings();
 
         //the predefined Konfigs of Ships, different number of Ships
         std::vector<Ship*> shipConf1Player;

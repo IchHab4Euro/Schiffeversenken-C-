@@ -25,6 +25,7 @@ class Output  {
         static void printBothBoards(Board* pBoardPlayer, Board* pBoardComputer); //prints the Board of the Player an the Enemy (Computer -> Ships are not visible)
         static void printBoardWithMenue(Board* pBoard, std::vector<Ship*> pMenue);//in ship Placment Phase Board + Ships to place
         static void printWelcome(); //Welcome Message
+        static void printRules(std::string playerName);
         static void printWin(); //Win Message
         static void printLose(); //Lose Message
 
