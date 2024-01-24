@@ -410,15 +410,15 @@ Sind alle Schiffe des Gegners versenkt, hat man gewonnen.
 
 Folgende Feldzustaende sind moeglich
 
-Schiff-Segment: 
+Schiff-Segment: #
 
-Wasser Treffer:
+Wasser Treffer: )" << BLUE << "#" << RESET << R"(
 
-Schiff getroffen:
+Schiff getroffen: )" << RED << "#" << RESET << R"(
 
-Schiff versenkt: 
+Schiff versenkt: )" << GREY << "#" << RESET << R"(
 
-Speichern: Du kannst waehrend des Spiels speichern. Du wirst alle 5 Zuege gefragt, ob du speichern willst. Uebrigens: Wenn du das Spiel aus Versehen schliesst, wird dein Spiel automatisch gespeichert.
+Speichern: Du kannst in der Atackierphase speichern. Du wirst alle 5 Zuege gefragt, ob du speichern willst. Uebrigens: Wenn du das Spiel aus Versehen schliesst, wird dein Spiel automatisch gespeichert.
 
 Viel Spass beim Spielen!
 
