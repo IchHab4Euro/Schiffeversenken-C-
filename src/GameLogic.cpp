@@ -309,7 +309,7 @@ void GameLogic::loadGame() {
     }
 
     if (gameNames.empty())  {
-        std::cout << "Es gibt keine Spielst\204nde zum laden!" << std::endl;
+        Output::printBoxError("Es gibt keine Spielst\204nde zum laden!", true);
         return;
     }
     
@@ -405,7 +405,7 @@ void GameLogic::loadGame() {
             std::string idString;
             std::getline(ss, idString, ';');
             int id = std::stoi(idString);
-            boardsegment->setShipOnSegment(startingShipsPlayer[id]);
+            boardsegment->setShipOnSegment(startingShipsPlayer[id-1]);
             initSegmentsPlayer.push_back(boardsegment);
         }
         if (tempFileInput == "#")  {
@@ -413,7 +413,7 @@ void GameLogic::loadGame() {
             std::string idString;
             std::getline(ss, idString, ';');
             int id = std::stoi(idString);
-            boardsegment->setShipOnSegment(startingShipsPlayer[id]);
+            boardsegment->setShipOnSegment(startingShipsPlayer[id-1]);
             initSegmentsPlayer.push_back(boardsegment);
         }
         if (tempFileInput == "p")  {
@@ -441,7 +441,7 @@ void GameLogic::loadGame() {
             std::string idString;
             std::getline(ss, idString, ';');
             int id = std::stoi(idString);
-            boardsegment->setShipOnSegment(startingshipsComputer[id]);
+            boardsegment->setShipOnSegment(startingshipsComputer[id-1]);
             initSegmentsComputer.push_back(boardsegment);
         }
         if (tempFileInput == "#")  {
@@ -449,7 +449,7 @@ void GameLogic::loadGame() {
             std::string idString;
             std::getline(ss, idString, ';');
             int id = std::stoi(idString);
-            boardsegment->setShipOnSegment(startingshipsComputer[id]);
+            boardsegment->setShipOnSegment(startingshipsComputer[id-1]);
             initSegmentsComputer.push_back(boardsegment);
         }
         if (tempFileInput == "p")  {
@@ -546,26 +546,27 @@ void GameLogic::loadAutosafe()  {
         }
         csvFile.close();
         if (autosafeAvailable == true)  {
-            std::stringstream ss(line);
+            initShipConf();
+            std::stringstream stringstream(line);
             std::string tempFileInput;
             bool tempPhase;
 
-            std::getline(ss, GameLogic::gameName, ';');
+            std::getline(stringstream, gameName, ';');
 
-            std::getline(ss, tempFileInput, ';');
+            std::getline(stringstream, tempFileInput, ';');
             player1 = new Player(tempFileInput);
             player2 = new Player("Computer");
 
 
-            std::getline(ss, tempFileInput, ';');
+            std::getline(stringstream, tempFileInput, ';');
             if (tempFileInput == "1")  {
-            gamePhase = true;
+                gamePhase = true;
             } else  {
-            gamePhase = false;
+                gamePhase = false;
             }
 
             //Produce based on the shipnumber ships with a pattern
-            std::getline(ss, tempFileInput, ';');
+            std::getline(stringstream, tempFileInput, ';');
             int shipNumber = std::stoi(tempFileInput);
             std::vector<Ship*> startingShipsPlayer;
             std::vector<Ship*> startingshipsComputer;
@@ -584,7 +585,7 @@ void GameLogic::loadAutosafe()  {
 
             //Set ships to sunken or not
             for (int i = 0; i < startingShipsPlayer.size(); i++)  {
-                std::getline(ss, tempFileInput, ';');
+                std::getline(stringstream, tempFileInput, ';');
                 if (tempFileInput == "1")  {
                     startingShipsPlayer.at(i)->sunk = true;
                 } else  {
@@ -592,7 +593,7 @@ void GameLogic::loadAutosafe()  {
                 }
             }
             for (int i = 0; i < startingshipsComputer.size(); i++)  {
-                std::getline(ss, tempFileInput, ';');
+                std::getline(stringstream, tempFileInput, ';');
                 if (tempFileInput == "1")  {
                     startingshipsComputer.at(i)->sunk = true;
                 } else  {
@@ -602,30 +603,29 @@ void GameLogic::loadAutosafe()  {
             
             board1 = new PlayerBoard();
             board2 = new ComputerBoard();
-
             //Set all States of the BoardSegments of the Playerboard
-            std::getline(ss, tempFileInput, ';');
+            std::getline(stringstream, tempFileInput, ';');
             int boardSize = std::stoi(tempFileInput);
             std::vector<BoardSegment*> initSegmentsPlayer;
             for(int i = 0; i < (board1->getBoardSize() * board1->getBoardSize()); i++) {
-                std::getline(ss, tempFileInput, ';');
+                std::getline(stringstream, tempFileInput, ';');
                 if (tempFileInput == "r")  {
                     initSegmentsPlayer.push_back(new BoardSegment(SegmentState::Revealed));
                 }
                 if (tempFileInput == "s")  {
                     BoardSegment* boardsegment = new BoardSegment(SegmentState::Ship);
                     std::string idString;
-                    std::getline(ss, idString, ';');
+                    std::getline(stringstream, idString, ';');
                     int id = std::stoi(idString);
-                    boardsegment->setShipOnSegment(startingShipsPlayer[id]);
+                    boardsegment->setShipOnSegment(startingShipsPlayer[id-1]);
                     initSegmentsPlayer.push_back(boardsegment);
                 }
                 if (tempFileInput == "#")  {
                     BoardSegment* boardsegment = new BoardSegment(SegmentState::ShipHit);
                     std::string idString;
-                    std::getline(ss, idString, ';');
+                    std::getline(stringstream, idString, ';');
                     int id = std::stoi(idString);
-                    boardsegment->setShipOnSegment(startingShipsPlayer[id]);
+                    boardsegment->setShipOnSegment(startingShipsPlayer[id-1]);
                     initSegmentsPlayer.push_back(boardsegment);
                 }
                 if (tempFileInput == "p")  {
@@ -644,24 +644,24 @@ void GameLogic::loadAutosafe()  {
             
             //Set all States of the BoardSegments of the Computerboard
             for(int i = 0; i < (board2->getBoardSize() * board2->getBoardSize()); i++) {
-                std::getline(ss, tempFileInput, ';');
+                std::getline(stringstream, tempFileInput, ';');
                 if (tempFileInput == "r")  {
                     initSegmentsComputer.push_back(new BoardSegment(SegmentState::Revealed));
                 }
                 if (tempFileInput == "s")  {
                     BoardSegment* boardsegment = new BoardSegment(SegmentState::Ship);
                     std::string idString;
-                    std::getline(ss, idString, ';');
+                    std::getline(stringstream, idString, ';');
                     int id = std::stoi(idString);
-                    boardsegment->setShipOnSegment(startingshipsComputer[id]);
+                    boardsegment->setShipOnSegment(startingshipsComputer[id-1]);
                     initSegmentsComputer.push_back(boardsegment);
                 }
                 if (tempFileInput == "#")  {
                     BoardSegment* boardsegment = new BoardSegment(SegmentState::ShipHit);
                     std::string idString;
-                    std::getline(ss, idString, ';');
+                    std::getline(stringstream, idString, ';');
                     int id = std::stoi(idString);
-                    boardsegment->setShipOnSegment(startingshipsComputer[id]);
+                    boardsegment->setShipOnSegment(startingshipsComputer[id-1]);
                     initSegmentsComputer.push_back(boardsegment);
                 }
                 if (tempFileInput == "p")  {
@@ -680,7 +680,7 @@ void GameLogic::loadAutosafe()  {
             startGame();
         }
     } else  {
-        Output::printBoxError("Ihre FieldSave Methode wurde nicht gefunden!", true);
+        Output::printBoxError("Ihre FieldSave Datei wurde nicht gefunden!", true);
     } 
 }
 
